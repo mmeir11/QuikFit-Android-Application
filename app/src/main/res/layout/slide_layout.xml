@@ -26,7 +26,6 @@
         android:layout_height="wrap_content"
         android:textSize="50dp"
         android:text="Testt"/>
-
     <TextView
         android:layout_gravity="center"
         android:layout_width="wrap_content"
@@ -34,4 +33,7 @@
         android:textSize="50dp"
         android:id="@+id/slide_desc"
         android:text="Testt"/>
+
+
+
 </LinearLayout>

@@ -1,33 +1,45 @@
 package com.evyatartzik.android2_project;
-
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-    FirebaseAuth.AuthStateListener authStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        /*Load slider view */
+        ViewPager viewPager = findViewById(R.id.slideViewPager);
+        SlideAdapter slideAdapter = new SlideAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(slideAdapter);
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(authStateListener);
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        firebaseAuth.removeAuthStateListener(authStateListener);
+    private class SlideAdapter extends FragmentStatePagerAdapter{
+
+        List<String> stringLottieAnimation;
+        public SlideAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int postion) {
+            return SlideFragment.newInstance(stringLottieAnimation,postion);
+        }
+
+        @Override
+        public int getCount() {
+            return Step.values().length;
+        }
     }
 
 }

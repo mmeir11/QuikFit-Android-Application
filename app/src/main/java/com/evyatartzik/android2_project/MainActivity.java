@@ -26,14 +26,13 @@ public class MainActivity extends AppCompatActivity {
 
     private class SlideAdapter extends FragmentStatePagerAdapter{
 
-        List<String> stringLottieAnimation;
         public SlideAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public Fragment getItem(int postion) {
-            return SlideFragment.newInstance(stringLottieAnimation,postion);
+            return SlideFragment.newInstance(postion);
         }
 
         @Override

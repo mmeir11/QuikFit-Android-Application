@@ -1,7 +1,5 @@
 package com.evyatartzik.android2_project;
 
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,13 +11,9 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
 public class SlideFragment extends Fragment {
 
-    public static SlideFragment newInstance( List<String> animations, int num) {
+    public static SlideFragment newInstance(int num) {
 
         SlideFragment slideAdapter = new SlideFragment();
         Bundle bundle = new Bundle();
@@ -31,7 +25,6 @@ public class SlideFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        String animation;
         View root = inflater.inflate(R.layout.slide_layout,container,false);
         TextView header = root.findViewById(R.id.slide_heading);
         TextView desc = root.findViewById(R.id.slide_desc);
@@ -40,18 +33,18 @@ public class SlideFragment extends Fragment {
         switch(step)
         {
             case Step1:
-                header.setText("Header1");
-                desc.setText("Description1");
+                header.setText(R.string.header1);
+                desc.setText(R.string.description1);
                 lottieAnimationView.setAnimation("loading.json");
                 break;
             case Step2:
-                header.setText("Header2");
-                desc.setText("Description2");
+                header.setText(R.string.header2);
+                desc.setText(R.string.description2);
                 lottieAnimationView.setAnimation("sport.json");
                 break;
             case Step3:
-                header.setText("Header3");
-                desc.setText("Description3");
+                header.setText(R.string.header3);
+                desc.setText(R.string.description3);
                 lottieAnimationView.setAnimation("done.json");
                 break;
         }

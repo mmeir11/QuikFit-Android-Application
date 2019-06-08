@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:scaleType="fitXY"
         app:lottie_autoPlay="true"
+        android:layout_margin="10dp"
         android:layout_gravity="center"
         app:lottie_fileName="loading.json"
         android:background="@color/colorAccent"

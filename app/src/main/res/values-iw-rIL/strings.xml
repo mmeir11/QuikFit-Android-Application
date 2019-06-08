@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Android2-Project</string>
+    <string name="header1">כותרת 1</string>
+    <string name="header2">כותרת 2</string>
+    <string name="header3">כותרת 3</string>
+    <string name="description1">תיאור 1</string>
+    <string name="description2">תיאור 2</string>
+    <string name="description3">תיאור 3</string>
+</resources>

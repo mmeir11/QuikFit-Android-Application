@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i=0;i<mDots.length;i++)
         {
             mDots[i] = new TextView(this);
+            mDots[i].setBackgroundResource(R.drawable.backgroud_step1);
             mDots[i].setText(Html.fromHtml("&#8226;"));
             mDots[i].setTextSize(40);
             mDots[i].setTextColor(getResources().getColor(R.color.colorTransparentWhite));

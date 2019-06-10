@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -28,6 +29,8 @@ public class SlideFragment extends Fragment {
         View root = inflater.inflate(R.layout.slide_layout,container,false);
         TextView header = root.findViewById(R.id.slide_heading);
         TextView desc = root.findViewById(R.id.slide_desc);
+        LinearLayout slide_layout_main = root.findViewById(R.id.slide_layout_main);
+
         LottieAnimationView lottieAnimationView= root.findViewById(R.id.slide_image);
         Step step = Step.values()[getArguments().getInt("step")];
         switch(step)
@@ -35,17 +38,20 @@ public class SlideFragment extends Fragment {
             case Step1:
                 header.setText(R.string.header1);
                 desc.setText(R.string.description1);
+                slide_layout_main.setBackgroundResource(R.drawable.background_step1);
                 lottieAnimationView.setAnimation("loading.json");
                 break;
             case Step2:
                 header.setText(R.string.header2);
                 desc.setText(R.string.description2);
-                lottieAnimationView.setAnimation("sport.json");
+                slide_layout_main.setBackgroundResource(R.drawable.background_step2);
+                lottieAnimationView.setAnimation("loading.json");
                 break;
             case Step3:
                 header.setText(R.string.header3);
                 desc.setText(R.string.description3);
-                lottieAnimationView.setAnimation("done.json");
+                slide_layout_main.setBackgroundResource(R.drawable.background_step3);
+                lottieAnimationView.setAnimation("loading.json");
                 break;
         }
         return root;

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slide_layout_main">
 
 
     <com.airbnb.lottie.LottieAnimationView
@@ -15,7 +17,6 @@
         android:layout_margin="10dp"
         android:layout_gravity="center"
         app:lottie_fileName="loading.json"
-        android:background="@color/colorAccent"
         app:lottie_loop="true" />
 
     <TextView

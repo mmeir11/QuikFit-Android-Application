@@ -6,4 +6,6 @@
     <string name="description1">Description1</string>
     <string name="description2">Description2</string>
     <string name="description3">Description3</string>
+    <string name="next">Next</string>
+    <string name="prev">Prev</string>
 </resources>

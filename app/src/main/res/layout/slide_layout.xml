@@ -15,7 +15,6 @@
         android:layout_margin="10dp"
         android:layout_gravity="center"
         app:lottie_fileName="loading.json"
-        android:background="@color/colorAccent"
         app:lottie_loop="true" />
 
     <TextView

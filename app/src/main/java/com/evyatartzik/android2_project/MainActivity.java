@@ -1,4 +1,5 @@
 package com.evyatartzik.android2_project;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -37,10 +38,38 @@ public class MainActivity extends AppCompatActivity {
         buttonNext = findViewById(R.id.button_Next);
         buttonPrev = findViewById(R.id.button_Prev);
 
+        buttonNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button button = (Button)v;
+                if(button.getText().toString().equals("Next")||button.getText().toString().equals("הבא"))
+                {
+                    Toast.makeText(MainActivity.this, "NEXT!", Toast.LENGTH_SHORT).show();
+
+                }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "Finished!", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(MainActivity.this, LoginRegister.class);
+                    startActivity(intent);
+
+                }
+            }
+        });
+
+        buttonPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this, "PREV!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         SlideAdapter slideAdapter = new SlideAdapter(getSupportFragmentManager());
         viewPager.setAdapter(slideAdapter);
         viewPager.addOnPageChangeListener(viewLisnter);
         addDotIndicator(0);
+
     }
 
     public void addDotIndicator(int position)

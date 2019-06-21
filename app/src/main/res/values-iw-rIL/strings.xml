@@ -7,4 +7,6 @@
     <string name="description1">תיאור 1</string>
     <string name="description2">תיאור 2</string>
     <string name="description3">תיאור 3</string>
+    <string name="next">הבא</string>
+    <string name="prev">הקודם</string>
 </resources>

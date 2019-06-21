@@ -34,6 +34,7 @@ public class SlideFragment extends Fragment {
         Step step = Step.values()[getArguments().getInt("step")];
         int backgrounds[] = {R.drawable.backgroud_step1, R.drawable.backgroud_step1, R.drawable.backgroud_step1};
 
+
         switch(step)
         {
             case Step1:

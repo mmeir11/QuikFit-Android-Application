@@ -44,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
                 Button button = (Button)v;
                 if(button.getText().toString().equals("Next")||button.getText().toString().equals("הבא"))
                 {
-                    Toast.makeText(MainActivity.this, "NEXT!", Toast.LENGTH_SHORT).show();
-
+                    viewPager.setCurrentItem(mCurrentPage+1);
                 }
                 else
                 {
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         buttonPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(MainActivity.this, "PREV!", Toast.LENGTH_SHORT).show();
+                viewPager.setCurrentItem(mCurrentPage-1);
             }
         });
 
@@ -141,29 +140,23 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onPageSelected(int i) {
             addDotIndicator(i);
-
-            Toast.makeText(MainActivity.this, "Swipe " + i + "", Toast.LENGTH_SHORT).show();
             mCurrentPage = i;
         }
 
         @Override
         public void onPageScrollStateChanged(int i) {
-
         }
     };
 
 
     private class SlideAdapter extends FragmentStatePagerAdapter{
-
         public SlideAdapter(FragmentManager fm) {
             super(fm);
         }
-
         @Override
         public Fragment getItem(int postion) {
             return SlideFragment.newInstance(postion);
         }
-
         @Override
         public int getCount() {
             return Step.values().length;

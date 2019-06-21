@@ -12,8 +12,7 @@
     <android.support.v4.view.ViewPager
         android:id="@+id/slideViewPager"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dots_layout">
+        android:layout_height="wrap_content">
 
     </android.support.v4.view.ViewPager>
 
@@ -22,16 +21,24 @@
         android:layout_height="wrap_content"
         android:id="@+id/dots_layout"
         android:layout_alignEnd="@+id/slideViewPager"
-        android:background="@color/colorPrimary">
+        android:background="@color/common_google_signin_btn_text_dark_disabled">
 
         <Button
+            android:id="@+id/button_Next"
+            android:textColor="@color/colorWhite"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/button_Next" />
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
+
         <Button
             android:id="@+id/button_Prev"
+            android:textColor="@color/colorWhite"
+            android:layout_weight="0.5"
+
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:background="@color/common_google_signin_btn_text_dark_disabled" />
     </LinearLayout>
 
 

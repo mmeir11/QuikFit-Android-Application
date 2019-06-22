@@ -1,5 +1,6 @@
 package com.evyatartzik.android2_project;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,10 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 
 public class SlideFragment extends Fragment {
+
+
 
     public static SlideFragment newInstance(int num) {
 
@@ -32,7 +36,7 @@ public class SlideFragment extends Fragment {
         TextView desc = root.findViewById(R.id.slide_desc);
         LottieAnimationView lottieAnimationView= root.findViewById(R.id.slide_image);
         Step step = Step.values()[getArguments().getInt("step")];
-        int backgrounds[] = {R.drawable.backgroud_step1, R.drawable.backgroud_step1, R.drawable.backgroud_step1};
+        int backgrounds[] = {R.drawable.background_step1, R.drawable.background_step2, R.drawable.background_step3};
 
 
         switch(step)
@@ -48,6 +52,7 @@ public class SlideFragment extends Fragment {
                 header.setText(R.string.header2);
                 desc.setText(R.string.description2);
                 lottieAnimationView.setAnimation("sport.json");
+
                 break;
             case Step3:
                 root.setBackgroundResource(backgrounds[2]);

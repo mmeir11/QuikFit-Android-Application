@@ -30,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*Load*/
+
+
         viewPager = findViewById(R.id.slideViewPager);
         phoneLanguage = Locale.getDefault().getLanguage();
 
@@ -48,10 +49,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(MainActivity.this, "Finished!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(MainActivity.this, LoginRegister.class);
                     startActivity(intent);
-
                 }
             }
         });

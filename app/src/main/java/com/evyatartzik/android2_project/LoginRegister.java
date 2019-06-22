@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -22,12 +23,51 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginRegister extends AppCompatActivity {
 
     private Button signupButton, loginButton;
+    TextView textViewForgotPassword;
     private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
+
+
+        textViewForgotPassword = findViewById(R.id.password_forgot);
+        textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Implemt new dialog that send reset mail
+                /**
+                 *         btnReset.setOnClickListener(new View.OnClickListener() {
+                 *             @Override
+                 *             public void onClick(View v) {
+                 *
+                 *                 String email = inputEmail.getText().toString().trim();
+                 *
+                 *                 if (TextUtils.isEmpty(email)) {
+                 *                     Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+                 *                     return;
+                 *                 }
+                 *
+                 *                 progressBar.setVisibility(View.VISIBLE);
+                 *                 auth.sendPasswordResetEmail(email)
+                 *                         .addOnCompleteListener(new OnCompleteListener<Void>() {
+                 *                             @Override
+                 *                             public void onComplete(@NonNull Task<Void> task) {
+                 *                                 if (task.isSuccessful()) {
+                 *                                     Toast.makeText(ResetPasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
+                 *                                 } else {
+                 *                                     Toast.makeText(ResetPasswordActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
+                 *                                 }
+                 *
+                 *                                 progressBar.setVisibility(View.GONE);
+                 *                             }
+                 *                         });
+                 *             }
+                 *         });
+                 */
+            }
+        });
 
 
         auth = FirebaseAuth.getInstance();
@@ -120,9 +160,13 @@ public class LoginRegister extends AppCompatActivity {
                                 }
                             }
                         });
-                }
+            }
         });
+
+
     }
+
+
 
 }
 

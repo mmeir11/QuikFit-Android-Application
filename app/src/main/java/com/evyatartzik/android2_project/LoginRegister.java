@@ -9,9 +9,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -23,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginRegister extends AppCompatActivity {
 
     private Button signupButton, loginButton;
-    TextView textViewForgotPassword;
+    Button buttonForgotPassword;
     private FirebaseAuth auth;
 
     @Override
@@ -31,46 +28,56 @@ public class LoginRegister extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_register);
 
+        auth = FirebaseAuth.getInstance();
 
-        textViewForgotPassword = findViewById(R.id.password_forgot);
-        textViewForgotPassword.setOnClickListener(new View.OnClickListener() {
+        buttonForgotPassword = findViewById(R.id.password_forgot);
+        buttonForgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Implemt new dialog that send reset mail
-                /**
-                 *         btnReset.setOnClickListener(new View.OnClickListener() {
-                 *             @Override
-                 *             public void onClick(View v) {
-                 *
-                 *                 String email = inputEmail.getText().toString().trim();
-                 *
-                 *                 if (TextUtils.isEmpty(email)) {
-                 *                     Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
-                 *                     return;
-                 *                 }
-                 *
-                 *                 progressBar.setVisibility(View.VISIBLE);
-                 *                 auth.sendPasswordResetEmail(email)
-                 *                         .addOnCompleteListener(new OnCompleteListener<Void>() {
-                 *                             @Override
-                 *                             public void onComplete(@NonNull Task<Void> task) {
-                 *                                 if (task.isSuccessful()) {
-                 *                                     Toast.makeText(ResetPasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT).show();
-                 *                                 } else {
-                 *                                     Toast.makeText(ResetPasswordActivity.this, "Failed to send reset email!", Toast.LENGTH_SHORT).show();
-                 *                                 }
-                 *
-                 *                                 progressBar.setVisibility(View.GONE);
-                 *                             }
-                 *                         });
-                 *             }
-                 *         });
-                 */
+                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginRegister.this);
+                AlertDialog alertDialog;
+                final View view = getLayoutInflater().inflate(R.layout.dialog_forgot_password, null);
+                final EditText editTextMail = view.findViewById(R.id.mail_forgot_password);
+                final Button sendResetMail = view.findViewById(R.id.btn_send_mail);
+                final LottieAnimationView lottieAnimationViewEmail = view.findViewById(R.id.lottie_email);
+                lottieAnimationViewEmail.playAnimation();
+
+                sendResetMail.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String email = editTextMail.getText().toString().trim();
+                        if(!email.isEmpty())
+                        {
+                            auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Snackbar.make(findViewById(R.id.scrollview), "Sent!",
+                                                Snackbar.LENGTH_SHORT)
+                                                .show();
+
+                                    } else {
+                                        Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                            lottieAnimationViewEmail.setAnimation("mail.json");
+                            lottieAnimationViewEmail.setVisibility(View.VISIBLE);
+                            lottieAnimationViewEmail.playAnimation();
+                        }
+                        else
+                        {
+                            editTextMail.setError("Enter Mail please");
+                        }
+                    }
+                });
+                mBuilder.setView(view);
+                alertDialog = mBuilder.create();
+                alertDialog.show();
             }
         });
 
 
-        auth = FirebaseAuth.getInstance();
         signupButton = findViewById(R.id.link_signup);
         loginButton = findViewById(R.id.btn_login);
         signupButton.setOnClickListener(new View.OnClickListener() {
@@ -98,9 +105,6 @@ public class LoginRegister extends AppCompatActivity {
                         } else if (password.length() < 6) {
                             Snackbar.make(view, "Password too short, enter minimum 6 characters!", Snackbar.LENGTH_SHORT).show();
                         } else {
-                            DonelottieAnimationView.setVisibility(View.VISIBLE);
-                            DonelottieAnimationView.loop(false);
-
                             auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(LoginRegister.this, new OnCompleteListener<AuthResult>() {
                                         @Override
@@ -109,8 +113,13 @@ public class LoginRegister extends AppCompatActivity {
                                             // the auth state listener will be notified and logic to handle the
                                             // signed in user can be handled in the listener.
                                             if (!task.isSuccessful()) {
+                                                Toast.makeText(LoginRegister.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+
                                             } else {
-                                                finish();
+                                                Toast.makeText(LoginRegister.this, "Successfully Register", Toast.LENGTH_SHORT).show();
+                                                DonelottieAnimationView.setVisibility(View.VISIBLE);
+                                                DonelottieAnimationView.playAnimation();
+                                                /*Go to new Intent*/
                                             }
                                         }
                                     });
@@ -156,7 +165,7 @@ public class LoginRegister extends AppCompatActivity {
                                     }
                                 } else {
                                     Toast.makeText(LoginRegister.this, "Succesfully login", Toast.LENGTH_SHORT).show();
-                                    finish();
+                                    /*Go to new Intent*/
                                 }
                             }
                         });

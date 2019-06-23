@@ -14,16 +14,16 @@
         android:paddingRight="24dp">
 
         <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/done_animation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:scaleType="fitCenter"
-            app:lottie_autoPlay="true"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/done_animation"
             app:lottie_fileName="done.json"
-            android:visibility="invisible"
-            app:lottie_loop="true" />
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            app:lottie_autoPlay="true"/>
 
         <!--  Name Label -->
         <android.support.design.widget.TextInputLayout

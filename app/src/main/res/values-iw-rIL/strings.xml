@@ -9,4 +9,11 @@
     <string name="description3">תיאור 3</string>
     <string name="next">הבא</string>
     <string name="prev">הקודם</string>
+    <string name="mail_sent">מייל לאיפוס נשלח</string>
+    <string name="failure_task">נסה שוב מאוחר יותר</string>
+    <string name="mandatory_field">שדה חובה</string>
+    <string name="password_min">סיסמא קצרה מידי , הכנס 6 תווים לפחות</string>
+    <string name="sucess_Login">התחברות בהצלחה</string>
+    <string name="sucess_register">נרשמת בהצלחה</string>
+    <string name="invaild_password">סיסמא לא נכונה</string>
 </resources>

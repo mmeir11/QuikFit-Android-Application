@@ -8,4 +8,11 @@
     <string name="description3">Description3</string>
     <string name="next">Next</string>
     <string name="prev">Prev</string>
+    <string name="mail_sent">Reset email sent</string>
+    <string name="failure_task">Please try later</string>
+    <string name="mandatory_field">Mandatory field</string>
+    <string name="password_min">Password too short, enter minimum 6 characters!</string>
+    <string name="sucess_Login">Successfully Login</string>
+    <string name="sucess_register">Successfully register</string>
+    <string name="invaild_password">Invaild Password</string>
 </resources>

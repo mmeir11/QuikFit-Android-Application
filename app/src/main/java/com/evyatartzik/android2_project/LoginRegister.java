@@ -66,22 +66,22 @@ public class LoginRegister extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Snackbar.make(findViewById(R.id.scrollview), "Sent!",
-                                                Snackbar.LENGTH_SHORT)
+                                        Snackbar.make(findViewById(R.id.scrollview), R.string.mail_sent,
+                                                Snackbar.LENGTH_LONG)
                                                 .show();
+                                        lottieAnimationViewEmail.setAnimation("mail.json");
+                                        lottieAnimationViewEmail.setVisibility(View.VISIBLE);
+                                        lottieAnimationViewEmail.playAnimation();
 
                                     } else {
-                                        Snackbar.make(view, task.getException().getMessage(), Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(view, R.string.failure_task, Snackbar.LENGTH_LONG).show();
                                     }
                                 }
                             });
-                            lottieAnimationViewEmail.setAnimation("mail.json");
-                            lottieAnimationViewEmail.setVisibility(View.VISIBLE);
-                            lottieAnimationViewEmail.playAnimation();
                         }
                         else
                         {
-                            editTextMail.setError("Enter Mail please");
+                            editTextMail.setError(getText(R.string.mandatory_field));
                         }
                     }
                 });
@@ -111,21 +111,21 @@ public class LoginRegister extends AppCompatActivity {
                         final String name = NameET.getText().toString().trim();
 
                         if (TextUtils.isEmpty(email)) {
-                            Snackbar.make(view, "Enter Email", Snackbar.LENGTH_SHORT).show();
+                            EmailET.setError(getText(R.string.mandatory_field));
                         } else if (TextUtils.isEmpty(password)) {
-                            Snackbar.make(view, "Enter Password", Snackbar.LENGTH_SHORT).show();
+                            PasswordET.setError(getText(R.string.mandatory_field));
                         } else if (password.length() < 6) {
-                            Snackbar.make(view, "Password too short, enter minimum 6 characters!", Snackbar.LENGTH_SHORT).show();
+                            PasswordET.setError(getText(R.string.password_min));
                         } else {
                             auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(LoginRegister.this, new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (!task.isSuccessful()) {
-                                                Toast.makeText(LoginRegister.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginRegister.this, R.string.failure_task, Toast.LENGTH_SHORT).show();
 
                                             } else {
-                                                Toast.makeText(LoginRegister.this, "Successfully Register", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(LoginRegister.this, R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                                 DonelottieAnimationView.setVisibility(View.VISIBLE);
                                                 DonelottieAnimationView.playAnimation();
                                                 ref.child(name).setValue(new User(name,email,password));
@@ -152,12 +152,12 @@ public class LoginRegister extends AppCompatActivity {
                 final String password = editTextPassword.getText().toString();
 
                 if (email.isEmpty()) {
-                    editTextEmail.setError("Enter Mail");
+                    editTextEmail.setError(getText(R.string.mandatory_field));
                     return;
                 }
 
                 if (password.isEmpty()) {
-                    editTextPassword.setError("Enter Password");
+                    editTextPassword.setError(getText(R.string.mandatory_field));
                     return;
                 }
                 auth.signInWithEmailAndPassword(email, password)
@@ -167,12 +167,12 @@ public class LoginRegister extends AppCompatActivity {
                                 if (!task.isSuccessful()) {
                                     // there was an error
                                     if (password.length() < 6) {
-                                        editTextPassword.setError(task.getException().getMessage());
+                                        editTextPassword.setError(getText(R.string.password_min));
                                     } else {
-                                        editTextEmail.setError(task.getException().getMessage());
+                                        editTextEmail.setError(getText(R.string.failure_task));
                                     }
                                 } else {
-                                    Toast.makeText(LoginRegister.this, "Succesfully login", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginRegister.this,R.string.sucess_Login, Toast.LENGTH_SHORT).show();
                                     //String name = findNameInDataBase();
                                     //usersRef.setValue(new User(name,email,password));
                                     afterSucessAuth();

@@ -15,4 +15,14 @@
     <string name="sucess_Login">Successfully Login</string>
     <string name="sucess_register">Successfully register</string>
     <string name="invaild_password">Invaild Password</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="sign_in">Sign in</string>
+    <string name="sign_up">Sign up</string>
+    <string name="signup_signup">Sign in \\ Sign up</string>
+    <string name="email">Email</string>
+    <string name="send_reset_mail">Send reset mail</string>
+    <string name="Name">Name</string>
+    <string name="create_account">Create Account</string>
 </resources>

@@ -220,18 +220,9 @@ public class LoginRegister extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==CAMERA_REQUEST && resultCode==RESULT_OK)
         {
-            Uri uri = data.getData();
-            progressDialog.setMessage("Uploading...");
-            progressDialog.show();
-            StorageReference filePath = mStorageRef.child("ProfilePhotos").child(uri.getLastPathSegment());
 
-            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(LoginRegister.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
-                    progressDialog.dismiss();
-                }
-            });
+            //UPLOAD IMAGE TO FIREBASE STORAGE...
+
         }
     }
     private void afterSucessAuth()

@@ -26,4 +26,7 @@
     <string name="send_reset_mail">שלח מייל איפוס</string>
     <string name="Name">שם מלא</string>
     <string name="create_account">הירשם</string>
+    <string name="take_photo">צלם את עצמך</string>
+    <string name="back">הקודם</string>
+    <string name="finish">סיימתי</string>
 </resources>

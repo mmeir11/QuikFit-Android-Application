@@ -25,4 +25,7 @@
     <string name="send_reset_mail">Send reset mail</string>
     <string name="Name">Name</string>
     <string name="create_account">Create Account</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="back">Back</string>
+    <string name="finish">finish</string>
 </resources>

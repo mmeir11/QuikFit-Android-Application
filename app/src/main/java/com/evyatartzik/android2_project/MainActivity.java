@@ -26,11 +26,16 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentPage;
     ViewPager viewPager;
     String phoneLanguage;
+    private boolean IS_FIRST_TIME;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSharedPreferences("settings", MODE_PRIVATE).edit().putBoolean("isFirstTime", false).apply();
 
         viewPager = findViewById(R.id.slideViewPager);
         phoneLanguage = Locale.getDefault().getLanguage();
@@ -106,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
             buttonPrev.setEnabled(false);
             buttonPrev.setVisibility(View.INVISIBLE);
 
-            buttonNext.setText("Next");
+            buttonNext.setText(R.string.next);
             buttonPrev.setText("");
 
         }
@@ -116,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
             buttonPrev.setEnabled(true);
             buttonPrev.setVisibility(View.VISIBLE);
 
-            buttonNext.setText("Finish");
-            buttonPrev.setText("Back");
+            buttonNext.setText(R.string.finish);
+            buttonPrev.setText(R.string.back);
         }
         else
         {
@@ -125,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
             buttonPrev.setEnabled(true);
             buttonPrev.setVisibility(View.VISIBLE);
 
-            buttonNext.setText("Next");
-            buttonPrev.setText("Back");
+            buttonNext.setText(R.string.next);
+            buttonPrev.setText(R.string.back);
         }
     }
 
@@ -161,5 +166,7 @@ public class MainActivity extends AppCompatActivity {
             return Step.values().length;
         }
     }
+
+
 
 }

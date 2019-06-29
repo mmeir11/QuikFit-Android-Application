@@ -1,13 +1,17 @@
 package com.evyatartzik.android2_project;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -15,23 +19,36 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.File;
 
 public class LoginRegister extends AppCompatActivity {
 
+    File profilePhoto;
+    final int CAMERA_REQUEST=1;
     private Button signupButton, loginButton;
     Button buttonForgotPassword;
     private FirebaseAuth auth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
     DatabaseReference usersRef;
+    private StorageReference mStorageRef;
+    ProgressDialog progressDialog;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        progressDialog = new ProgressDialog(this);
         setContentView(R.layout.activity_login_register);
 
         database = FirebaseDatabase.getInstance();
@@ -44,6 +61,9 @@ public class LoginRegister extends AppCompatActivity {
         buttonForgotPassword = findViewById(R.id.password_forgot);
 
         auth = FirebaseAuth.getInstance();
+
+        /*Firebase Storage*/
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         /*Forgot password*/
         buttonForgotPassword.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +123,16 @@ public class LoginRegister extends AppCompatActivity {
                 final EditText NameET = view.findViewById(R.id.input_name);
                 final Button RegisterButton = view.findViewById(R.id.btn_signup);
                 final LottieAnimationView DonelottieAnimationView = view.findViewById(R.id.done_animation);
-
+                final Button buttonCamera = view.findViewById(R.id.camera_btn);
+                buttonCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                            startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+                        }
+                    }
+                });
                 RegisterButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -129,7 +158,8 @@ public class LoginRegister extends AppCompatActivity {
                                                 Toast.makeText(LoginRegister.this, R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                                 DonelottieAnimationView.setVisibility(View.VISIBLE);
                                                 DonelottieAnimationView.playAnimation();
-                                                ref.child(name).setValue(new User(name,email,password));
+                                                User user = new User(name,email,password);
+                                                ref.child(name).setValue(user);
                                                 afterSucessAuth();
                                             }
                                         }
@@ -174,7 +204,6 @@ public class LoginRegister extends AppCompatActivity {
                                     }
                                 } else {
                                     Toast.makeText(LoginRegister.this,R.string.sucess_Login, Toast.LENGTH_SHORT).show();
-                                    //String name = findNameInDataBase();
                                     //usersRef.setValue(new User(name,email,password));
                                     afterSucessAuth();
                                 }
@@ -186,7 +215,25 @@ public class LoginRegister extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==CAMERA_REQUEST && resultCode==RESULT_OK)
+        {
+            Uri uri = data.getData();
+            progressDialog.setMessage("Uploading...");
+            progressDialog.show();
+            StorageReference filePath = mStorageRef.child("ProfilePhotos").child(uri.getLastPathSegment());
 
+            filePath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(LoginRegister.this, "Successfully uploaded", Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
+            });
+        }
+    }
     private void afterSucessAuth()
     {
         Intent intent = new Intent(LoginRegister.this, MenuActivity.class);

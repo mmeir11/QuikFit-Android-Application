@@ -18,7 +18,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="forgot_password">Forgot password?</string>
-    <string name="sign_in">Sign in</string>
+    <string name="sign_in">Login</string>
     <string name="sign_up">Sign up</string>
     <string name="signup_signup">Sign in \\ Sign up</string>
     <string name="email">Email</string>
@@ -28,4 +28,9 @@
     <string name="take_photo">Take Photo</string>
     <string name="back">Back</string>
     <string name="finish">finish</string>
+    <string name="or">Or</string>
+    <string name="login_with">Login with</string>
+    <string name="login_with_facebook_text">Login with Facebook</string>
+    <string name="login_with_google_text">Login with Google</string>
+
 </resources>

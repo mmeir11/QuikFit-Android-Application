@@ -236,8 +236,7 @@ public class LoginRegister extends AppCompatActivity {
     }
     private void afterSucessAuth()
     {
-        Intent intent = new Intent(LoginRegister.this, MenuActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(LoginRegister.this, MenuActivity.class));
         finish();
     }
 

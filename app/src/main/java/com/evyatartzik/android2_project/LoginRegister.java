@@ -1,13 +1,18 @@
 package com.evyatartzik.android2_project;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,6 +37,8 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class LoginRegister extends AppCompatActivity {
 
     File profilePhoto;
@@ -44,6 +51,8 @@ public class LoginRegister extends AppCompatActivity {
     DatabaseReference usersRef;
     private StorageReference mStorageRef;
     ProgressDialog progressDialog;
+    private Uri imageUri;
+    final int CAMARA_PERRMISON_REQ = 1;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,14 +132,25 @@ public class LoginRegister extends AppCompatActivity {
                 final EditText NameET = view.findViewById(R.id.input_name);
                 final Button RegisterButton = view.findViewById(R.id.btn_signup);
                 final LottieAnimationView DonelottieAnimationView = view.findViewById(R.id.done_animation);
-                final Button buttonCamera = view.findViewById(R.id.camera_btn);
-                buttonCamera.setOnClickListener(new View.OnClickListener() {
+                final CircleImageView profile_Image = view.findViewById(R.id.location_photo);
+                profile_Image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                            startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+
+                        if(Build.VERSION.SDK_INT>=23) {
+                            int wasWritePermission = checkSelfPermission(Manifest.permission.CAMERA);
+
+                            if(wasWritePermission != PackageManager.PERMISSION_GRANTED){
+                                requestPermissions(new String[]{Manifest.permission.CAMERA},CAMARA_PERRMISON_REQ);
+
+                            }
+                            else {
+                                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+                            }
                         }
+
+
                     }
                 });
                 RegisterButton.setOnClickListener(new View.OnClickListener() {

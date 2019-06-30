@@ -34,4 +34,5 @@
     <string name="login_with_facebook_text">התחבר באמצעות פייסבוק</string>
     <string name="login_with_google_text">התחבר באמצעות גוגל</string>
     <string name="repeat_password">חזור על הסיסמא</string>
+    <string name="mismatch_password">סיסמאות לא זהות</string>
 </resources>

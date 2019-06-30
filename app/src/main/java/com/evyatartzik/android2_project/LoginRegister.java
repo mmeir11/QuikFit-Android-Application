@@ -96,6 +96,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginRegister.this);
                 final View view = getLayoutInflater().inflate(R.layout.dialog_register, null);
                 final EditText PasswordET = view.findViewById(R.id.input_password);
+                final EditText RePasswordET = view.findViewById(R.id.repeat_password);
                 final EditText EmailET = view.findViewById(R.id.input_email);
                 final EditText NameET = view.findViewById(R.id.input_name);
                 final Button RegisterButton = view.findViewById(R.id.btn_signup);
@@ -140,15 +141,19 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                     public void onClick(View v) {
                         final String email = EmailET.getText().toString().trim();
                         final String password = PasswordET.getText().toString().trim();
+                        final String rePassword = RePasswordET.getText().toString().trim();
                         final String name = NameET.getText().toString().trim();
-
                         if (TextUtils.isEmpty(email)) {
                             EmailET.setError(getText(R.string.mandatory_field));
                         } else if (TextUtils.isEmpty(password)) {
                             PasswordET.setError(getText(R.string.mandatory_field));
                         } else if (password.length() < 6) {
                             PasswordET.setError(getText(R.string.password_min));
-                        } else {
+                        } else if(!password.equals(rePassword))
+                        {
+                            Toast.makeText(LoginRegister.this, getText(R.string.mismatch_password), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
                             auth.createUserWithEmailAndPassword(email, password)
                                     .addOnCompleteListener(LoginRegister.this, new OnCompleteListener<AuthResult>() {
                                         @Override

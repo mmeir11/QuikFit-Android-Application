@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import java.util.Locale;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 {
                     Intent intent = new Intent(MainActivity.this, LoginRegister.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });

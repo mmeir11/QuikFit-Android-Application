@@ -1,4 +1,4 @@
-package com.evyatartzik.android2_project;
+package com.evyatartzik.android2_project.UI;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -11,11 +11,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.evyatartzik.android2_project.R;
+import com.evyatartzik.android2_project.Fragments.SlideFragment;
+import com.evyatartzik.android2_project.Classes.Step;
 
 import java.util.Locale;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class MainActivity extends AppCompatActivity {

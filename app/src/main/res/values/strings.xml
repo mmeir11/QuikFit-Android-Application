@@ -34,5 +34,12 @@
     <string name="login_with_google_text">Login with Google</string>
     <string name="repeat_password">Repeat Password</string>
     <string name="mismatch_password">Passwords are not the same</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_profile">Profile</string>
+    <string name="nav_chat">Chat</string>
+    <string name="nav_more">Settings</string>
+    <string name="Title">Title</string>
+    <string name="sub_title">Sub title</string>
 
 </resources>

@@ -1,19 +1,17 @@
-package com.evyatartzik.android2_project;
+package com.evyatartzik.android2_project.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.evyatartzik.android2_project.R;
+import com.evyatartzik.android2_project.Classes.Step;
 
 public class SlideFragment extends Fragment {
 

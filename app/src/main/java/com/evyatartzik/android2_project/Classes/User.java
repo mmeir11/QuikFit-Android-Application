@@ -1,4 +1,4 @@
-package com.evyatartzik.android2_project;
+package com.evyatartzik.android2_project.Classes;
 
 public class User {
 

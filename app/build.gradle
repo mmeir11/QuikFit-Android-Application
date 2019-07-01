@@ -37,4 +37,9 @@ dependencies {
     implementation 'com.github.msayan:tutorial-view:v1.0.10'
     implementation 'de.hdodenhof:circleimageview:3.0.0'
     implementation 'agency.tango.android:material-intro-screen:0.0.5'
+    implementation 'com.appyvet:materialrangebar:1.4.4'
+    implementation 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
+    implementation 'com.algolia:algoliasearch-android:3.+'
+    implementation 'agency.tango.android:material-intro-screen:0.0.5'
+
 }

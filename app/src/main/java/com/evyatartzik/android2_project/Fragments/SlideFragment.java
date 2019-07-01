@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.R;
-import com.evyatartzik.android2_project.Classes.Step;
+import com.evyatartzik.android2_project.Models.Step;
 
 public class SlideFragment extends Fragment {
 

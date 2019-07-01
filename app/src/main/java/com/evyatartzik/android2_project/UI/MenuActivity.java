@@ -9,7 +9,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Fragments.ChatFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
@@ -17,7 +16,7 @@ import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Fragments.SettingsFragment;
 import com.evyatartzik.android2_project.R;
-import com.evyatartzik.android2_project.Classes.User;
+import com.evyatartzik.android2_project.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;

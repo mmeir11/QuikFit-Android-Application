@@ -8,5 +8,32 @@
     <color name="primary">#3F51B5</color>
     <color name="primary_dark">#303F9F</color>
     <color name="accent">#FF4081</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#fff</color>
+    <color name="disabled">#964b05</color>
+    <color name="colorTextPrimary">#2b2b2b</color>
+    <color name="colorTextSecondary">#c2c2c2</color>
+
+    <color name="colorTextNormal">#737373</color>
+    <color name="chip">#f1a968</color>
+
+
+    <string-array name="topicsColors">
+        <item>#f6d365</item>
+        <item>#fda085</item>
+
+        <item>#fbc2eb</item>
+        <item>#a6c1ee</item>
+
+        <item>#84fab0</item>
+        <item>#8fd3f4</item>
+
+        <item>#007991</item>
+        <item>#78ffd6</item>
+
+        <item>#56ccf2</item>
+        <item>#2f80ed</item>
+
+        <item>#f2994a</item>
+        <item>#f2c94c</item>
+    </string-array>
 </resources>

@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Fragments.SlideFragment;
-import com.evyatartzik.android2_project.Classes.Step;
+import com.evyatartzik.android2_project.Models.Step;
 
 import java.util.Locale;
 

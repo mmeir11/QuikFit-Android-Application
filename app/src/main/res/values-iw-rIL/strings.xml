@@ -42,4 +42,5 @@
     <string name="nav_more">הגדרות</string>
     <string name="Title">כותרת</string>
     <string name="sub_title">כותרת משנה</string>
+    <string name="search_hint">שם, עיר, חוות דעת, וכו\'</string>
 </resources>

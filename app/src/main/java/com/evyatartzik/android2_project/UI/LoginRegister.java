@@ -86,13 +86,12 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
         /*user_preferences*/
       userPreferencesList = new ArrayList<>();
-     // userPreferencesList.add(new UserPreferences("Isarel",R.drawable.circle_black));
-     // userPreferencesList.add(new UserPreferences("China",R.drawable.circle_black));
-     // userPreferencesList.add(new UserPreferences("Romania",R.drawable.circle_black));
-     // userPreferencesList.add(new UserPreferences("France",R.drawable.circle_black));
-     // userPreferencesList.add(new UserPreferences("Italy",R.drawable.circle_black));
-
-     //  preferencesRef.setValue(userPreferencesList);
+      userPreferencesList.add(new UserPreferences("Isarel",R.drawable.circle_black));
+      userPreferencesList.add(new UserPreferences("China",R.drawable.circle_black));
+      userPreferencesList.add(new UserPreferences("Romania",R.drawable.circle_black));
+      userPreferencesList.add(new UserPreferences("France",R.drawable.circle_black));
+      userPreferencesList.add(new UserPreferences("Italy",R.drawable.circle_black));
+        preferencesRef.setValue(userPreferencesList);
 
 
 

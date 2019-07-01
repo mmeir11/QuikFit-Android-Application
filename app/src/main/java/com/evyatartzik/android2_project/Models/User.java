@@ -1,10 +1,22 @@
 package com.evyatartzik.android2_project.Models;
 
+import java.util.List;
+
 public class User {
 
     private String Name;
     private String Email;
     private String Password;
+
+    public List<String> getUserPreferences() {
+        return userPreferences;
+    }
+
+    public void setUserPreferences(List<String> userPreferences) {
+        this.userPreferences = userPreferences;
+    }
+
+    List<String> userPreferences;
 
     public User(){ }
 

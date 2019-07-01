@@ -17,24 +17,34 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
+import com.evyatartzik.android2_project.Adapters.UserPreferencesAdapter;
+import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,7 +57,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth auth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
-    private DatabaseReference usersRef;
+    private DatabaseReference usersRef, preferencesRef;
     private DatabaseReference current_user_ref;
     private StorageReference mStorageRef;
     private ProgressDialog progressDialog;
@@ -58,6 +68,10 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private CircleImageView profile_Image;
     private File file;
     private Uri filePath;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private List<UserPreferences> userPreferencesList;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +80,39 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login_register);
         profile_Image = findViewById(R.id.location_photo);
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("users");
+        ref = database.getReference("database");
         usersRef = ref.child("users");
+        preferencesRef = ref.child("preferences");
+
+        /*user_preferences*/
+      userPreferencesList = new ArrayList<>();
+     // userPreferencesList.add(new UserPreferences("Isarel",R.drawable.circle_black));
+     // userPreferencesList.add(new UserPreferences("China",R.drawable.circle_black));
+     // userPreferencesList.add(new UserPreferences("Romania",R.drawable.circle_black));
+     // userPreferencesList.add(new UserPreferences("France",R.drawable.circle_black));
+     // userPreferencesList.add(new UserPreferences("Italy",R.drawable.circle_black));
+
+     //  preferencesRef.setValue(userPreferencesList);
+
+
+
+
+        final UserPreferencesAdapter userPreferences = new UserPreferencesAdapter(this.userPreferencesList);
+
+        userPreferences.setListener(new UserPreferencesAdapter.MyCountryListener() {
+            @Override
+            public void onCountryClicked(int position, View view) {
+
+            }
+
+            @Override
+            public void onCountryLongClicked(int position, View view) {
+
+            }
+        });
+
+
+
 
 
         signupButton = findViewById(R.id.link_signup);
@@ -95,6 +140,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 final Button RegisterButton = view.findViewById(R.id.btn_signup);
                 final LottieAnimationView DonelottieAnimationView = view.findViewById(R.id.done_animation);
                 //final CircleImageView profile_Image = view.findViewById(R.id.location_photo);
+                initUserPref(view);
                 profile_Image = view.findViewById(R.id.location_photo);
                 profile_Image.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -159,7 +205,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 DonelottieAnimationView.setVisibility(View.VISIBLE);
                                                 DonelottieAnimationView.playAnimation();
                                                 User user = new User(name,email,password);
-                                                ref.child(name).setValue(user);
+                                                usersRef.child(UUID.randomUUID().toString()).setValue(user);
                                                 afterSucessAuth();
                                             }
                                         }
@@ -212,6 +258,16 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
             }
         });
 
+    }
+
+    private void initUserPref(View view) {
+        recyclerView = (RecyclerView) view.findViewById(R.id.user_preferences);
+        layoutManager = new LinearLayoutManager(LoginRegister.this);
+        ((LinearLayoutManager) layoutManager).setOrientation(0);
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new UserPreferencesAdapter(userPreferencesList);
+        recyclerView.setAdapter(mAdapter);
+        initUserRefList();
     }
 
 
@@ -310,7 +366,22 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
 
         }
+           public void initUserRefList()
+            {
+                Toast.makeText(this, "Lists!!", Toast.LENGTH_SHORT).show();
+                preferencesRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                            UserPreferences userPreference =postSnapshot.getValue(UserPreferences.class);
+                            userPreferencesList.add(userPreference);
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) { }
+                });
+            }
     }
 
 

@@ -76,10 +76,10 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private List<UserPreferences> userPreferencesList;
+    private ArrayList<UserPreferences> userPreferencesList;
     private UserPreferencesAdapter userPreferencesAdapter;
     ItemTouchHelper.SimpleCallback callback;
-    private List<UserPreferences> userFavoriteList;
+    private ArrayList<UserPreferences> userFavoriteList;
 
     @Override
     public void onStart() {

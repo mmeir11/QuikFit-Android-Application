@@ -7,41 +7,108 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#FAFAFA"
+    android:background="@drawable/user_profile_background"
     >
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appbar"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="320dp"
             android:fitsSystemWindows="true"
             android:theme="@style/MyAppBarLayoutTheme"
             xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-
-        <ImageView
-            android:id="@+id/backdrop"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true"
-            android:scaleType="centerCrop"
-            app:layout_collapseMode="parallax"
-            android:transitionName="img"
-            android:src="@drawable/avatar"
-            tools:ignore="UnusedAttribute" />
+            <ImageView
+                android:id="@+id/backdrop"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/avatar"
+                android:transitionName="img"
+                app:layout_collapseMode="parallax"
+                tools:ignore="UnusedAttribute" />
 
 
 
     </android.support.design.widget.AppBarLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="150dp"
+        >
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/user_profile_round_box"
         android:layout_gravity="center"
-        android:layout_marginTop="80dp">
+        android:id="@+id/user_details">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_name"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:fontFamily="@font/heebo_bold_xml"
+            android:text="Evyatar Tzik"
+            android:textSize="22sp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_name"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/user_address"
+            android:text="Rishon Lzion , Israel"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/user_address"
+            android:layout_marginTop="30dp"
+            android:layout_centerHorizontal="true">
+
+            <Button
+                android:layout_width="75dp"
+                android:layout_height="27dp"
+                android:background="@drawable/massage_button"
+                android:layout_marginEnd="10dp"
+                android:text="MASSAGE"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:elevation="3dp"/>
+            <Button
+                android:layout_width="75dp"
+                android:layout_height="27dp"
+                android:background="@drawable/follow_button"
+                android:text="Folloe"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:elevation="3dp"/>
+
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_details"
+        android:layout_centerHorizontal="true">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/user_preferences_rv"
+            >
 
 
 
+
+        </android.support.v7.widget.RecyclerView>
+    </RelativeLayout>
 
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

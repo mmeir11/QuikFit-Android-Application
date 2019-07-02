@@ -65,6 +65,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class LoginRegister extends AppCompatActivity implements View.OnClickListener  {
 
     File profilePhoto;
+    String uploadName;
     final int CAMERA_REQUEST=1;
     private Button signupButton, loginButton;
     Button buttonForgotPassword;
@@ -235,11 +236,13 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 Toast.makeText(LoginRegister.this, R.string.failure_task, Toast.LENGTH_SHORT).show();
 
                                             } else {
+                                                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                                 Toast.makeText(LoginRegister.this, R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                                 DonelottieAnimationView.setVisibility(View.VISIBLE);
                                                 DonelottieAnimationView.playAnimation();
-                                                User user = new User(name,email,password,userFavoriteList);
-                                                usersRef.child(UUID.randomUUID().toString()).setValue(user);
+                                                User user = new User(name,email,userFavoriteList,0,0,uploadName,"about");
+                                                //usersRef.child(UUID.randomUUID().toString()).setValue(user);
+                                                usersRef.child(firebaseUser.getUid()).setValue(user);
                                                 uploadProfilePhoto(email);
                                                 afterSucessAuth();
                                             }
@@ -443,6 +446,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
             public void uploadProfilePhoto(final String email)
             {
+
                 final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
                 fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
@@ -456,7 +460,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onComplete(@NonNull Task<Uri> task) {
                         if (task.isSuccessful()) {
-                            String uploadName  = task.getResult().toString();
+                            uploadName  = task.getResult().toString();
                             ProfileImageUpload profileImageUpload = new ProfileImageUpload(email,uploadName);
                             String uploadID = uploadRef.push().getKey();
                             uploadRef.child(uploadID).setValue(profileImageUpload);

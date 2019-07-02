@@ -42,6 +42,7 @@
 
                     <TextView
                         android:layout_width="wrap_content"
+                        android:textColor="#000"
                         android:layout_height="wrap_content"
                         android:id="@+id/user_name"
                         android:layout_centerHorizontal="true"
@@ -52,6 +53,7 @@
                         />
                     <TextView
                         android:layout_width="wrap_content"
+                        android:textColor="#000"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/user_name"
                         android:layout_centerHorizontal="true"
@@ -104,15 +106,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/appbar"
         android:layout_centerHorizontal="true">
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/user_preferences_rv"
-            >
-
-
-
-
+            android:id="@+id/user_preferences_rv">
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
 

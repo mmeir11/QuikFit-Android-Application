@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -30,10 +31,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.Adapters.UserPreferencesAdapter;
+import com.evyatartzik.android2_project.Models.ProfileImageUpload;
 import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +49,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,7 +70,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private FirebaseAuth auth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
-    private DatabaseReference usersRef, preferencesRef;
+    private DatabaseReference usersRef, preferencesRef,uploadRef;
     private DatabaseReference current_user_ref;
     private StorageReference mStorageRef;
     private ProgressDialog progressDialog;
@@ -72,7 +80,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private final int PICK_IMAGE_REQUEST = 3;
     private CircleImageView profile_Image;
     private File file;
-    private Uri filePath;
+    private Uri filePath , uploadPhotoUri;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -124,6 +132,9 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
 
 
+        /*Firebase storage*/
+        mStorageRef  = FirebaseStorage.getInstance().getReference("uploads");
+        uploadRef =  FirebaseDatabase.getInstance().getReference("uploads");
 
 
 
@@ -228,6 +239,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 DonelottieAnimationView.playAnimation();
                                                 User user = new User(name,email,password,userFavoriteList);
                                                 usersRef.child(UUID.randomUUID().toString()).setValue(user);
+                                                uploadProfilePhoto();
                                                 afterSucessAuth();
                                             }
                                         }
@@ -318,9 +330,11 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         if(requestCode==CAMERA_REQUEST && resultCode==RESULT_OK)
         {
             Bitmap bitmap1 = (Bitmap) BitmapFactory.decodeFile(file.getAbsolutePath());
-            profile_Image.setImageBitmap(bitmap1);
-            //UPLOAD IMAGE TO FIREBASE STORAGE...
-
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            Bitmap bitmapRotate = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
+            profile_Image.setImageBitmap(bitmapRotate);
+            uploadPhotoUri = data.getData();
         }
 
         if(requestCode==PICK_IMAGE_REQUEST && resultCode==RESULT_OK && data != null && data.getData() != null){
@@ -420,6 +434,29 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) { }
+                });
+            }
+
+            public void uploadProfilePhoto()
+            {
+                StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
+                fileReference.putFile(uploadPhotoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Toast.makeText(LoginRegister.this, "SucessTask", Toast.LENGTH_SHORT).show();
+                        String uploadName = mStorageRef.child("uploads").getDownloadUrl().toString();
+                        ProfileImageUpload profileImageUpload = new ProfileImageUpload("test",uploadName);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(LoginRegister.this, R.string.failure_task, Toast.LENGTH_SHORT).show();
+                    }
+                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                    }
                 });
             }
     }

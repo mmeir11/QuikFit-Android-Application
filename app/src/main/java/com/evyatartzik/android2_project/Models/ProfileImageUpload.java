@@ -3,6 +3,8 @@ package com.evyatartzik.android2_project.Models;
 public class ProfileImageUpload {
     String mName;
 
+    String mImageUrl;
+
     public String getmName() {
         return mName;
     }
@@ -19,7 +21,7 @@ public class ProfileImageUpload {
         this.mImageUrl = mImageUrl;
     }
 
-    String mImageUrl;
+
 
     public ProfileImageUpload(){}
 

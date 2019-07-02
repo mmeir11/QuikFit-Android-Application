@@ -36,6 +36,7 @@ import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
 import com.google.android.gms.auth.api.signin.internal.Storage;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -145,8 +146,8 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         buttonForgotPassword.setOnClickListener(this);
         auth = FirebaseAuth.getInstance();
 
-        /*Firebase Storage*/
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+
+
 
         /*Forgot password*/
 
@@ -184,13 +185,13 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
 
                             }
-                            else if(wasWritePermission != PackageManager.PERMISSION_GRANTED){
+                            if(wasWritePermission != PackageManager.PERMISSION_GRANTED){
                                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERRMISON_REQ);
                             }
 
-                            else {
+                            if (wasWritePermission == PackageManager.PERMISSION_GRANTED && wasCamPermission == PackageManager.PERMISSION_GRANTED) {
                                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                                 startActivityForResult(takePictureIntent, CAMERA_REQUEST);
                             }
                         }
@@ -239,7 +240,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 DonelottieAnimationView.playAnimation();
                                                 User user = new User(name,email,password,userFavoriteList);
                                                 usersRef.child(UUID.randomUUID().toString()).setValue(user);
-                                                uploadProfilePhoto();
+                                                uploadProfilePhoto(email);
                                                 afterSucessAuth();
                                             }
                                         }
@@ -247,6 +248,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                         }
                     }
                 });
+
                 mBuilder.setView(view);
                 AlertDialog alertDialog = mBuilder.create();
                 alertDialog.show();
@@ -334,7 +336,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
             matrix.postRotate(90);
             Bitmap bitmapRotate = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
             profile_Image.setImageBitmap(bitmapRotate);
-            uploadPhotoUri = data.getData();
+            uploadPhotoUri = imageUri;
         }
 
         if(requestCode==PICK_IMAGE_REQUEST && resultCode==RESULT_OK && data != null && data.getData() != null){
@@ -369,7 +371,9 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId()){
+
             case R.id.password_forgot:
                 final AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginRegister.this);
                 AlertDialog alertDialog;
@@ -437,27 +441,32 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 });
             }
 
-            public void uploadProfilePhoto()
+            public void uploadProfilePhoto(final String email)
             {
-                StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
-                fileReference.putFile(uploadPhotoUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
+                fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(LoginRegister.this, "SucessTask", Toast.LENGTH_SHORT).show();
-                        String uploadName = mStorageRef.child("uploads").getDownloadUrl().toString();
-                        ProfileImageUpload profileImageUpload = new ProfileImageUpload("test",uploadName);
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
+                        return fileReference.getDownloadUrl();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(LoginRegister.this, R.string.failure_task, Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            String uploadName  = task.getResult().toString();
+                            ProfileImageUpload profileImageUpload = new ProfileImageUpload(email,uploadName);
+                            String uploadID = uploadRef.push().getKey();
+                            uploadRef.child(uploadID).setValue(profileImageUpload);
+                        } else {
+                            Toast.makeText(LoginRegister.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
+
+
             }
     }
 

@@ -65,7 +65,7 @@
                         android:layout_marginTop="30dp"
                         android:layout_centerHorizontal="true">
 
-                        <Button
+                        <android.support.v7.widget.AppCompatButton
                             android:layout_width="75dp"
                             android:layout_height="27dp"
                             android:background="@drawable/massage_button"
@@ -74,7 +74,8 @@
                             android:textColor="@color/white"
                             android:textSize="10sp"
                             android:elevation="3dp"/>
-                        <Button
+
+                        <android.support.v7.widget.AppCompatButton
                             android:layout_width="75dp"
                             android:layout_height="27dp"
                             android:background="@drawable/follow_button"

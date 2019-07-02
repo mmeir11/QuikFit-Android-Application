@@ -42,6 +42,13 @@ public class MenuActivity extends AppCompatActivity {
     ProfileFragment profileFragment;
     ChatFragment chatFragment;
 
+    /*onStop calls when you want to kill all fragments ( == signout)*/
+    @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

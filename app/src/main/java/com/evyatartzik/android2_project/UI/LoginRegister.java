@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -17,11 +18,14 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
@@ -33,6 +37,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -72,7 +77,20 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private List<UserPreferences> userPreferencesList;
+    private UserPreferencesAdapter userPreferencesAdapter;
+    ItemTouchHelper.SimpleCallback callback;
+    private List<UserPreferences> userFavoriteList;
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if(currentUser!=null)
+        {
+            afterSucessAuth();
+        }
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,30 +103,26 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         preferencesRef = ref.child("preferences");
 
         /*user_preferences*/
-      userPreferencesList = new ArrayList<>();
-      userPreferencesList.add(new UserPreferences("Isarel",R.drawable.circle_black));
-      userPreferencesList.add(new UserPreferences("China",R.drawable.circle_black));
-      userPreferencesList.add(new UserPreferences("Romania",R.drawable.circle_black));
-      userPreferencesList.add(new UserPreferences("France",R.drawable.circle_black));
-      userPreferencesList.add(new UserPreferences("Italy",R.drawable.circle_black));
-        preferencesRef.setValue(userPreferencesList);
+        userPreferencesList = new ArrayList<>();
+        userFavoriteList = new ArrayList<>();
+        initUserRefList();
 
+        userPreferencesAdapter = new UserPreferencesAdapter(this.userPreferencesList);
 
-
-
-        final UserPreferencesAdapter userPreferences = new UserPreferencesAdapter(this.userPreferencesList);
-
-        userPreferences.setListener(new UserPreferencesAdapter.MyCountryListener() {
+        userPreferencesAdapter.setListener(new UserPreferencesAdapter.MyUserPrefListener() {
             @Override
-            public void onCountryClicked(int position, View view) {
+            public void onCardClicked(int position, View view) {
 
             }
 
             @Override
-            public void onCountryLongClicked(int position, View view) {
-
+            public void onCheckSelected(int position, UserPreferences userPreference) {
+                Toast.makeText(LoginRegister.this, userPreference.getName(), Toast.LENGTH_SHORT).show();
+                userFavoriteList.add(userPreference);
             }
         });
+
+
 
 
 
@@ -183,13 +197,22 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                         final String name = NameET.getText().toString().trim();
                         if (TextUtils.isEmpty(email)) {
                             EmailET.setError(getText(R.string.mandatory_field));
+                            return;
                         } else if (TextUtils.isEmpty(password)) {
                             PasswordET.setError(getText(R.string.mandatory_field));
+                            return;
                         } else if (password.length() < 6) {
                             PasswordET.setError(getText(R.string.password_min));
+                            return;
                         } else if(!password.equals(rePassword))
                         {
                             Toast.makeText(LoginRegister.this, getText(R.string.mismatch_password), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        else if(userFavoriteList.size()==0 || userFavoriteList==null)
+                        {
+                            Toast.makeText(LoginRegister.this, R.string.selcet_pref, Toast.LENGTH_SHORT).show();
+                            return;
                         }
                         else {
                             auth.createUserWithEmailAndPassword(email, password)
@@ -203,7 +226,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 Toast.makeText(LoginRegister.this, R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                                 DonelottieAnimationView.setVisibility(View.VISIBLE);
                                                 DonelottieAnimationView.playAnimation();
-                                                User user = new User(name,email,password);
+                                                User user = new User(name,email,password,userFavoriteList);
                                                 usersRef.child(UUID.randomUUID().toString()).setValue(user);
                                                 afterSucessAuth();
                                             }
@@ -215,6 +238,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 mBuilder.setView(view);
                 AlertDialog alertDialog = mBuilder.create();
                 alertDialog.show();
+
             }
         });
         /*Login to firebase*/
@@ -266,7 +290,25 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new UserPreferencesAdapter(userPreferencesList);
         recyclerView.setAdapter(mAdapter);
-        initUserRefList();
+        callback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                if(direction==ItemTouchHelper.RIGHT)
+                    Toast.makeText(LoginRegister.this, "Right", Toast.LENGTH_SHORT).show();
+                else if(direction==ItemTouchHelper.LEFT)
+                    Toast.makeText(LoginRegister.this, "Left", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+        recyclerView.setAdapter(userPreferencesAdapter);
     }
 
 
@@ -367,7 +409,6 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         }
            public void initUserRefList()
             {
-                Toast.makeText(this, "Lists!!", Toast.LENGTH_SHORT).show();
                 preferencesRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

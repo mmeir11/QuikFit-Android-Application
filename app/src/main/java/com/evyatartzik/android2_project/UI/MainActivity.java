@@ -1,5 +1,7 @@
 package com.evyatartzik.android2_project.UI;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -21,6 +23,15 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editor =sp.edit();
+        editor.putBoolean("isFirstTime",false);
+        editor.commit();
+    }
+
+
 
     private TextView[] mDots;
     private LinearLayout mDotsLayout;
@@ -29,7 +40,8 @@ public class MainActivity extends AppCompatActivity {
     private int mCurrentPage;
     ViewPager viewPager;
     String phoneLanguage;
-    private boolean IS_FIRST_TIME;
+    boolean isFirstTime = true;
+    SharedPreferences sp;
 
 
 
@@ -38,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSharedPreferences("settings", MODE_PRIVATE).edit().putBoolean("isFirstTime", false).apply();
-
+        sp = getSharedPreferences("details",MODE_PRIVATE);
+        checkFirstTimeLuanchApp();
         viewPager = findViewById(R.id.slideViewPager);
         phoneLanguage = Locale.getDefault().getLanguage();
 
@@ -77,6 +89,16 @@ public class MainActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(viewLisnter);
         addDotIndicator(0);
 
+    }
+
+    private void checkFirstTimeLuanchApp() {
+        if(sp.contains("isFirstTime"))
+        {
+            Intent intent = new Intent(MainActivity.this, LoginRegister.class);
+            startActivity(intent);
+            finish();
+
+        }
     }
 
     public void addDotIndicator(int position)

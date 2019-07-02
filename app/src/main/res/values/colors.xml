@@ -12,6 +12,8 @@
     <color name="disabled">#964b05</color>
     <color name="colorTextPrimary">#2b2b2b</color>
     <color name="colorTextSecondary">#c2c2c2</color>
+    <color name="colorRed">#FF0000</color>
+    <color name="colorGreen">#68FF00</color>
 
     <color name="colorTextNormal">#737373</color>
     <color name="chip">#f1a968</color>

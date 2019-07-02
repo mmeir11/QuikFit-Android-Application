@@ -43,4 +43,5 @@
     <string name="Title">כותרת</string>
     <string name="sub_title">כותרת משנה</string>
     <string name="search_hint">שם, עיר, חוות דעת, וכו\'</string>
+    <string name="selcet_pref">עליך לבחור קטגוריה אחת לפחות</string>
 </resources>

@@ -7,16 +7,7 @@ public class User {
     private String Name;
     private String Email;
     private String Password;
-
-    public List<String> getUserPreferences() {
-        return userPreferences;
-    }
-
-    public void setUserPreferences(List<String> userPreferences) {
-        this.userPreferences = userPreferences;
-    }
-
-    List<String> userPreferences;
+    List<UserPreferences> userPreferences;
 
     public User(){ }
 
@@ -45,9 +36,17 @@ public class User {
     }
 
 
-    public User(String name,String email, String password) {
+    public User(String name,String email, String password,List<UserPreferences> userPreferences) {
         Name = name;
         Email = email;
         Password = password;
+        this.userPreferences = userPreferences;
+    }
+    public List<UserPreferences> getUserPreferences() {
+        return userPreferences;
+    }
+
+    public void setUserPreferences(List<UserPreferences> userPreferences) {
+        this.userPreferences = userPreferences;
     }
 }

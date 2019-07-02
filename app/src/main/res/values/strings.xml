@@ -42,5 +42,6 @@
     <string name="Title">Title</string>
     <string name="sub_title">Sub title</string>
     <string name="search_hint">Name, City, Overview, etc.</string>
+    <string name="selcet_pref">"You must select at least one category "</string>
 
 </resources>

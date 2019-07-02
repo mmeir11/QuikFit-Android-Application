@@ -3,26 +3,24 @@ package com.evyatartzik.android2_project.Models;
 public class UserPreferences {
 
     private String name;
-    private int resId;
-    public UserPreferences(String name, int resId) {
+    private Boolean isSelected;
+
+    public UserPreferences(String name) {
         this.name = name;
-        this.resId = resId;
     }
     UserPreferences(){}
 
     public String getName() {
         return name;
     }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public int getResId() {
-        return resId;
+    public void setCheck(Boolean b) {
+        isSelected = b;
     }
-
-    public void setResId(int resId) {
-        this.resId = resId;
+    public Boolean getCheck() {
+       return isSelected ;
     }
 }

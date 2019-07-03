@@ -11,6 +11,9 @@ public class User {
     private float latitude;
     private float longitude;
     private String profile_pic_path;
+
+
+
     private String about;
 
     public User(){ }
@@ -81,6 +84,14 @@ public class User {
 
     public void setuID(String uID) {
         this.uID = uID;
+    }
+
+    public String getAbout() {
+        return about;
+    }
+
+    public void setAbout(String about) {
+        this.about = about;
     }
 
 

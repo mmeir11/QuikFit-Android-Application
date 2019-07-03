@@ -68,34 +68,34 @@ public class ProfileFragment extends Fragment {
         ValueEventListener postListener = new ValueEventListener() {
 
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // Get Post object and use the values to update the UI
 
-                User post = null;
-                try{
-                    post = dataSnapshot.getValue(User.class);
-                }
-                catch (Exception ex)
-                {
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
-                }
-                if(post!=null ){
-                    initLayoutByID();
-                    textViewUserName.setText(post.getName());
-                    String location = getLocation(post.getLongitude(),post.getLatitude());
-
-                    textViewUserLocation.setText(post.getLongitude()+" " + post.getLatitude());
-
-                    if(!post.getProfile_pic_path().equals("profile.image"))
+                    User post = null;
+                    try{
+                        post = dataSnapshot.getValue(User.class);
+                    }
+                    catch (Exception ex)
                     {
-                        Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);
+                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                    }
+                    if(post!=null ){
+                        initLayoutByID();
+                        textViewUserName.setText(post.getName());
+                        String location = getLocation(post.getLongitude(),post.getLatitude());
+
+                        textViewUserLocation.setText(post.getLongitude()+" " + post.getLatitude());
+
+                        if(!post.getProfile_pic_path().equals("profile.image"))
+                        {
+                            Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);
+
+                        }
+
 
                     }
-
-
+                    // ...
                 }
-                // ...
-            }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {

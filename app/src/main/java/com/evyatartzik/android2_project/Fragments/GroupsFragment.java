@@ -67,7 +67,6 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         groupFragmentView =  inflater.inflate(R.layout.fragment_groups, container, false);
-//        mReference = FirebaseDatabase.getInstance().getReference().child("Groups");
         mReference = FirebaseDatabase.getInstance().getReference("database/groups");
         initFields();
         retrieveAndDisplayGroups();
@@ -77,8 +76,6 @@ public class GroupsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String currentGroupName =  parent.getItemAtPosition(position).toString();
-//                Toast.makeText(getContext(), currentGroupName+"", Toast.LENGTH_SHORT).show();
-
                 Intent intent = new Intent(getContext(), GroupChatActivity.class);
                 intent.putExtra("groupName", currentGroupName);
                 startActivity(intent);

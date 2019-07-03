@@ -38,14 +38,13 @@
 
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_button"
+        android:id="@+id/add_fb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="30dp"
         android:backgroundTint="@color/colorAccent"
-        app:srcCompat="@drawable/ic_add_black_24dp"
-        />
+        android:src="@drawable/ic_add_black_24dp"/>
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ public class Activity {
     private ArrayList<UUID> users;
 
 
+    public Activity(){}
     public Activity(String title, Location location, String type, String date, String description, ArrayList users) {
         this.title = title;
         this.location = location;

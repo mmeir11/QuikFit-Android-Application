@@ -21,13 +21,6 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.home_fragment, container, false);
 
-        FloatingActionButton newActivityFb = root.findViewById(R.id.newActivityFb);
-        newActivityFb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
 
         return root;
     }

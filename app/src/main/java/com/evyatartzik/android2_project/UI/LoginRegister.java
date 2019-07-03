@@ -193,9 +193,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                      startActivityForResult(takePictureIntent, CAMERA_REQUEST);
                                     }
 
-
                         }
-
 
 
                     }

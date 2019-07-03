@@ -192,6 +192,7 @@
                     android:layout_marginHorizontal="10dp" />
 
 
+
                 <android.support.design.button.MaterialButton
                     android:id="@+id/search_btn"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"

@@ -3,12 +3,16 @@ package com.evyatartzik.android2_project.Fragments;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.evyatartzik.android2_project.R;
+
+import java.util.ArrayList;
 
 
 public class ActivityFragment extends Fragment {
@@ -20,8 +24,6 @@ public class ActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
         View root =  inflater.inflate(R.layout.activity_fragment, container, false);
-
-
 
 
         return root;

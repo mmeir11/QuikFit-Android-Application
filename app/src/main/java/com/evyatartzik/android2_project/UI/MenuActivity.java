@@ -48,7 +48,7 @@ public class MenuActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+        //finish();
     }
 
     @Override

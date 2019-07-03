@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.github.msayan:tutorial-view:v1.0.10@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7b7ce58db631a769b501f78ab4b006d5/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/7b7ce58db631a769b501f78ab4b006d5/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e9fc95f2daee7c4fcded263817c89cd1/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/e9fc95f2daee7c4fcded263817c89cd1/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

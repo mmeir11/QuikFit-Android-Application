@@ -90,6 +90,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private UserPreferencesAdapter userPreferencesAdapter;
     ItemTouchHelper.SimpleCallback callback;
     private ArrayList<UserPreferences> userFavoriteList;
+    private String user_id;
 
     @Override
     public void onStart() {
@@ -240,8 +241,9 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 Toast.makeText(LoginRegister.this, R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                                 DonelottieAnimationView.setVisibility(View.VISIBLE);
                                                 DonelottieAnimationView.playAnimation();
-                                                User user = new User(name,email,userFavoriteList,0,0,uploadName,"about");
                                                 //usersRef.child(UUID.randomUUID().toString()).setValue(user);
+                                                user_id = firebaseUser.getUid();
+                                                User user = new User(user_id,name,email,userPreferencesList,0,0,"profile.image","about");
                                                 usersRef.child(firebaseUser.getUid()).setValue(user);
                                                 uploadProfilePhoto(email);
                                                 afterSucessAuth();
@@ -427,51 +429,52 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
 
 
-        }
-           public void initUserRefList()
-            {
-                preferencesRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                            UserPreferences userPreference =postSnapshot.getValue(UserPreferences.class);
-                            userPreferencesList.add(userPreference);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) { }
-                });
-            }
-
-            public void uploadProfilePhoto(final String email)
-            {
-
-                final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
-                fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                    @Override
-                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                        if (!task.isSuccessful()) {
-                            throw task.getException();
-                        }
-                        return fileReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            uploadName  = task.getResult().toString();
-                            ProfileImageUpload profileImageUpload = new ProfileImageUpload(email,uploadName);
-                            String uploadID = uploadRef.push().getKey();
-                            uploadRef.child(uploadID).setValue(profileImageUpload);
-                        } else {
-                            Toast.makeText(LoginRegister.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-
-            }
     }
+    public void initUserRefList()
+    {
+        preferencesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserPreferences userPreference =postSnapshot.getValue(UserPreferences.class);
+                    userPreferencesList.add(userPreference);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    public void uploadProfilePhoto(final String email)
+    {
+
+        final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
+        fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                return fileReference.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    uploadName  = task.getResult().toString();
+                    ProfileImageUpload profileImageUpload = new ProfileImageUpload(email,uploadName);
+                    String uploadID = uploadRef.push().getKey();
+                    uploadRef.child(uploadID).setValue(profileImageUpload);
+                    usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
+                } else {
+                    Toast.makeText(LoginRegister.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+    }
+}
 
 

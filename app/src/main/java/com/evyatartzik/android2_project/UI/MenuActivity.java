@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.evyatartzik.android2_project.Fragments.ChatFragment;
+import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
 import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
@@ -41,6 +42,7 @@ public class MenuActivity extends AppCompatActivity {
     SearchFragment searchFragment;
     ProfileFragment profileFragment;
     ChatFragment chatFragment;
+    GroupsFragment groupsFragment;
 
     /*onStop calls when you want to kill all fragments ( == signout)*/
     @Override
@@ -101,10 +103,12 @@ public class MenuActivity extends AppCompatActivity {
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
          chatFragment = new ChatFragment();
+         groupsFragment = new GroupsFragment();
          adapter.addFragment(homeFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
-         adapter.addFragment(chatFragment);
+//         adapter.addFragment(chatFragment);
+         adapter.addFragment(groupsFragment);
          adapter.addFragment(settingsFragment);
 
 

@@ -11,4 +11,8 @@
         <item name="colorControlHighlight">@color/colorAccent</item>
     </style>
 
+    <style name="AlertDialog" parent="Base.Theme.AppCompat.Light.Dialog">
+
+    </style>
+
 </resources>

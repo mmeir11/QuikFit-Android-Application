@@ -449,12 +449,10 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     public void uploadProfilePhoto(final String email)
     {
 
-        if(uploadName==null)
+        if(uploadPhotoUri==null)
         {
             return;
         }
-        else if(uploadName.isEmpty())
-            return;
         final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
         fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override

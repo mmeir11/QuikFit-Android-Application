@@ -1,7 +1,5 @@
 package com.evyatartzik.android2_project.Fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,7 +19,7 @@ public class ActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
-        View root =  inflater.inflate(R.layout.fragment_activity, container, false);
+        View root =  inflater.inflate(R.layout.activity_fragment, container, false);
 
 
 

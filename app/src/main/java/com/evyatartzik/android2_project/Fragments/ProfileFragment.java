@@ -85,16 +85,14 @@ public class ProfileFragment extends Fragment {
                     String location = getLocation(post.getLongitude(),post.getLatitude());
 
                     textViewUserLocation.setText(post.getLongitude()+" " + post.getLatitude());
-/*
-                    if(post.getProfile_pic_path().equals("profile.image"))
-                    {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            imageViewProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.avatar, getActivity().getTheme()));
-                        }
-                    }
-*/
 
-//                    Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);
+                    if(!post.getProfile_pic_path().equals("profile.image"))
+                    {
+                        Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);
+
+                    }
+
+
                 }
                 // ...
             }

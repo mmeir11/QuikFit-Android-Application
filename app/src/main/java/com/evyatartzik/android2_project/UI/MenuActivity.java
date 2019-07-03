@@ -1,5 +1,6 @@
 package com.evyatartzik.android2_project.UI;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.evyatartzik.android2_project.Fragments.ActivityFragment;
 import com.evyatartzik.android2_project.Fragments.ChatFragment;
 import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
@@ -43,6 +45,7 @@ public class MenuActivity extends AppCompatActivity {
     ProfileFragment profileFragment;
     ChatFragment chatFragment;
     GroupsFragment groupsFragment;
+    ActivityFragment activityFragment;
 
     /*onStop calls when you want to kill all fragments ( == signout)*/
     @Override
@@ -99,14 +102,15 @@ public class MenuActivity extends AppCompatActivity {
          ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
 
-         homeFragment=new HomeFragment();
+         //homeFragment=new HomeFragment();
+         activityFragment = new ActivityFragment();
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
 //         chatFragment = new ChatFragment();
          groupsFragment = new GroupsFragment();
 
-         adapter.addFragment(homeFragment);
+         adapter.addFragment(activityFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
 //         adapter.addFragment(chatFragment);
@@ -197,6 +201,7 @@ public class MenuActivity extends AppCompatActivity {
 //            viewPager.setCurrentItem(0, true);
 //        } else {
 //        }
+        startActivity(new Intent(MenuActivity.this, LoginRegister.class));
         finish();
 
     }

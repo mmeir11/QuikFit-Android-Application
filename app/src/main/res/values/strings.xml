@@ -44,4 +44,7 @@
     <string name="search_hint">Name, City, Overview, etc.</string>
     <string name="selcet_pref">"You must select at least one category "</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

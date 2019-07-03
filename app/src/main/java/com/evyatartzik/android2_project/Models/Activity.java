@@ -4,6 +4,7 @@ import android.location.Location;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 public class Activity {
 
@@ -14,7 +15,7 @@ public class Activity {
     private String type;
     private String date;
     private String description;
-    private ArrayList users;
+    private ArrayList<UUID> users;
 
 
     public Activity(String title, Location location, String type, String date, String description, ArrayList users) {

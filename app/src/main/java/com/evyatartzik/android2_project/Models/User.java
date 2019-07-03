@@ -8,23 +8,50 @@ public class User {
 
     private String Name;
     private String Email;
-    private String Password;
     private ArrayList<UserPreferences> userPreferences;
     private float latitude;
     private float longitude;
     private String profile_pic_path;
-    private UUID uuid;
     private String about;
 
     public User(){ }
 
-    public User(String name,String email, String password,ArrayList<UserPreferences> userPreferences) {
+
+    public User(String name,String email,ArrayList<UserPreferences> userPreferences,float latitude, float longitude,String profile_pic_path, String about)
+    {
         Name = name;
         Email = email;
-        Password = password;
         this.userPreferences = userPreferences;
-        uuid = UUID.randomUUID();
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.profile_pic_path = profile_pic_path;
+        this.about = about;
     }
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getProfile_pic_path() {
+        return profile_pic_path;
+    }
+
+    public void setProfile_pic_path(String profile_pic_path) {
+        this.profile_pic_path = profile_pic_path;
+    }
+
     public String getName() {
         return Name;
     }
@@ -40,15 +67,6 @@ public class User {
     public void setEmail(String email) {
         Email = email;
     }
-
-    public String getPassword() {
-        return Password;
-    }
-
-    public void setPassword(String password) {
-        Password = password;
-    }
-
 
     public ArrayList<UserPreferences> getUserPreferences() {
         return userPreferences;

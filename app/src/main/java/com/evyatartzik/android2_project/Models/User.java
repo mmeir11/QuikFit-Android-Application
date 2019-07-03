@@ -1,13 +1,12 @@
 package com.evyatartzik.android2_project.Models;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 public class User {
 
     private String Name;
     private String Email;
+    private String uID;
     private ArrayList<UserPreferences> userPreferences;
     private float latitude;
     private float longitude;
@@ -17,8 +16,9 @@ public class User {
     public User(){ }
 
 
-    public User(String name,String email,ArrayList<UserPreferences> userPreferences,float latitude, float longitude,String profile_pic_path, String about)
+    public User(String uID, String name, String email, ArrayList<UserPreferences> userPreferences, float latitude, float longitude, String profile_pic_path, String about)
     {
+        this.uID = uID;
         Name = name;
         Email = email;
         this.userPreferences = userPreferences;
@@ -74,6 +74,13 @@ public class User {
 
     public void setUserPreferences(ArrayList<UserPreferences> userPreferences) {
         this.userPreferences = userPreferences;
+    }
+    public String getuID() {
+        return uID;
+    }
+
+    public void setuID(String uID) {
+        this.uID = uID;
     }
 
 

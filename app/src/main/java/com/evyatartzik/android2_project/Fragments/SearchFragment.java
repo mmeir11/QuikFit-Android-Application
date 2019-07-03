@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -146,8 +147,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             }
                             fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
                             fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                            fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                                @Override
+                                public void onSuccess(Location location) {
+                                    userLocationTextbox.setText(getLocationNameByLocation(location));
 
-                            userLocationTextbox.setText(getLocationNameByLocation(current_location));
+                                }
+                            });
+//                            userLocationTextbox.setText(getLocationNameByLocation(current_location));
 
                         }
                     }
@@ -179,6 +186,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
         return "";
     }
+
+
+
+
 
     @Override
     public void onClick(View v) {

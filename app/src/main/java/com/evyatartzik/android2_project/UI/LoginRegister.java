@@ -182,20 +182,18 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                             int wasCamPermission = checkSelfPermission(Manifest.permission.CAMERA);
                             int wasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
 
-                            if(wasCamPermission != PackageManager.PERMISSION_GRANTED){
-                                requestPermissions(new String[]{Manifest.permission.CAMERA},CAMARA_PERRMISON_REQ);
-
-
-                            }
-                            if(wasWritePermission != PackageManager.PERMISSION_GRANTED){
-                                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},WRITE_PERRMISON_REQ);
+                            if(wasCamPermission != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMARA_PERRMISON_REQ);
                             }
 
-                            if (wasWritePermission == PackageManager.PERMISSION_GRANTED && wasCamPermission == PackageManager.PERMISSION_GRANTED) {
-                                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                startActivityForResult(takePictureIntent, CAMERA_REQUEST);
-                            }
+                             else
+                                 {
+                                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                                     startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+                                    }
+
+
                         }
 
 
@@ -330,12 +328,23 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         recyclerView.setAdapter(userPreferencesAdapter);
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == CAMARA_PERRMISON_REQ)
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==CAMERA_REQUEST && resultCode==RESULT_OK)
         {
+
             Bitmap bitmap1 = (Bitmap) BitmapFactory.decodeFile(file.getAbsolutePath());
             Matrix matrix = new Matrix();
             matrix.postRotate(90);
@@ -359,6 +368,8 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
         }
     }
+
+
     private void afterSucessAuth()
     {
         startActivity(new Intent(LoginRegister.this, MenuActivity.class));
@@ -430,6 +441,8 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
 
     }
+
+
     public void initUserRefList()
     {
         preferencesRef.addValueEventListener(new ValueEventListener() {

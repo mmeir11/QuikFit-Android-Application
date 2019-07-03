@@ -193,10 +193,11 @@ public class MenuActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() != 0) {
-            viewPager.setCurrentItem(0, true);
-        } else {
-            finish();
-        }
+//        if (viewPager.getCurrentItem() != 0) {
+//            viewPager.setCurrentItem(0, true);
+//        } else {
+//        }
+        finish();
+
     }
 }

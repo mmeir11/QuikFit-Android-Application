@@ -1,18 +1,26 @@
 package com.evyatartzik.android2_project.Fragments;
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -20,7 +28,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.appyvet.materialrangebar.RangeBar;
+import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
+import com.evyatartzik.android2_project.Models.Activity;
+import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -28,7 +38,11 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -36,11 +50,11 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener {
+public class SearchFragment extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener, ActivityRvAdapter.ObjectListener {
 
     private static final int LOCATION_PERMISSION_REQUEST = 1;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -48,17 +62,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private LocationRequest locationRequest;
     static Location current_location;
     private ImageView loctionButton;
-    private AutoCompleteTextView userLocationTextbox;
     private View rootView;
+    private ArrayList<UserPreferences> PreferencesList;
+    private ArrayList<Activity> ActivitysList;
+    private ArrayList<Activity> SearchActivityList;
+    private ActivityRvAdapter activityRvAdapter;
+    private RecyclerView SearchRv;
 
 
 
 
     boolean isAdvancedSearchOpen = false;
-    EditText freeTextTv, teacherTv;
-    AutoCompleteTextView locationTv;
-    int minPrice, maxPrice;
-    ChipGroup topicsGroup;
+    private EditText freeTextTv;
+    ChipGroup chipGroup;
     LinearLayout advancedLayout;
     ImageView searchBg;
 
@@ -72,21 +88,33 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.search_fragment, container, false);
+        SearchActivityList = new ArrayList<>();
+        activityRvAdapter = new ActivityRvAdapter(getActivity(), SearchActivityList);
+        SearchRv = rootView.findViewById(R.id.search_results_rv);
+        SearchRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        SearchRv.setAdapter(activityRvAdapter);
+        activityRvAdapter.setListener(this);
+
+
         loctionButton = rootView.findViewById(R.id.location_btn);
-        userLocationTextbox = rootView.findViewById(R.id.user_location);
 
         advancedLayout = rootView.findViewById(R.id.advanced_layout);
         searchBg = rootView.findViewById(R.id.search_bg);
         final TextView rangeTv = rootView.findViewById(R.id.range_tv);
 
         freeTextTv = rootView.findViewById(R.id.free_text_tv);
-        teacherTv = rootView.findViewById(R.id.teacher_tv);
-        RangeBar rangeBar = rootView.findViewById(R.id.range_bar);
-        topicsGroup = rootView.findViewById(R.id.topics_container);
 
-        minPrice = Integer.parseInt(rangeBar.getLeftPinValue());
-        maxPrice = Integer.parseInt(rangeBar.getRightPinValue());
+        chipGroup = rootView.findViewById(R.id.chips_container);
 
+        freeTextTv.setOnEditorActionListener(this);
+
+
+
+
+
+        getAllActivitysTypeList_And_Add_choices();
+
+        //getAllActivitys();
 
         ImageView advancedSearchBtn = rootView.findViewById(R.id.advanced_search_btn);
         advancedSearchBtn.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +126,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         });
 
         loctionButton.setOnClickListener(this);
+
 
         return rootView;
 
@@ -114,6 +143,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         locationRequest.setSmallestDisplacement(10.0f);
     }
 
+
     private void buildLocationCallBack() {
         locationCallback = new LocationCallback(){
             @Override
@@ -126,6 +156,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         };
 
     }
+
 
     public void checkLoctionAndUpdateText(){
 
@@ -150,11 +181,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
                                 @Override
                                 public void onSuccess(Location location) {
-                                    userLocationTextbox.setText(getLocationNameByLocation(location));
+                                    freeTextTv.setText(getLocationNameByLocation(location));
 
                                 }
                             });
-//                            userLocationTextbox.setText(getLocationNameByLocation(current_location));
 
                         }
                     }
@@ -173,6 +203,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 }
 
+
     String getLocationNameByLocation(Location location) {
         Geocoder geocoder = new Geocoder(getActivity());
         try {
@@ -188,8 +219,88 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    private void Search(){
+
+        isAdvancedSearchOpen = false;
+        advancedLayout.setVisibility(View.GONE);
+
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(freeTextTv.getWindowToken(), 0);
+
+        ArrayList<String> activitys = new ArrayList<>();
+
+        for (int i = 0; i < chipGroup.getChildCount(); ++i) {
+            Chip chip = (Chip) chipGroup.getChildAt(i);
+            if (chip.isChecked()) {
+                activitys.add((String) chip.getText());
+            }
+
+        }
 
 
+        // Add here search logic
+
+
+    }
+
+
+    public void getAllActivitysTypeList_And_Add_choices(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("database");
+        DatabaseReference preferencesRef = ref.child("preferences");
+
+        PreferencesList = new ArrayList<>();
+
+
+
+            preferencesRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                        UserPreferences preferencesRef = postSnapshot.getValue(UserPreferences.class);
+                        PreferencesList.add(preferencesRef);
+                    }
+                    for(UserPreferences user_Preference : PreferencesList){
+                        Chip chip = new Chip(getActivity(), null , R.style.Widget_MaterialComponents_Chip_Filter);
+                        chip.setText(user_Preference.getName());
+                        chip.setClickable(true);
+                        chip.setCheckable(true);
+                        chip.setChipBackgroundColorResource(R.color.chip);
+                        chipGroup.addView(chip);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) { }
+            });
+    }
+
+
+    public void getAllActivitys(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("database");
+        DatabaseReference activitysRef = ref.child("activity");
+
+        ActivitysList = new ArrayList<>();
+
+
+
+        activitysRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Activity activitysRef = postSnapshot.getValue(Activity.class);
+                    ActivitysList.add(activitysRef);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
 
     @Override
     public void onClick(View v) {
@@ -200,6 +311,22 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 checkLoctionAndUpdateText();
 
         }
+
+    }
+
+
+    @Override
+    public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        if (i == EditorInfo.IME_ACTION_SEARCH) {
+            Search();
+            return true;
+        }
+        return false;
+    }
+
+    /* open display activity fragment */
+    @Override
+    public void onObjectClicked(int pos, View view) {
 
     }
 }

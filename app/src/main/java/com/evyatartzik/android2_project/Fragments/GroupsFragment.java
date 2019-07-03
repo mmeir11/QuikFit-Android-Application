@@ -207,7 +207,7 @@ public class GroupsFragment extends Fragment {
                 Location location = null;
 
 
-                Activity activity = new Activity(title, location, activityType, dateStr, "",null );
+                Activity activity = new Activity(title,location, activityType, dateStr, "",null );
 
                 if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() /*|| date.isEmpty()*/ || time.isEmpty()){
                     Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();

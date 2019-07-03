@@ -1,5 +1,7 @@
 package com.evyatartzik.android2_project.Fragments;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +11,9 @@ import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.R;
@@ -34,10 +40,13 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class ActivityFragment extends Fragment implements View.OnClickListener {
+public class ActivityFragment extends Fragment implements View.OnClickListener, ActivityRvAdapter.ObjectListener {
 
     View root;
     FloatingActionButton floatingActionButton;
+    private ActivityRvAdapter activityRvAdapter;
+    private RecyclerView NearByActivitysRv;
+    private RecyclerView MyActivityRv;
 
     /*Firebase*/
     private FirebaseAuth mAuth;
@@ -53,6 +62,23 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         root =  inflater.inflate(R.layout.activity_fragment, container, false);
+
+        activities = new ArrayList<>();
+
+        activityRvAdapter = new ActivityRvAdapter(getActivity(), activities);
+        NearByActivitysRv = root.findViewById(R.id.recycler_near_activates);
+        NearByActivitysRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        NearByActivitysRv.setAdapter(activityRvAdapter);
+
+
+        MyActivityRv = root.findViewById(R.id.recycler_my_activitys);
+        MyActivityRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        MyActivityRv.setAdapter(activityRvAdapter);
+
+
+
+
+        activityRvAdapter.setListener(this);
 
         initDataStructe();
         initFragmentByID();
@@ -178,5 +204,12 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
 
 
         }
+    }
+
+
+    /* open display activity fragment */
+    @Override
+    public void onObjectClicked(int pos, View view) {
+
     }
 }

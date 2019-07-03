@@ -1,18 +1,22 @@
 package com.evyatartzik.android2_project.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.GlobalApplication;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.R;
+import com.evyatartzik.android2_project.UI.LoginRegister;
+import com.evyatartzik.android2_project.UI.MenuActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -23,7 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements View.OnClickListener {
 
 
     private FirebaseAuth mAuth;
@@ -35,7 +39,8 @@ public class SettingsFragment extends Fragment {
 
     private View rootView;
     Context context;
-    private TextView userName,Location;
+    private TextView userName;
+    private Button buttonSignOut;
 
 
     public SettingsFragment() {
@@ -76,14 +81,16 @@ public class SettingsFragment extends Fragment {
             }
         };
         databaseUsers.addValueEventListener(postListener);
-
+        buttonSignOut.setOnClickListener(this);
 
 
         return rootView;
     }
 
     private void initLayoutByID() {
+
         userName = rootView.findViewById(R.id.username);
+        buttonSignOut = rootView.findViewById(R.id.signout_btn);
     }
 
     private void initFirebase() {
@@ -92,6 +99,13 @@ public class SettingsFragment extends Fragment {
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
         databaseUsers =ref.child("users").child(currentUser.getUid());
+
+    }
+
+    @Override
+    public void onClick(View v) {
+        mAuth.signOut();
+        getActivity().onBackPressed();
 
     }
 }

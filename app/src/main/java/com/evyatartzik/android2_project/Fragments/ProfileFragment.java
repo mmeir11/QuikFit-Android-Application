@@ -2,6 +2,7 @@ package com.evyatartzik.android2_project.Fragments;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -82,12 +83,13 @@ public class ProfileFragment extends Fragment {
                     initLayoutByID();
                     textViewUserName.setText(post.getName());
                     String location = getLocation(post.getLongitude(),post.getLatitude());
+
                     textViewUserLocation.setText(post.getLongitude()+" " + post.getLatitude());
                     if(post.getProfile_pic_path().equals("profile.image"))
                     {
-                        //int id = getResources().getIdentifier("yourpackagename:drawable/" + , null, null);
-
-                       // imageViewProfilePicture.setImageDrawable(R.drawable.avatar);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            imageViewProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.avatar, getActivity().getTheme()));
+                        }
                     }
 
                     Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);

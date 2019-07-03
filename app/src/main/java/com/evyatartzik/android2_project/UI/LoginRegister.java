@@ -362,7 +362,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private void afterSucessAuth()
     {
         startActivity(new Intent(LoginRegister.this, MenuActivity.class));
-        finish();
+        //finish();
     }
 
 
@@ -449,10 +449,12 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     public void uploadProfilePhoto(final String email)
     {
 
-        if(uploadName.isEmpty() || uploadName==null)
+        if(uploadName==null)
         {
             return;
         }
+        else if(uploadName.isEmpty())
+            return;
         final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
         fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override

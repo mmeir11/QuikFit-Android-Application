@@ -243,7 +243,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                                                 DonelottieAnimationView.playAnimation();
                                                 //usersRef.child(UUID.randomUUID().toString()).setValue(user);
                                                 user_id = firebaseUser.getUid();
-                                                User user = new User(user_id,name,email,userPreferencesList,0,0,"profile.image","about");
+                                                User user = new User(user_id,name,email,userFavoriteList,0,0,"profile.image","about");
                                                 usersRef.child(firebaseUser.getUid()).setValue(user);
                                                 uploadProfilePhoto(email);
                                                 afterSucessAuth();
@@ -449,6 +449,10 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     public void uploadProfilePhoto(final String email)
     {
 
+        if(uploadName.isEmpty() || uploadName==null)
+        {
+            return;
+        }
         final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
         fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override

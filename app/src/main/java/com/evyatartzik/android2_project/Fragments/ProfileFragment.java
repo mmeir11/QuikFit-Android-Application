@@ -1,5 +1,7 @@
 package com.evyatartzik.android2_project.Fragments;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -26,9 +28,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 
@@ -53,76 +57,73 @@ public class ProfileFragment extends Fragment {
     public ProfileFragment() {
     }
 
-    private void updateUI() {
-        textViewUserName.setText(currentUser.getEmail());
-        textViewUserLocation.setText("Test");//Get current location
-
-
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Context context = GlobalApplication.getAppContext();
         rootView =  inflater.inflate(R.layout.profile_fragment, container, false);
 
-        initLayoutById();
-        userArrayList = new ArrayList<>();
-        initFirebase(); //Update ui elements
-        initUserDatabaseToList();
-        User dbUser = findInArrayList(currentUser.getEmail());//need to test
-        if(dbUser!=null)
-        {
-            Toast.makeText(context, dbUser.getEmail(), Toast.LENGTH_LONG).show();
-        }
+        initFirebase();
+        ValueEventListener postListener = new ValueEventListener() {
 
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+
+                User post = null;
+                try{
+                    post = dataSnapshot.getValue(User.class);
+                }
+                catch (Exception ex)
+                {
+                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+                }
+                if(post!=null ){
+                    initLayoutByID();
+                    textViewUserName.setText(post.getName());
+                    String location = getLocation(post.getLongitude(),post.getLatitude());
+                    textViewUserLocation.setText(post.getLongitude()+" " + post.getLatitude());
+                    if(post.getProfile_pic_path().equals("profile.image"))
+                    {
+                        //int id = getResources().getIdentifier("yourpackagename:drawable/" + , null, null);
+
+                       // imageViewProfilePicture.setImageDrawable(R.drawable.avatar);
+                    }
+
+                    Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);
+                }
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                // ...
+            }
+        };
+
+        databaseUsers.addValueEventListener(postListener);
         return rootView;
 
 
     }
 
-    private User findInArrayList(String email) {
-        for (User tempUser:userArrayList)
-        {
-          if(tempUser.getEmail().equals(email))
-              return tempUser;
-        }
-        return null;
+    private String getLocation(float longitude, float latitude) {
+        return "Holon, IL";
     }
 
     private void initFirebase() {
         database = FirebaseDatabase.getInstance();
-
         ref = database.getReference("database");
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-        databaseUsers =ref.child("users");
-
-        updateUI();
-
+        databaseUsers =ref.child("users").child(currentUser.getUid());
     }
 
-    private void initLayoutById() {
-
-        textViewUserName = rootView.findViewById(R.id.user_name);
+    private void initLayoutByID() {
+        textViewUserName = rootView.findViewById(R.id.user_full_name);
         textViewUserLocation = rootView.findViewById(R.id.user_address);
-        imageViewProfilePicture = rootView.findViewById(R.id.backdrop);
-    }
-
-    public void initUserDatabaseToList()
-    {
-        databaseUsers.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    User userPreference =postSnapshot.getValue(User.class);
-                    userArrayList.add(userPreference);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) { }
-        });
+        imageViewProfilePicture = rootView.findViewById(R.id.user_profile_picture);
     }
 
 }

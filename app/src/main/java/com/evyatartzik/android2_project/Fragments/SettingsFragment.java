@@ -35,7 +35,8 @@ public class SettingsFragment extends Fragment {
 
     private View rootView;
     Context context;
-    private TextView userName;
+    private TextView userName,Location;
+
 
     public SettingsFragment() {
     }
@@ -46,6 +47,8 @@ public class SettingsFragment extends Fragment {
         //context = GlobalApplication.getAppContext();
         rootView = inflater.inflate(R.layout.settings_fragment, container, false);
         initFirebase();
+        initLayoutByID();
+
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

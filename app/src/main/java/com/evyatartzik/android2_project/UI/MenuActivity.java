@@ -98,17 +98,18 @@ public class MenuActivity extends AppCompatActivity {
      {
          ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-         homeFragment=new HomeFragment();
+         groupsFragment = new GroupsFragment();
+//         homeFragment=new HomeFragment();
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
          chatFragment = new ChatFragment();
-         groupsFragment = new GroupsFragment();
-         adapter.addFragment(homeFragment);
+
+         adapter.addFragment(groupsFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
 //         adapter.addFragment(chatFragment);
-         adapter.addFragment(groupsFragment);
+         adapter.addFragment(chatFragment);
          adapter.addFragment(settingsFragment);
 
 

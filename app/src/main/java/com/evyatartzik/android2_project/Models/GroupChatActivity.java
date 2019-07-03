@@ -54,8 +54,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
 
         currentUserId = mAuth.getCurrentUser().getUid();
-//        currentUserName = mAuth.getCurrentUser().getUid();
         mReference = FirebaseDatabase.getInstance().getReference().child("users");
+
+        //get the name of the current user
         FirebaseDatabase.getInstance().getReference("database/users").child(currentUserId).child("name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -67,8 +68,8 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
-                currentGroupName = getIntent().getExtras().get("groupName").toString();
-        Toast.makeText(this, currentGroupName, Toast.LENGTH_SHORT).show();
+        currentGroupName = getIntent().getExtras().get("groupName").toString();
+
 //        mGroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
         mGroupNameRef = FirebaseDatabase.getInstance().getReference("database/groups").child(currentGroupName);
 
@@ -166,7 +167,7 @@ public class GroupChatActivity extends AppCompatActivity {
             String chatName = (String)((DataSnapshot)iterator.next()).getValue();
             String chatTime = (String)((DataSnapshot)iterator.next()).getValue();
 
-            mDisplayMessages.append(chatName +":\n"+ chatMessage +"\n"+chatTime+"      "+chatDate+"\n\n\n");
+            mDisplayMessages.append(chatName +"  "+chatTime+"    "+chatDate+":\n"+ chatMessage+"\n\n"  );
             mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
         }
     }

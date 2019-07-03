@@ -1,26 +1,30 @@
 package com.evyatartzik.android2_project.Fragments;
 
-
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.GroupChatActivity;
 import com.evyatartzik.android2_project.R;
-import com.evyatartzik.android2_project.UI.MainActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -29,9 +33,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -46,6 +53,8 @@ public class GroupsFragment extends Fragment {
     private ArrayList<String> mListGroup = new ArrayList<>();
 
     private DatabaseReference mReference;
+
+    final Calendar myCalendar = Calendar.getInstance();
 
 
     public GroupsFragment() {
@@ -68,7 +77,7 @@ public class GroupsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String currentGroupName =  parent.getItemAtPosition(position).toString();
-                Toast.makeText(getContext(), currentGroupName+"", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), currentGroupName+"", Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(getContext(), GroupChatActivity.class);
                 intent.putExtra("groupName", currentGroupName);
@@ -122,21 +131,92 @@ public class GroupsFragment extends Fragment {
     }
 
     private void RequestNewGroup() {
+
+        View dialog_createGroup = getLayoutInflater().inflate(R.layout.dialog_create_activity, null, false);
+        final EditText titleEt = dialog_createGroup.findViewById(R.id.groupName_Et);
+        final EditText countryLocationEt = dialog_createGroup.findViewById(R.id.country_Et);
+        final EditText cityLocationEt = dialog_createGroup.findViewById(R.id.city_Et);
+        final EditText activityTypeEt = dialog_createGroup.findViewById(R.id.activityType_Et);
+        final Button timePickerBtn = dialog_createGroup.findViewById(R.id.timePickerBtn);
+        final Button datePickerBtn = dialog_createGroup.findViewById(R.id.datePickerBtn);
+
+        datePickerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                          int dayOfMonth) {
+                        // TODO Auto-generated method stub
+                        myCalendar.set(Calendar.YEAR, year);
+                        myCalendar.set(Calendar.MONTH, monthOfYear);
+                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                        String myFormat = "MM/dd/yy"; //In which you need put here
+                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
+
+                        datePickerBtn.setText(sdf.format(myCalendar.getTime()));
+                    }
+
+                };
+
+                        // TODO Auto-generated method stub
+                        new DatePickerDialog(getContext(), date, myCalendar
+                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+
+
+            }
+        });
+
+
+        timePickerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Calendar mcurrentTime = Calendar.getInstance();
+                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                        timePickerBtn.setText(selectedHour + ":" + selectedMinute);
+                    }
+                }, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+
+            }
+        });
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.AlertDialog);
-        builder.setTitle("Enter Group Name:");
-        final EditText groupNameField = new EditText(getContext());
-        groupNameField.setHint("e.g Coding Cafe");
-        builder.setView(groupNameField);
+        builder.setTitle("New activity");
+        builder.setView(dialog_createGroup);
+
 
         builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String groupName = groupNameField.getText().toString();
-                if(TextUtils.isEmpty(groupName)){
-                    Toast.makeText(getContext(), "Please write group name", Toast.LENGTH_SHORT).show();
+
+                String title = titleEt.getText().toString();
+                String county = countryLocationEt.getText().toString();
+                String city = cityLocationEt.getText().toString();
+                String activityType = activityTypeEt.getText().toString();
+                String dateStr = datePickerBtn.getText().toString();
+                String time = timePickerBtn.getText().toString();
+
+                Location location = null;
+
+
+                Activity activity = new Activity(title, location, activityType, dateStr, "",null );
+
+                if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() /*|| date.isEmpty()*/ || time.isEmpty()){
+                    Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    CreateNewGroup(groupName);
+                    CreateNewGroup(activity);
                 }
             }
         });
@@ -153,15 +233,46 @@ public class GroupsFragment extends Fragment {
 
     }
 
-    private void CreateNewGroup(final String groupname) {
-        mReference.child(groupname).setValue(groupname)
+    private void CreateNewGroup(final Activity activity) {
+        mReference.child(activity.getTitle()).setValue(activity)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(getContext(), "Group "+groupname +" Created Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Group "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
+
+
+    public void showHourPicker() {
+        final Calendar myCalender;
+        myCalender = Calendar.getInstance();
+        int hour = myCalender.get(Calendar.HOUR_OF_DAY);
+        int minute = myCalender.get(Calendar.MINUTE);
+
+
+        TimePickerDialog.OnTimeSetListener myTimeListener = new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                if (view.isShown()) {
+                    myCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                    myCalender.set(Calendar.MINUTE, minute);
+
+                }
+            }
+        };
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), android.R.style.Theme_Material_Light_Dialog_NoActionBar, myTimeListener, hour, minute, true);
+        timePickerDialog.setTitle("Choose hour:");
+//        timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        timePickerDialog.show();
+
+    }
+
+
+
+
+
 }
+

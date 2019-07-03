@@ -1,18 +1,46 @@
 package com.evyatartzik.android2_project.Models;
 
+import android.location.Location;
+
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Activity {
 
+    private String title;
+    private Location location;
     private float latitude;
     private float longitude;
     private String type;
-    private ArrayList users;
-    private String title;
-    private Date date;
+    private String date;
     private String description;
-    private Boolean is_private;
+    private ArrayList users;
+
+
+    public Activity(String title, Location location, String type, String date, String description, ArrayList users) {
+        this.title = title;
+        this.location = location;
+        this.type = type;
+        this.date = date;
+        this.description = description;
+        this.users = users;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 
     public float getLatitude() {
         return latitude;
@@ -38,27 +66,11 @@ public class Activity {
         this.type = type;
     }
 
-    public ArrayList getUsers() {
-        return users;
-    }
-
-    public void setUsers(ArrayList users) {
-        this.users = users;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -70,11 +82,11 @@ public class Activity {
         this.description = description;
     }
 
-    public Boolean getIs_private() {
-        return is_private;
+    public ArrayList getUsers() {
+        return users;
     }
 
-    public void setIs_private(Boolean is_private) {
-        this.is_private = is_private;
+    public void setUsers(ArrayList users) {
+        this.users = users;
     }
 }

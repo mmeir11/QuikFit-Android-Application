@@ -20,6 +20,14 @@
         android:textStyle="bold" />
 
     <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/signup_fragment"
+        android:elevation="10dp">
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="486dp"
         android:layout_below="@+id/login_title"
@@ -174,6 +182,7 @@
                     android:elevation="2dp"/>
 
             </RelativeLayout>
+
         </LinearLayout>
 
 
@@ -189,4 +198,6 @@
         android:background="@color/transparent"
         android:elevation="4dp"
         android:src="@drawable/quickfix_logo" />
+
+
 </RelativeLayout>

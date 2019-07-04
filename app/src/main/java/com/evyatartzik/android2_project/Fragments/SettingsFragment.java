@@ -105,7 +105,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         mAuth.signOut();
-        getActivity().onBackPressed();
+        startActivity(new Intent(getActivity(), LoginRegister.class));
+
 
     }
 }

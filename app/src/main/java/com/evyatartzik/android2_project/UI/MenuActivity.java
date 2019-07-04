@@ -192,17 +192,29 @@ public class MenuActivity extends AppCompatActivity {
 
         public void addFragment(Fragment fragment) {
             mFragmentList.add(fragment);
+
         }
 
     }
     @Override
     public void onBackPressed() {
-//        if (viewPager.getCurrentItem() != 0) {
-//            viewPager.setCurrentItem(0, true);
-//        } else {
-//        }
-        startActivity(new Intent(MenuActivity.this, LoginRegister.class));
-        finish();
+
+        if(viewPager.getCurrentItem() != 0){
+            viewPager.setCurrentItem(0,true);
+        }
+        else if (viewPager.getCurrentItem() == 0 && getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                Intent a = new Intent(Intent.ACTION_MAIN);
+                a.addCategory(Intent.CATEGORY_HOME);
+                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(a);
+
+
+        }
+        else
+            {
+                getSupportFragmentManager().popBackStack();
+            }
+
 
     }
 }

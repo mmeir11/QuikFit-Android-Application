@@ -221,6 +221,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     private void Search(){
 
+
         isAdvancedSearchOpen = false;
         advancedLayout.setVisibility(View.GONE);
 

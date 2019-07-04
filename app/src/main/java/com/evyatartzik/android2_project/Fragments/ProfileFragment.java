@@ -95,7 +95,6 @@ public class ProfileFragment extends Fragment {
                     if(post!=null ){
                         initLayoutByID();
                         textViewUserName.setText(post.getName());
-                        String location = getLocation(post.getLongitude(),post.getLatitude());
 
                         textViewUserLocation.setText(post.getLocation_string());
 

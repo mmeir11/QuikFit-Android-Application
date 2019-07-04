@@ -4,12 +4,17 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+
     <TextView
+        android:id="@+id/title_my_activates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="0dp"
         android:text="My Activitys"
-        android:textSize="30sp"
-        android:id="@+id/title_my_activates"/>
+        android:textSize="30sp" />
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -47,5 +52,13 @@
         android:layout_margin="30dp"
         android:backgroundTint="@color/colorAccent"
         android:src="@drawable/ic_add_black_24dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/home_fragment">
+
+    </RelativeLayout>
+
 
 </RelativeLayout>

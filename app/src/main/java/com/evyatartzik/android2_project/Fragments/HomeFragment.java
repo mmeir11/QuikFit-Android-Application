@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -203,7 +204,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     @Override
     public void onObjectClicked(int pos, View view) {
         Toast.makeText(getActivity(), activitiesArrayList.get(pos).getTitle(), Toast.LENGTH_SHORT).show();
-
+        floatingActionButton.hide();
+        ActivityFragment activityFragment = new ActivityFragment();
+        getActivity().getSupportFragmentManager().beginTransaction()
+        .replace(R.id.home_fragment, activityFragment , "test"). // give your fragment container id in first parameter
+        addToBackStack("test").commit();
     }
 
 

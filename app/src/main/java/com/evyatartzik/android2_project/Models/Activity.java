@@ -20,6 +20,7 @@ public class Activity {
 
 
     public Activity(){}
+
     public Activity(String title, String location, String type, String date, int maxParticipents, String description, ArrayList users) {
         this.title = title;
         this.location = location;

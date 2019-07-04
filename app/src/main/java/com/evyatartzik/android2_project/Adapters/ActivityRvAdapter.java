@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.R;
 
@@ -25,16 +26,19 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
     private ObjectListener listener;
 
     public interface ObjectListener{
-        void onObjectClicked(int pos,View view);
+       public void onObjectClicked(int pos,View view);
     }
 
     public void setListener(ObjectListener listener) {
         this.listener = listener;
     }
 
+
+
     public ActivityRvAdapter(Context mContext, ArrayList<Activity> mData) {
         this.mContext = mContext;
         this.mData = mData;
+
     }
 
     @NonNull
@@ -43,7 +47,6 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
         View view;
         view = LayoutInflater.from(mContext).inflate(R.layout.activity_card_layout,viewGroup,false);
         MyViewHolder vHolder = new MyViewHolder(view);
-
         return vHolder;
     }
 
@@ -74,7 +77,7 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
         TextView typeActivity;
         TextView location;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
 
             profilepic = itemView.findViewById(R.id.profileActivity);
@@ -84,6 +87,17 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
             typeActivity = itemView.findViewById(R.id.typeActivity);
             location = itemView.findViewById(R.id.locationActivity);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                       if( listener.getClass()!= SearchFragment.class)
+                            listener.onObjectClicked(getAdapterPosition(), v);
+                    }
+                }
+            });
+
         }
+
     }
 }

@@ -107,11 +107,16 @@
         android:layout_below="@id/appbar"
         android:layout_centerHorizontal="true">
 
-        <android.support.v7.widget.RecyclerView
+
+
+        <view class="android.support.v7.widget.RecyclerView"
+            android:id="@+id/user_preferences_logged_in"
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/user_preferences_rv">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content">
+
+        </view>
+
     </RelativeLayout>
 
 

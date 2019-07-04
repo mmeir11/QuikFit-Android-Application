@@ -70,7 +70,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         root = inflater.inflate(R.layout.home_fragment, container, false);
 
-        mReferenceActivity = FirebaseDatabase.getInstance().getReference("database/activitys");
+        mReferenceActivity = FirebaseDatabase.getInstance().getReference("database/activity");
 
         activitiesArrayList = new ArrayList<>();
         Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19", 30,"לא לאחר!!", null);
@@ -91,8 +91,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         initDataStructe();
         initFragmentByID();
         initFirebase();
-//        retrieveAndDisplayGroups();
         floatingActionButton.setOnClickListener(this);
+
+        retrieveAndDisplayGroups();
 
 
 /*
@@ -201,6 +202,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     /* open display activity fragment */
     @Override
     public void onObjectClicked(int pos, View view) {
+        Toast.makeText(getActivity(), activitiesArrayList.get(pos).getTitle(), Toast.LENGTH_SHORT).show();
 
     }
 
@@ -318,31 +320,42 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                     }
                 });
     }
+*/
+
+    private void retrieveAndDisplayGroups()
+    {
 
 
-    private void retrieveAndDisplayGroups() {
-        mReferenceActivity.addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("database");
+        DatabaseReference activitysRef = ref.child("activity");
+
+//        ActivitysList = new ArrayList<>();
+
+
+
+        activitysRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Set<String> set = new HashSet<>();
-                Iterator iterator = dataSnapshot.getChildren().iterator();
-                while (iterator.hasNext()){
-                    set.add(((DataSnapshot)iterator.next()).getKey());
-                    Activity activity = (DataSnapshot)iterator.next());
+                activitiesArrayList.clear();
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Activity activitysRef = postSnapshot.getValue(Activity.class);
+                    activitiesArrayList.add(activitysRef);
                 }
 
-//                activitiesArrayList.clear();
-//                activitiesArrayList.addAll(set);
                 activityRvAdapter.notifyDataSetChanged();
+
+
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+
+
+
     }
-*/
+
 
 
 }

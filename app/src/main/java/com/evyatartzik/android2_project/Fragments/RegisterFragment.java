@@ -278,7 +278,7 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                                         DonelottieAnimationView.playAnimation();
                                         //usersRef.child(UUID.randomUUID().toString()).setValue(user);
                                         user_id = firebaseUser.getUid();
-                                        User user = new User(user_id,name,email,userFavoriteList,0,0,"profile.image","about",location);
+                                        User user = new User(user_id,name,email,userFavoriteList,0,0,location,"profile.image","about");
                                         usersRef.child(firebaseUser.getUid()).setValue(user);
                                         uploadProfilePhoto(email);
                                         afterSucessAuth();

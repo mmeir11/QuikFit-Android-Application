@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -31,6 +33,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.Adapters.UserPreferencesAdapter;
+import com.evyatartzik.android2_project.Fragments.RegisterFragment;
+import com.evyatartzik.android2_project.Interfaces.SignupListener;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
 import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
@@ -64,7 +68,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class LoginRegister extends AppCompatActivity implements View.OnClickListener  {
 
-    File profilePhoto;
     String uploadName;
     final int CAMERA_REQUEST=1;
     private Button signupButton, loginButton;
@@ -73,24 +76,18 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private DatabaseReference usersRef, preferencesRef,uploadRef;
-    private DatabaseReference current_user_ref;
     private StorageReference mStorageRef;
     private ProgressDialog progressDialog;
-    private Uri imageUri;
-    final int CAMARA_PERRMISON_REQ = 1;
-    final int WRITE_PERRMISON_REQ = 2;
     private final int PICK_IMAGE_REQUEST = 3;
-    private CircleImageView profile_Image;
-    private File file;
-    private Uri filePath , uploadPhotoUri;
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
     private ArrayList<UserPreferences> userPreferencesList;
-    private UserPreferencesAdapter userPreferencesAdapter;
-    ItemTouchHelper.SimpleCallback callback;
-    private ArrayList<UserPreferences> userFavoriteList;
-    private String user_id;
+    private RegisterFragment SignupFragment;
+    private SignupListener signupListener;
+
+
+
+    private void setListener(SignupListener signupListener){
+        this.signupListener = signupListener;
+    }
 
     @Override
     public void onStart() {
@@ -107,7 +104,6 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         progressDialog = new ProgressDialog(this);
         setContentView(R.layout.activity_login_register);
-        profile_Image = findViewById(R.id.location_photo);
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("database");
         usersRef = ref.child("users");
@@ -115,31 +111,13 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
         /*user_preferences*/
         userPreferencesList = new ArrayList<>();
-        userFavoriteList = new ArrayList<>();
+
         initUserRefList();
-
-        userPreferencesAdapter = new UserPreferencesAdapter(this.userPreferencesList);
-
-        userPreferencesAdapter.setListener(new UserPreferencesAdapter.MyUserPrefListener() {
-            @Override
-            public void onCardClicked(int position, View view) {
-
-            }
-
-            @Override
-            public void onCheckSelected(int position, UserPreferences userPreference) {
-                Toast.makeText(LoginRegister.this, userPreference.getName(), Toast.LENGTH_SHORT).show();
-                userFavoriteList.add(userPreference);
-            }
-        });
-
 
 
         /*Firebase storage*/
         mStorageRef  = FirebaseStorage.getInstance().getReference("uploads");
         uploadRef =  FirebaseDatabase.getInstance().getReference("uploads");
-
-
 
 
         signupButton = findViewById(R.id.link_signup);
@@ -149,113 +127,12 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         auth = FirebaseAuth.getInstance();
 
 
-
-
         /*Forgot password*/
 
-
-        /*Sign up to Firebase*/
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder mBuilder = new AlertDialog.Builder(LoginRegister.this);
-                final View view = getLayoutInflater().inflate(R.layout.dialog_register, null);
-                final EditText PasswordET = view.findViewById(R.id.input_password);
-                final EditText RePasswordET = view.findViewById(R.id.repeat_password);
-                final EditText EmailET = view.findViewById(R.id.input_email);
-                final EditText NameET = view.findViewById(R.id.input_name);
-                final Button RegisterButton = view.findViewById(R.id.btn_signup);
-                final LottieAnimationView DonelottieAnimationView = view.findViewById(R.id.done_animation);
-                //final CircleImageView profile_Image = view.findViewById(R.id.location_photo);
-                initUserPref(view);
-                profile_Image = view.findViewById(R.id.location_photo);
-                profile_Image.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        file = new File(Environment.getExternalStorageDirectory(),"profile_img.jpg");
-                        imageUri = FileProvider.getUriForFile(
-                                LoginRegister.this,
-                                getPackageName()+".provider", //(use your app signature + ".provider" )
-                                file);
-
-                        if(Build.VERSION.SDK_INT>=23) {
-                            int wasCamPermission = checkSelfPermission(Manifest.permission.CAMERA);
-                            int wasWritePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-                            if(wasCamPermission != PackageManager.PERMISSION_GRANTED) {
-                                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, CAMARA_PERRMISON_REQ);
-                            }
-
-                             else
-                                 {
-                                     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                                     startActivityForResult(takePictureIntent, CAMERA_REQUEST);
-                                    }
-
-                        }
+        SignupFragment = new RegisterFragment();
+        signupButton.setOnClickListener(this);
 
 
-                    }
-                });
-                RegisterButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final String email = EmailET.getText().toString().trim();
-                        final String password = PasswordET.getText().toString().trim();
-                        final String rePassword = RePasswordET.getText().toString().trim();
-                        final String name = NameET.getText().toString().trim();
-                        if (TextUtils.isEmpty(email)) {
-                            EmailET.setError(getText(R.string.mandatory_field));
-                            return;
-                        } else if (TextUtils.isEmpty(password)) {
-                            PasswordET.setError(getText(R.string.mandatory_field));
-                            return;
-                        } else if (password.length() < 6) {
-                            PasswordET.setError(getText(R.string.password_min));
-                            return;
-                        } else if(!password.equals(rePassword))
-                        {
-                            Toast.makeText(LoginRegister.this, getText(R.string.mismatch_password), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        else if(userFavoriteList.size()==0 || userFavoriteList==null)
-                        {
-                            Toast.makeText(LoginRegister.this, R.string.selcet_pref, Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        else {
-                            auth.createUserWithEmailAndPassword(email, password)
-                                    .addOnCompleteListener(LoginRegister.this, new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (!task.isSuccessful()) {
-                                                Toast.makeText(LoginRegister.this, R.string.failure_task, Toast.LENGTH_SHORT).show();
-
-                                            } else {
-                                                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                                                Toast.makeText(LoginRegister.this, R.string.sucess_register, Toast.LENGTH_SHORT).show();
-                                                DonelottieAnimationView.setVisibility(View.VISIBLE);
-                                                DonelottieAnimationView.playAnimation();
-                                                //usersRef.child(UUID.randomUUID().toString()).setValue(user);
-                                                user_id = firebaseUser.getUid();
-                                                User user = new User(user_id,name,email,userFavoriteList,0,0,"profile.image","about");
-                                                usersRef.child(firebaseUser.getUid()).setValue(user);
-                                                uploadProfilePhoto(email);
-                                                afterSucessAuth();
-                                            }
-                                        }
-                                    });
-                        }
-                    }
-                });
-
-                mBuilder.setView(view);
-                AlertDialog alertDialog = mBuilder.create();
-                alertDialog.show();
-
-            }
-        });
         /*Login to firebase*/
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,74 +175,6 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private void initUserPref(View view) {
-        recyclerView = (RecyclerView) view.findViewById(R.id.user_preferences);
-        layoutManager = new LinearLayoutManager(LoginRegister.this);
-        ((LinearLayoutManager) layoutManager).setOrientation(0);
-        recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new UserPreferencesAdapter(userPreferencesList);
-        recyclerView.setAdapter(mAdapter);
-        callback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-
-                if(direction==ItemTouchHelper.RIGHT)
-                    Toast.makeText(LoginRegister.this, "Right", Toast.LENGTH_SHORT).show();
-                else if(direction==ItemTouchHelper.LEFT)
-                    Toast.makeText(LoginRegister.this, "Left", Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
-        recyclerView.setAdapter(userPreferencesAdapter);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == CAMARA_PERRMISON_REQ)
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            startActivityForResult(takePictureIntent, CAMERA_REQUEST);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==CAMERA_REQUEST && resultCode==RESULT_OK)
-        {
-
-            Bitmap bitmap1 = (Bitmap) BitmapFactory.decodeFile(file.getAbsolutePath());
-            Matrix matrix = new Matrix();
-            matrix.postRotate(90);
-            Bitmap bitmapRotate = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
-            profile_Image.setImageBitmap(bitmapRotate);
-            uploadPhotoUri = imageUri;
-        }
-
-        if(requestCode==PICK_IMAGE_REQUEST && resultCode==RESULT_OK && data != null && data.getData() != null){
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-
-                profile_Image.setImageBitmap(bitmap);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
-
-
-        }
-    }
 
 
     private void afterSucessAuth()
@@ -431,12 +240,12 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 alertDialog.show();
                 break;
 
+            case R.id.link_signup:
+                getSupportFragmentManager().beginTransaction().add(R.id.signup_fragment, SignupFragment,"signup_fragment").commit();
+
 
 
         }
-
-
-
 
     }
 
@@ -457,39 +266,6 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    public void uploadProfilePhoto(final String email)
-    {
-
-        if(uploadPhotoUri==null)
-        {
-            return;
-        }
-        final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
-        fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-            @Override
-            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                if (!task.isSuccessful()) {
-                    throw task.getException();
-                }
-                return fileReference.getDownloadUrl();
-            }
-        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    uploadName  = task.getResult().toString();
-                    ProfileImageUpload profileImageUpload = new ProfileImageUpload(email,uploadName);
-                    String uploadID = uploadRef.push().getKey();
-                    uploadRef.child(uploadID).setValue(profileImageUpload);
-                    usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
-                } else {
-                    Toast.makeText(LoginRegister.this, "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-
-    }
 }
 
 

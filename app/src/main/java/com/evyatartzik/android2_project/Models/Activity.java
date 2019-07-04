@@ -9,23 +9,25 @@ import java.util.UUID;
 public class Activity {
 
     private String title;
-    private Location location;
+    private String location;
     private float latitude;
     private float longitude;
     private String type;
     private String date;
     private String description;
     private ArrayList<UUID> users;
+    private int maxParticipents;
 
 
     public Activity(){}
-    public Activity(String title, Location location, String type, String date, String description, ArrayList users) {
+    public Activity(String title, String location, String type, String date, int maxParticipents, String description, ArrayList users) {
         this.title = title;
         this.location = location;
         this.type = type;
         this.date = date;
         this.description = description;
         this.users = users;
+        this.maxParticipents = maxParticipents;
     }
 
     public String getTitle() {
@@ -36,11 +38,11 @@ public class Activity {
         this.title = title;
     }
 
-    public Location getLocation() {
+    public String getLocation() {
         return location;
     }
 
-    public void setLocation(Location location) {
+    public void setLocation(String location) {
         this.location = location;
     }
 
@@ -90,5 +92,18 @@ public class Activity {
 
     public void setUsers(ArrayList users) {
         this.users = users;
+    }
+
+    public int getMaxParticipents() {
+        return maxParticipents;
+    }
+
+    public void setMaxParticipents(int maxParticipents) {
+        this.maxParticipents = maxParticipents;
+    }
+
+    public int getAmountOfParticipents(){
+        if(users == null) return 0;
+        return users.size();
     }
 }

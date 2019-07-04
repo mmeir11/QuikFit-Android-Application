@@ -2,17 +2,13 @@ package com.evyatartzik.android2_project.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.arch.lifecycle.Observer;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.button.MaterialButton;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -28,6 +24,8 @@ import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -39,7 +37,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Set;
 
 public class HomeFragment extends Fragment implements View.OnClickListener, ActivityRvAdapter.ObjectListener  {
 
@@ -55,33 +56,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     private FirebaseUser currentUser;
     private FirebaseDatabase database;
     private DatabaseReference ref , databaseUsers,dataBaseActivity;
+    private DatabaseReference mReferenceActivity;
 
     /**Arraylist of activity**/
     ArrayList<User> userArrayList;
-    ArrayList<Activity> activities;
+    ArrayList<Activity> activitiesArrayList;
+    final Calendar myCalendar = Calendar.getInstance();
 
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        /*View*/ root = inflater.inflate(R.layout.home_fragment, container, false);
+        root = inflater.inflate(R.layout.home_fragment, container, false);
 
-//        root =  inflater.inflate(R.layout.activity_fragment, container, false);
+        mReferenceActivity = FirebaseDatabase.getInstance().getReference("database/activitys");
 
-        activities = new ArrayList<>();
+        activitiesArrayList = new ArrayList<>();
+        Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19", 30,"לא לאחר!!", null);
+        activitiesArrayList.add(activity);
 
-        activityRvAdapter = new ActivityRvAdapter(getActivity(), activities);
+        activityRvAdapter = new ActivityRvAdapter(getActivity(), activitiesArrayList);
         NearByActivitysRv = root.findViewById(R.id.recycler_near_activates);
         NearByActivitysRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         NearByActivitysRv.setAdapter(activityRvAdapter);
 
-
         MyActivityRv = root.findViewById(R.id.recycler_my_activitys);
         MyActivityRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyActivityRv.setAdapter(activityRvAdapter);
-
-
 
 
         activityRvAdapter.setListener(this);
@@ -89,6 +91,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         initDataStructe();
         initFragmentByID();
         initFirebase();
+//        retrieveAndDisplayGroups();
         floatingActionButton.setOnClickListener(this);
 
 
@@ -166,6 +169,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
     }
 
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -176,33 +180,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         switch(v.getId())
         {
             case R.id.add_fb:
-                final AlertDialog.Builder mBuilder = new AlertDialog.Builder(getActivity());
-                AlertDialog alertDialog;
-                final View view = getLayoutInflater().inflate(R.layout.dialog_create_activity, null);
-                final EditText activityNameET = view.findViewById(R.id.groupName_Et);
-                final EditText activityLocationET = view.findViewById(R.id.city_Et);
-                final EditText activitiyType = view.findViewById(R.id.activityType_Et);
-                final Button buttonDatePicker = view.findViewById(R.id.datePickerBtn);
-                final Button buttonTimePicker = view.findViewById(R.id.timePickerBtn);
-                final Button buttonActivitySave = view.findViewById(R.id.save_activitiy_btn);
-                buttonActivitySave.setOnClickListener(this);
-                buttonDatePicker.setOnClickListener(this);
-                buttonTimePicker.setOnClickListener(this);
+                RequestNewGroup();
 
-                mBuilder.setView(view);
-                alertDialog = mBuilder.create();
-                alertDialog.show();
-                break;
-            case R.id.timePickerBtn:
-                break;
-            case R.id.datePickerBtn:
-                break;
-            case R.id.save_activitiy_btn: /*Created dummy activitiy object*/
+           /* case R.id.save_activitiy_btn: *//*Created dummy activitiy object*//*
                 Location location = new Location("LocationManager.GPS_PROVIDER");
-                Activity activity = new Activity("test",location,"test","123456","test",userArrayList);
+                Activity activity = new Activity("כדורגל בלה בלה", "Rishon Lezion","football", "30.5.19",30, "לא לאחר!!" , null);
                 dataBaseActivity.child(activity.getTitle()).setValue(activity);
 
-                /**update the database**/
+                *//**update the database**/
                 break;
             default:
                 Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
@@ -221,7 +206,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
 
 
-/*    private void RequestNewGroup() {
+    private void RequestNewGroup() {
 
         View dialog_createGroup = getLayoutInflater().inflate(R.layout.dialog_create_activity, null, false);
         final EditText titleEt = dialog_createGroup.findViewById(R.id.groupName_Et);
@@ -295,19 +280,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                 String county = countryLocationEt.getText().toString();
                 String city = cityLocationEt.getText().toString();
                 String activityType = activityTypeEt.getText().toString();
-                String dateStr = datePickerBtn.getText().toString();
+                String date = datePickerBtn.getText().toString();
                 String time = timePickerBtn.getText().toString();
 
-                Location location = null;
 
-
-                Activity activity = new Activity(title,location, activityType, dateStr, "",null );
-
-                if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() *//*|| date.isEmpty()*//* || time.isEmpty()){
+                if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() || time.isEmpty()){
                     Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    CreateNewGroup(activity);
+                    Activity activity = new Activity(title, city,activityType, date, 30,"לא לאחר!!", null);
+                    dataBaseActivity.child(activity.getTitle()).setValue(activity);
                 }
             }
         });
@@ -322,8 +304,45 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         builder.show();
 
 
-    }*/
+    }
 
+/*
+    private void CreateNewGroup(final Activity activity) {
+        mReferenceActivity.child(activity.getTitle()).setValue(activity)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(getContext(), "Activity "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+
+    private void retrieveAndDisplayGroups() {
+        mReferenceActivity.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Set<String> set = new HashSet<>();
+                Iterator iterator = dataSnapshot.getChildren().iterator();
+                while (iterator.hasNext()){
+                    set.add(((DataSnapshot)iterator.next()).getKey());
+                    Activity activity = (DataSnapshot)iterator.next());
+                }
+
+//                activitiesArrayList.clear();
+//                activitiesArrayList.addAll(set);
+                activityRvAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+*/
 
 
 }

@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.R;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -48,8 +50,14 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder myViewHolder, int i) {
 
-        //Fill card view item Example: "myViewHolder.profilepic.setImageBitmap(mData.get(pos).getMyBitMap());"
+        Activity activity = mData.get(i);
 
+        myViewHolder.profilepic.setImageResource(R.drawable.avatar);
+        myViewHolder.titleActivity.setText(activity.getTitle());
+        myViewHolder.amountNumber.setText(activity.getAmountOfParticipents()+"");
+        myViewHolder.amountMaxnumber.setText(activity.getMaxParticipents()+"");
+        myViewHolder.typeActivity.setText(activity.getType());
+        myViewHolder.location.setText(activity.getLocation());
     }
 
     @Override
@@ -59,36 +67,22 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        /* create the same components as card view , Example: */
-
-//        CircleImageView profilepic;
-//        TextView contactname;
-//        CardView CardView_Layout;
-//        TextView Amount_number;
-//        TextView Amount_Type;
+        CircleImageView profilepic;
+        TextView titleActivity;
+        TextView amountNumber;
+        TextView amountMaxnumber;
+        TextView typeActivity;
+        TextView location;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
-            /* Get references to card view layout items , Example: */
 
-//            profilepic = (CircleImageView) itemView.findViewById(R.id.profile_image);
-//            contactname = (TextView) itemView.findViewById(R.id.text_test);
-//            CardView_Layout = (CardView) itemView.findViewById(R.id.card_view_id);
-//            Amount_number = itemView.findViewById(R.id.amount_number);
-//            Amount_Type = itemView.findViewById(R.id.amount_type);
-
-
-            /* Set on click listner to card view items Example: */
-
-//            CardView_Layout.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if(listener != null)
-//                        listener.onObjectClicked(getAdapterPosition(),v);
-//
-//                }
-//            });
-
+            profilepic = itemView.findViewById(R.id.profileActivity);
+            titleActivity = itemView.findViewById(R.id.titleActivity);
+            amountNumber = itemView.findViewById(R.id.amountNumber);
+            amountMaxnumber = itemView.findViewById(R.id.amountMaxNumber);
+            typeActivity = itemView.findViewById(R.id.typeActivity);
+            location = itemView.findViewById(R.id.locationActivity);
 
         }
     }

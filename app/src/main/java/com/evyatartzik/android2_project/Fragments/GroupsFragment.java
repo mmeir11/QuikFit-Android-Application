@@ -207,7 +207,8 @@ public class GroupsFragment extends Fragment {
                 Location location = null;
 
 
-                Activity activity = new Activity(title,location, activityType, dateStr, "",null );
+//                Activity activity = new Activity(title,location, activityType, dateStr, "",null );
+                Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19",30, "לא לאחר!!", null);
 
                 if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() /*|| date.isEmpty()*/ || time.isEmpty()){
                     Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();
@@ -242,30 +243,6 @@ public class GroupsFragment extends Fragment {
                 });
     }
 
-
-    public void showHourPicker() {
-        final Calendar myCalender;
-        myCalender = Calendar.getInstance();
-        int hour = myCalender.get(Calendar.HOUR_OF_DAY);
-        int minute = myCalender.get(Calendar.MINUTE);
-
-
-        TimePickerDialog.OnTimeSetListener myTimeListener = new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                if (view.isShown()) {
-                    myCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
-                    myCalender.set(Calendar.MINUTE, minute);
-
-                }
-            }
-        };
-        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), android.R.style.Theme_Material_Light_Dialog_NoActionBar, myTimeListener, hour, minute, true);
-        timePickerDialog.setTitle("Choose hour:");
-//        timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        timePickerDialog.show();
-
-    }
 
 
 

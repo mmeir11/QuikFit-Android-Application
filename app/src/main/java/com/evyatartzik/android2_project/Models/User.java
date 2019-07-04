@@ -11,6 +11,7 @@ public class User {
     private float latitude;
     private float longitude;
     private String profile_pic_path;
+    private String location_string;
 
 
 
@@ -19,7 +20,7 @@ public class User {
     public User(){ }
 
 
-    public User(String uID, String name, String email, ArrayList<UserPreferences> userPreferences, float latitude, float longitude, String profile_pic_path, String about)
+    public User(String uID, String name, String email, ArrayList<UserPreferences> userPreferences, float latitude, float longitude,String location_string , String profile_pic_path, String about)
     {
         this.uID = uID;
         Name = name;
@@ -29,6 +30,7 @@ public class User {
         this.longitude = longitude;
         this.profile_pic_path = profile_pic_path;
         this.about = about;
+        this.location_string = location_string;
     }
 
     public float getLatitude() {
@@ -94,5 +96,11 @@ public class User {
         this.about = about;
     }
 
+    public String getLocation_string() {
+        return location_string;
+    }
 
+    public void setLocation_string(String location_string) {
+        this.location_string = location_string;
+    }
 }

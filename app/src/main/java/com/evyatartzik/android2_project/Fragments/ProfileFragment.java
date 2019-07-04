@@ -84,7 +84,7 @@ public class ProfileFragment extends Fragment {
                         textViewUserName.setText(post.getName());
                         String location = getLocation(post.getLongitude(),post.getLatitude());
 
-                        textViewUserLocation.setText(post.getLongitude()+" " + post.getLatitude());
+                        textViewUserLocation.setText(post.getLocation_string());
 
                         if(!post.getProfile_pic_path().equals("profile.image"))
                         {

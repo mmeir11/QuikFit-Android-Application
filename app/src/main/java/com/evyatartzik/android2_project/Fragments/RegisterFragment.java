@@ -6,23 +6,30 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -32,8 +39,14 @@ import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.UI.MenuActivity;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,10 +59,16 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,6 +78,7 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
     private android.widget.EditText RePasswordET;
     private EditText EmailET;
     private EditText NameET;
+    private EditText LocationET;
     private Button RegisterButton;
     private LottieAnimationView DonelottieAnimationView;
     private CircleImageView profile_Image;
@@ -81,6 +101,13 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
     private File profilePhoto;
     private File file;
     private String user_id;
+    private ImageView LocationImage;
+    private static final int LOCATION_PERMISSION_REQUEST = 5;
+    private FusedLocationProviderClient fusedLocationProviderClient;
+    private LocationCallback locationCallback;
+    private LocationRequest locationRequest;
+    static Location current_location;
+
 
 
     @Nullable
@@ -97,10 +124,13 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
         DonelottieAnimationView = rootView.findViewById(R.id.done_animation);
         profile_Image = rootView.findViewById(R.id.location_photo);
         chipGroup = rootView.findViewById(R.id.user_preferences);
+        LocationImage = rootView.findViewById(R.id.location_btn);
+        LocationET = rootView.findViewById(R.id.input_location);
 
 
         profile_Image.setOnClickListener(this);
         RegisterButton.setOnClickListener(this);
+        LocationImage.setOnClickListener(this);
 
 
         mStorageRef  = FirebaseStorage.getInstance().getReference("uploads");
@@ -203,6 +233,7 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                 final String password = PasswordET.getText().toString().trim();
                 final String rePassword = RePasswordET.getText().toString().trim();
                 final String name = NameET.getText().toString().trim();
+                final String location = LocationET.getText().toString().trim();
 
                 for (int i = 0; i < chipGroup.getChildCount(); ++i) {
                     Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -239,14 +270,15 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                                     if (!task.isSuccessful()) {
                                         Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
 
-                                    } else {
+                                    }
+                                    else {
                                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
                                         Toast.makeText(getActivity(), R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                         DonelottieAnimationView.setVisibility(View.VISIBLE);
                                         DonelottieAnimationView.playAnimation();
                                         //usersRef.child(UUID.randomUUID().toString()).setValue(user);
                                         user_id = firebaseUser.getUid();
-                                        User user = new User(user_id,name,email,userFavoriteList,0,0,"profile.image","about");
+                                        User user = new User(user_id,name,email,userFavoriteList,0,0,"profile.image","about",location);
                                         usersRef.child(firebaseUser.getUid()).setValue(user);
                                         uploadProfilePhoto(email);
                                         afterSucessAuth();
@@ -255,6 +287,10 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                             });
                 }
                     break;
+
+            case R.id.location_btn:
+                checkLoctionAndUpdateText();
+                break;
 
 
 
@@ -329,5 +365,89 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+    }
+
+    private void buildLocationRequest() {
+
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setSmallestDisplacement(10.0f);
+    }
+
+
+    private void buildLocationCallBack() {
+        locationCallback = new LocationCallback(){
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                current_location = locationResult.getLastLocation();
+
+            }
+        };
+
+    }
+
+
+    public void checkLoctionAndUpdateText(){
+
+        // check permissions
+        try {
+            Dexter.withActivity(getActivity())
+                    .withPermissions(Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            if (report.areAllPermissionsGranted()) {
+                                buildLocationRequest();
+                                buildLocationCallBack();
+
+                                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                    requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+
+                                }
+                                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+                                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
+                                fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                                    @Override
+                                    public void onSuccess(Location location) {
+                                        LocationET.setText(getLocationNameByLocation(location));
+
+                                    }
+                                });
+
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                            Toast.makeText(getActivity(), "Request Denied", Toast.LENGTH_SHORT).show();
+                        }
+                    }).check();
+
+        }
+
+        catch(Exception ex){
+
+            Log.d("check_prm","lala");
+        }
+    }
+
+
+    String getLocationNameByLocation(Location location) {
+        Geocoder geocoder = new Geocoder(getActivity());
+        try {
+            List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            String country = addressList.get(0).getCountryName();
+            String city = addressList.get(0).getLocality();
+            return city + ", " + country;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

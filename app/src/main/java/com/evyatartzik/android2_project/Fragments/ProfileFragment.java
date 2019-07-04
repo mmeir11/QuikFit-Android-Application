@@ -69,13 +69,11 @@ public class ProfileFragment extends Fragment {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
 
-    public ProfileFragment() {
-    }
+    public ProfileFragment() { }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Context context = GlobalApplication.getAppContext();
         rootView =  inflater.inflate(R.layout.profile_fragment, container, false);
 
 
@@ -118,28 +116,13 @@ public class ProfileFragment extends Fragment {
                 // ...
             }
         };
-        ValueEventListener userPreferencesListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userPreferences = new ArrayList<>();
-                for (DataSnapshot  snapshot: dataSnapshot.getChildren())
-                {
-                    userPreferences.add(snapshot.getValue(UserPreferences.class));
-                }
 
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        };
-
-        databaseUserPref.addValueEventListener(userPreferencesListener);
         Query query  = databaseUserPref;
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                userPreferences = new ArrayList<>();
                 for (DataSnapshot snap: dataSnapshot.getChildren())
                 {
                     userPreferences.add(snap.getValue(UserPreferences.class));
@@ -167,6 +150,7 @@ public class ProfileFragment extends Fragment {
         userPreferencesAdapter = new UserPrefAdapter(userPreferences);
 
         if(userPreferences!=null) {
+
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setAdapter(userPreferencesAdapter);
         }

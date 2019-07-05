@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
@@ -40,7 +42,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-public class ActivityFragment extends Fragment{
+public class ActivityFragment extends Fragment implements View.OnClickListener {
 
     View root;
 
@@ -50,10 +52,54 @@ public class ActivityFragment extends Fragment{
 
         root =  inflater.inflate(R.layout.activity_fragment, container, false);
 
+        TextView titleTv = root.findViewById(R.id.title_activity);
+        TextView typeTv = root.findViewById(R.id.type_activity);
+        TextView locationTv = root.findViewById(R.id.location_activity);
+        TextView dateTv = root.findViewById(R.id.date_activity);
+        TextView timeTv = root.findViewById(R.id.time_activity);
+        TextView numParticipantsTv = root.findViewById(R.id.numParticipants);
+        TextView maxNumParticipantsTv = root.findViewById(R.id.maxNumParticipants);
+        Switch confirmArravSwtich = root.findViewById(R.id.confirmArravSwtich);
+        Button chatBtn = root.findViewById(R.id.chatBtn);
+
+
+        /*
+        String strtext=getArguments().getString("message");
+        String title = getArguments().getString("title");
+        String type = getArguments().getString("type");
+        String location = getArguments().getString("location");
+        String date = getArguments().getString("date");
+        String time = getArguments().getString("time");
+        int numOfPart = getArguments().getInt("numOfPart");
+        int maxPart =  getArguments().getInt("maxPart");
+        */
+
+        Activity activity = (Activity)getArguments().getSerializable("activity");
+
+        titleTv.setText(activity.getTitle());
+        typeTv.setText(activity.getType());
+        locationTv.setText(activity.getLocation());
+        dateTv.setText(activity.getDate());
+        timeTv.setText(activity.getTime());
+        numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
+        maxNumParticipantsTv.setText(activity.getMaxParticipents() + "");
+        confirmArravSwtich.setChecked(activity.getConfirm());
+        chatBtn.setOnClickListener(this);
+
 
 
         return root;
     }
+
+
+    @Override
+    public void onClick(View v) {
+
+        if(v.getId() == R.id.chatBtn) {
+
+        }
+    }
+
 
 
 }

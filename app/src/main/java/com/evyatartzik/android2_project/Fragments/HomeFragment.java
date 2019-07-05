@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         mReferenceActivity = FirebaseDatabase.getInstance().getReference("database/activity");
 
         activitiesArrayList = new ArrayList<>();
-        Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19", 30,"לא לאחר!!", null);
+        Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19", "20:30", 30,"לא לאחר!!", null);
         activitiesArrayList.add(activity);
 
         activityRvAdapter = new ActivityRvAdapter(getActivity(), activitiesArrayList);
@@ -95,35 +95,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         floatingActionButton.setOnClickListener(this);
 
         retrieveAndDisplayGroups();
-
-
-/*
-        ValueEventListener activityListener = new ValueEventListener() {
-
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User post = null;
-                try
-                {
-                    post = dataSnapshot.getValue(User.class);
-                }
-                catch (Exception ex)
-                {
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
-                }
-                if(post!=null ){
-                    initFragmentByID();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                // ...
-            }
-        };
-*/
 
         ValueEventListener userListener = new ValueEventListener() {
 
@@ -203,9 +174,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     /* open display activity fragment */
     @Override
     public void onObjectClicked(int pos, View view) {
-        Toast.makeText(getActivity(), activitiesArrayList.get(pos).getTitle(), Toast.LENGTH_SHORT).show();
-        floatingActionButton.hide();
+
+//        Toast.makeText(getActivity(), activitiesArrayList.get(pos).getTitle(), Toast.LENGTH_SHORT).show();
+        Activity activity = activitiesArrayList.get(pos);
+        String title = activity.getTitle();
+        String type = activity.getType();
+        String location = activity.getLocation();
+        String date = activity.getDate();
+        String time = activity.getTime();
+        int numOfPart = activity.getAmountOfParticipents();
+        int maxPart = activity.getMaxParticipents();
+
+//        floatingActionButton.hide();
         ActivityFragment activityFragment = new ActivityFragment();
+
+        Bundle bundle=new Bundle();
+  /*      bundle.putString("title", title);
+        bundle.putString("type", type);
+        bundle.putString("location", location);
+        bundle.putString("date", date);
+        bundle.putString("time", time);
+        bundle.putInt("numOfPart", numOfPart);
+        bundle.putInt("maxPart", maxPart);*/
+
+        bundle.putSerializable("activity", activity);
+        //set Fragmentclass Arguments
+        activityFragment.setArguments(bundle);
+
         getActivity().getSupportFragmentManager().beginTransaction()
         .replace(R.id.home_fragment, activityFragment , "test"). // give your fragment container id in first parameter
         addToBackStack("test").commit();
@@ -295,7 +290,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                     Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                    Activity activity = new Activity(title, city,activityType, date, 30,"לא לאחר!!", null);
+                    Activity activity = new Activity(title, city,activityType, date, time, 30,"לא לאחר!!", null);
                     dataBaseActivity.child(activity.getTitle()).setValue(activity);
                 }
             }

@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
+import com.evyatartzik.android2_project.Models.GroupChatActivity;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.UI.LoginRegister;
@@ -45,6 +46,7 @@ import java.util.ArrayList;
 public class ActivityFragment extends Fragment implements View.OnClickListener {
 
     View root;
+    Activity activity;
 
 
     @Override
@@ -62,19 +64,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
         Switch confirmArravSwtich = root.findViewById(R.id.confirmArravSwtich);
         Button chatBtn = root.findViewById(R.id.chatBtn);
 
-
-        /*
-        String strtext=getArguments().getString("message");
-        String title = getArguments().getString("title");
-        String type = getArguments().getString("type");
-        String location = getArguments().getString("location");
-        String date = getArguments().getString("date");
-        String time = getArguments().getString("time");
-        int numOfPart = getArguments().getInt("numOfPart");
-        int maxPart =  getArguments().getInt("maxPart");
-        */
-
-        Activity activity = (Activity)getArguments().getSerializable("activity");
+        activity = (Activity)getArguments().getSerializable("activity");
 
         titleTv.setText(activity.getTitle());
         typeTv.setText(activity.getType());
@@ -97,6 +87,10 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
 
         if(v.getId() == R.id.chatBtn) {
 
+
+            Intent intent = new Intent(getContext(), GroupChatActivity.class);
+            intent.putExtra("groupName", activity.getTitle());
+            startActivity(intent);
         }
     }
 

@@ -175,30 +175,16 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     @Override
     public void onObjectClicked(int pos, View view) {
 
-//        Toast.makeText(getActivity(), activitiesArrayList.get(pos).getTitle(), Toast.LENGTH_SHORT).show();
         Activity activity = activitiesArrayList.get(pos);
-        String title = activity.getTitle();
-        String type = activity.getType();
-        String location = activity.getLocation();
-        String date = activity.getDate();
-        String time = activity.getTime();
-        int numOfPart = activity.getAmountOfParticipents();
-        int maxPart = activity.getMaxParticipents();
 
 //        floatingActionButton.hide();
         ActivityFragment activityFragment = new ActivityFragment();
 
         Bundle bundle=new Bundle();
-  /*      bundle.putString("title", title);
-        bundle.putString("type", type);
-        bundle.putString("location", location);
-        bundle.putString("date", date);
-        bundle.putString("time", time);
-        bundle.putInt("numOfPart", numOfPart);
-        bundle.putInt("maxPart", maxPart);*/
+
 
         bundle.putSerializable("activity", activity);
-        //set Fragmentclass Arguments
+        //set Fragment Arguments
         activityFragment.setArguments(bundle);
 
         getActivity().getSupportFragmentManager().beginTransaction()
@@ -291,6 +277,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                 }
                 else{
                     Activity activity = new Activity(title, city,activityType, date, time, 30,"לא לאחר!!", null);
+                    CreateNewChat(activity);
                     dataBaseActivity.child(activity.getTitle()).setValue(activity);
                 }
             }
@@ -308,19 +295,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
     }
 
-/*
-    private void CreateNewGroup(final Activity activity) {
-        mReferenceActivity.child(activity.getTitle()).setValue(activity)
+
+    private void CreateNewChat(final Activity activity) {
+        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("database/chats");
+
+        mReference.child(activity.getTitle()).setValue(activity.getTitle())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(getContext(), "Activity "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Chat "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
-*/
+
 
     private void retrieveAndDisplayGroups()
     {

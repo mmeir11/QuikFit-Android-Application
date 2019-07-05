@@ -81,13 +81,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Scheduled: "/>
+            android:text="Scheduled:  "/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="20-01-93"
             android:id="@+id/date_activity"/>
+
+        <Space
+            android:layout_width="10dp"
+            android:layout_height="wrap_content" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -141,7 +145,8 @@
         android:layout_below="@id/confirmArravSwtich"
         android:layout_centerInParent="true"
         android:layout_marginTop="100dp"
-        android:text="Chat"/>
+        android:text="Chat"
+        android:id="@+id/chatBtn"/>
 
 
 </RelativeLayout>

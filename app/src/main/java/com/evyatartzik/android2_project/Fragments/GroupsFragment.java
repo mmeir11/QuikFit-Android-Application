@@ -208,7 +208,7 @@ public class GroupsFragment extends Fragment {
 
 
 //                Activity activity = new Activity(title,location, activityType, dateStr, "",null );
-                Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19",30, "לא לאחר!!", null);
+                Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19", "20:30", 30, "לא לאחר!!", null);
 
                 if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() /*|| date.isEmpty()*/ || time.isEmpty()){
                     Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();

@@ -2,11 +2,12 @@ package com.evyatartzik.android2_project.Models;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-public class Activity {
+public class Activity implements Serializable {
 
     private String title;
     private String location;
@@ -14,21 +15,25 @@ public class Activity {
     private float longitude;
     private String type;
     private String date;
+    private String time;
     private String description;
     private ArrayList<UUID> users;
     private int maxParticipents;
+    private Boolean isConfirm;
 
 
     public Activity(){}
 
-    public Activity(String title, String location, String type, String date, int maxParticipents, String description, ArrayList users) {
+    public Activity(String title, String location, String type, String date, String time, int maxParticipents, String description, ArrayList users) {
         this.title = title;
         this.location = location;
         this.type = type;
         this.date = date;
+        this.time = time;
         this.description = description;
         this.users = users;
         this.maxParticipents = maxParticipents;
+        isConfirm = false;
     }
 
     public String getTitle() {
@@ -95,6 +100,22 @@ public class Activity {
         this.users = users;
     }
 
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public Boolean getConfirm() {
+        return isConfirm;
+    }
+
+    public void setConfirm(Boolean confirm) {
+        isConfirm = confirm;
+    }
+
     public int getMaxParticipents() {
         return maxParticipents;
     }
@@ -107,4 +128,17 @@ public class Activity {
         if(users == null) return 0;
         return users.size();
     }
+
+    public boolean isInActivity(UUID uuid){
+        if(users.contains(uuid))
+            isConfirm = true;
+
+        else
+            isConfirm = false;
+
+        return isConfirm;
+
+    }
+
+
 }

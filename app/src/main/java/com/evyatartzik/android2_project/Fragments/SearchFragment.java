@@ -14,6 +14,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
@@ -80,7 +83,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private EditText freeTextTv;
     ChipGroup chipGroup;
     LinearLayout advancedLayout;
-    ImageView searchBg;
+    LottieAnimationView searchBg;
     Button buttonSearch;
     private ArrayList<Activity> activitiesByUsers;
     private boolean userSelectedLocationSearch = false;
@@ -137,6 +140,24 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
         loctionButton.setOnClickListener(this);
         buttonSearch.setOnClickListener(this);
+
+        freeTextTv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                userSelectedLocationSearch = false;
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
 
         return rootView;
 
@@ -234,7 +255,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         Toast.makeText(getActivity(), "Searching...", Toast.LENGTH_SHORT).show();
         isAdvancedSearchOpen = false;
         advancedLayout.setVisibility(View.GONE);
-
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(freeTextTv.getWindowToken(), 0);
 
@@ -263,10 +283,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         }
         else if (freeTextTv.getText().toString().isEmpty())
         {
-            Toast.makeText(getActivity(), "Please select chip or search by location / input text", Toast.LENGTH_SHORT).show();
-        }
+            Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
 
-        updateRecyclerView();
+        }
+        if(getListSize()!=0)
+        {
+            updateRecyclerView();
+        }
+    }
+
+    private int getListSize() {
+        return usersMatchedBySearch.size()+activitiesByUsers.size()+nearByActivities.size();
     }
 
     private void cleanLists() {

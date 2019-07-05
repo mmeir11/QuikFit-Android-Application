@@ -12,6 +12,7 @@ import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -32,6 +33,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
+import com.evyatartzik.android2_project.Adapters.UsersRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Models.UserPreferences;
@@ -58,7 +60,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class SearchFragment extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener, ActivityRvAdapter.ObjectListener {
+public class SearchFragment extends Fragment implements View.OnClickListener, TextView.OnEditorActionListener, ActivityRvAdapter.ObjectListener, UsersRvAdapter.UserObjectListener {
 
     private static final int LOCATION_PERMISSION_REQUEST = 1;
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -73,9 +75,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private ArrayList<User> usersMatchedBySearch;
     private  ArrayList<Activity> databaseActivities;
     private ArrayList<Activity> SearchActivityList;
-    private ActivityRvAdapter activityRvAdapter;
-    private RecyclerView SearchRv;
 
+
+    private ActivityRvAdapter activityRvAdapter;
+    private RecyclerView activitySearchRv;
+
+    private UsersRvAdapter usersRvAdapter;
+    private RecyclerView userSearchRv;
 
 
 
@@ -88,7 +94,9 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private ArrayList<Activity> activitiesByUsers;
     private boolean userSelectedLocationSearch = false;
     private ArrayList<Activity> nearByActivities;
-    private RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager activityLayoutManager;
+    private RecyclerView.LayoutManager userLayoutManager;
+
 
 
     public SearchFragment() {
@@ -99,17 +107,26 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.search_fragment, container, false);
+
+
         SearchActivityList = new ArrayList<>();
         activityRvAdapter = new ActivityRvAdapter(getActivity(), SearchActivityList);
-        SearchRv = rootView.findViewById(R.id.search_results_rv);
-        SearchRv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        SearchRv.setAdapter(activityRvAdapter);
-        buttonSearch = rootView.findViewById(R.id.search_btn);
+        activitySearchRv = rootView.findViewById(R.id.activitys_search_results_rv);
+        activitySearchRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        activitySearchRv.setAdapter(activityRvAdapter);
         activityRvAdapter.setListener(this);
 
+        usersMatchedBySearch = new ArrayList<>();
+        usersRvAdapter = new UsersRvAdapter(getActivity(), usersMatchedBySearch);
+        userSearchRv = rootView.findViewById(R.id.user_search_results_rv);
+        userSearchRv.setLayoutManager(new GridLayoutManager(getActivity(),3, LinearLayoutManager.VERTICAL, false));
+        //userSearchRv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        userSearchRv.setAdapter(usersRvAdapter);
+        usersRvAdapter.setListener(this);
 
+
+        buttonSearch = rootView.findViewById(R.id.search_btn);
         loctionButton = rootView.findViewById(R.id.location_btn);
-
         advancedLayout = rootView.findViewById(R.id.advanced_layout);
         searchBg = rootView.findViewById(R.id.search_bg);
         final TextView rangeTv = rootView.findViewById(R.id.range_tv);
@@ -326,7 +343,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         for (String activity: activities) {
             for(Activity activity1: databaseActivities)
             {
-                if(activity1.getType().toLowerCase().equals(activity.toLowerCase()))
+                if(activity1.getType().toLowerCase().contains(activity.toLowerCase()))
                 {
                     allDatabaseActivitiesByChips.add(activity1);
                 }
@@ -337,12 +354,24 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     private void updateRecyclerView() {
         searchBg.setVisibility(View.GONE);
-        layoutManager = new LinearLayoutManager(getActivity());
-        ((LinearLayoutManager) layoutManager).setOrientation(0);
-        SearchRv.setLayoutManager(layoutManager);
+
+
+        activityLayoutManager = new LinearLayoutManager(getActivity());
+        ((LinearLayoutManager) activityLayoutManager).setOrientation(1);
+        activitySearchRv.setLayoutManager(activityLayoutManager);
         activityRvAdapter = new ActivityRvAdapter(getActivity(),activitiesByUsers) ;
-        SearchRv.setAdapter(activityRvAdapter);
+        activitySearchRv.setAdapter(activityRvAdapter);
+
+//        userLayoutManager = new LinearLayoutManager(getActivity());
+//        ((LinearLayoutManager) userLayoutManager).setOrientation(1);
+        userLayoutManager = new GridLayoutManager(getActivity(),3, LinearLayoutManager.VERTICAL, false);
+        userSearchRv.setLayoutManager(userLayoutManager);
+        usersRvAdapter = new UsersRvAdapter(getActivity(),usersMatchedBySearch) ;
+        userSearchRv.setAdapter(usersRvAdapter);
+
+
         activityRvAdapter.notifyDataSetChanged();
+        usersRvAdapter.notifyDataSetChanged();
 
     }
 
@@ -460,8 +489,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     }
 
     /* open display activity fragment */
+
     @Override
-    public void onObjectClicked(int pos, View view) {
+    public void onActivityObjectClicked(int pos, View view) {
+
+    }
+
+    @Override
+    public void onUserObjectClicked(int pos, View view) {
 
     }
 }

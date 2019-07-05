@@ -129,6 +129,7 @@ public class MenuActivity extends AppCompatActivity {
 
              @Override
              public void onPageSelected(int i) {
+                 getSupportFragmentManager().popBackStack();
                  if (prevMenuItem != null) {
                      prevMenuItem.setChecked(false);
                  } else {
@@ -165,6 +166,8 @@ public class MenuActivity extends AppCompatActivity {
                     case R.id.action_more:
                         viewPager.setCurrentItem(4, true);
                         break;
+                    default:
+                        getSupportFragmentManager().popBackStack();
                 }
 
                 return false;
@@ -200,9 +203,12 @@ public class MenuActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         if(viewPager.getCurrentItem() != 0){
+            getSupportFragmentManager().popBackStack();
             viewPager.setCurrentItem(0,true);
+
         }
         else if (viewPager.getCurrentItem() == 0 && getSupportFragmentManager().getBackStackEntryCount() == 0) {
+                getSupportFragmentManager().popBackStack();
                 Intent a = new Intent(Intent.ACTION_MAIN);
                 a.addCategory(Intent.CATEGORY_HOME);
                 a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

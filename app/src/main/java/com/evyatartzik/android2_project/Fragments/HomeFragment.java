@@ -153,14 +153,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         switch(v.getId())
         {
             case R.id.add_fb:
-                RequestNewGroup();
+               //RequestNewGroup();
 
-           /* case R.id.save_activitiy_btn: *//*Created dummy activitiy object*//*
-                Location location = new Location("LocationManager.GPS_PROVIDER");
-                Activity activity = new Activity("כדורגל בלה בלה", "Rishon Lezion","football", "30.5.19",30, "לא לאחר!!" , null);
-                dataBaseActivity.child(activity.getTitle()).setValue(activity);
+                CreateActivityFragment createActivityFragment = new CreateActivityFragment();
 
-                *//**update the database**/
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.home_fragment, createActivityFragment , "test"). // give your fragment container id in first parameter
+                        addToBackStack("test").commit();
+
+
                 break;
             default:
                 Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
@@ -172,25 +173,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
 
     /* open display activity fragment */
-    @Override
-    public void onObjectClicked(int pos, View view) {
-
-        Activity activity = activitiesArrayList.get(pos);
-
-//        floatingActionButton.hide();
-        ActivityFragment activityFragment = new ActivityFragment();
-
-        Bundle bundle=new Bundle();
 
 
-        bundle.putSerializable("activity", activity);
-        //set Fragment Arguments
-        activityFragment.setArguments(bundle);
-
-        getActivity().getSupportFragmentManager().beginTransaction()
-        .replace(R.id.home_fragment, activityFragment , "test"). // give your fragment container id in first parameter
-        addToBackStack("test").commit();
-    }
 
 
 
@@ -346,7 +330,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     }
 
 
+    @Override
+    public void onActivityObjectClicked(int pos, View view) {
 
+
+        Activity activity = activitiesArrayList.get(pos);
+
+//        floatingActionButton.hide();
+        ActivityFragment activityFragment = new ActivityFragment();
+
+        Bundle bundle=new Bundle();
+
+
+        bundle.putSerializable("activity", activity);
+        //set Fragment Arguments
+        activityFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_fragment, activityFragment , "test"). // give your fragment container id in first parameter
+                addToBackStack("test").commit();
+    }
 
 
 }

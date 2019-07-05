@@ -26,7 +26,7 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
     private ObjectListener listener;
 
     public interface ObjectListener{
-       public void onObjectClicked(int pos,View view);
+       public void onActivityObjectClicked(int pos,View view);
     }
 
     public void setListener(ObjectListener listener) {
@@ -92,7 +92,7 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
                 public void onClick(View v) {
                     if(listener != null){
                        if( listener.getClass()!= SearchFragment.class)
-                            listener.onObjectClicked(getAdapterPosition(), v);
+                            listener.onActivityObjectClicked(getAdapterPosition(), v);
                     }
                 }
             });

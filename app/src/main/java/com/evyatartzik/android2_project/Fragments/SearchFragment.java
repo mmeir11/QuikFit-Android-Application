@@ -21,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
+import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -64,7 +65,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private ImageView loctionButton;
     private View rootView;
     private ArrayList<UserPreferences> PreferencesList;
-    private ArrayList<Activity> ActivitysList;
+    private ArrayList<User> databaseUsers;
+
+    private ArrayList<User> usersMatchedBySearch;
+    private  ArrayList<Activity> databaseActivities;
     private ArrayList<Activity> SearchActivityList;
     private ActivityRvAdapter activityRvAdapter;
     private RecyclerView SearchRv;
@@ -77,7 +81,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     ChipGroup chipGroup;
     LinearLayout advancedLayout;
     ImageView searchBg;
-
+    Button buttonSearch;
+    private ArrayList<Activity> activitiesByUsers;
+    private boolean userSelectedLocationSearch = false;
+    private ArrayList<Activity> nearByActivities;
 
 
     public SearchFragment() {
@@ -93,6 +100,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         SearchRv = rootView.findViewById(R.id.search_results_rv);
         SearchRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         SearchRv.setAdapter(activityRvAdapter);
+        buttonSearch = rootView.findViewById(R.id.search_btn);
         activityRvAdapter.setListener(this);
 
 
@@ -114,7 +122,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
         getAllActivitysTypeList_And_Add_choices();
 
-        //getAllActivitys();
+        getAllUsers();
+        getAllActivities();
 
         ImageView advancedSearchBtn = rootView.findViewById(R.id.advanced_search_btn);
         advancedSearchBtn.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +135,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         });
 
         loctionButton.setOnClickListener(this);
-
+        buttonSearch.setOnClickListener(this);
 
         return rootView;
 
@@ -158,7 +167,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     }
 
 
-    public void checkLoctionAndUpdateText(){
+    public void checkLocationAndUpdateText(){
 
     // check permissions
     try {
@@ -221,29 +230,95 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     private void Search(){
 
-
+        Toast.makeText(getActivity(), "Searching...", Toast.LENGTH_SHORT).show();
         isAdvancedSearchOpen = false;
         advancedLayout.setVisibility(View.GONE);
 
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(freeTextTv.getWindowToken(), 0);
 
-        ArrayList<String> activitys = new ArrayList<>();
+        ArrayList<String> activities = new ArrayList<>();
+        usersMatchedBySearch = new ArrayList<>();
+        activitiesByUsers =  new ArrayList<>();
+        nearByActivities = new ArrayList<>();
+
 
         for (int i = 0; i < chipGroup.getChildCount(); ++i) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
             if (chip.isChecked()) {
-                activitys.add((String) chip.getText());
+                activities.add((String) chip.getText());
+            }//Get all user's selected activities
+
             }
+        if(activities.size()!=0)/*If user select search by chips*/
+        {
+            usersMatchedBySearch = getMatchUsers(activities); //return all users with same preferences
+            activitiesByUsers = getActivitiesByChips(activities);//return all activities with same title
 
         }
+        /*If user select location method search*/
+        if(userSelectedLocationSearch) //return all users with same location
+        {
+            String location = freeTextTv.getText().toString();
+            nearByActivities = getActivitiesByLocation(location);
+        }
+        else if (freeTextTv.getText().toString().isEmpty())
+        {
+            Toast.makeText(getActivity(), "Please select chip or search by location / input text", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private ArrayList<Activity> getActivitiesByLocation(String location) {
+        ArrayList<Activity> allDatabaseActivitiesByChips = new ArrayList<>();
+         for(Activity activity1: databaseActivities)
+            {
+                if(activity1.getTitle().equals(location))
+                {
+                    allDatabaseActivitiesByChips.add(activity1);
+                }
+            }
+        return allDatabaseActivitiesByChips;
+    }
 
 
-        // Add here search logic
+    private ArrayList<User> getMatchUsers(ArrayList<String> activities) {
+        ArrayList<User> usersBySameActivities = new ArrayList<>();
+
+        for (String activity:activities) {
+            for (User user: databaseUsers) {
+                for (UserPreferences userPreferences: user.getUserPreferences())
+                {
+                    if(userPreferences.getName().equals(activity) || userPreferences.getName().equals(activity.toLowerCase()))
+                    {
+                        //Match !
+                        usersBySameActivities.add(user);
+                        break;
+                    }
+                }
+            }
+    }
+
+    return usersBySameActivities;
+    // Add here search logic
+
+
 
 
     }
 
+    private ArrayList<Activity> getActivitiesByChips(ArrayList<String> activities) {
+        ArrayList<Activity> allDatabaseActivitiesByChips = new ArrayList<>();
+        for (String activity: activities) {
+            for(Activity activity1: databaseActivities)
+            {
+                if(activity1.getType().equals(activity))
+                {
+                    allDatabaseActivitiesByChips.add(activity1);
+                }
+            }
+        }
+                return allDatabaseActivitiesByChips;
+    }
 
     public void getAllActivitysTypeList_And_Add_choices(){
 
@@ -278,13 +353,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     }
 
 
-    public void getAllActivitys(){
+    public void getAllUsers(){
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("database");
-        DatabaseReference activitysRef = ref.child("activity");
+        DatabaseReference activitysRef = ref.child("users");
 
-        ActivitysList = new ArrayList<>();
+        databaseUsers = new ArrayList<>();
 
 
 
@@ -292,8 +367,33 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Activity activitysRef = postSnapshot.getValue(Activity.class);
-                    ActivitysList.add(activitysRef);
+                    User user = postSnapshot.getValue(User.class);
+                    databaseUsers.add(user);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
+    public void getAllActivities(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("database");
+        DatabaseReference activitysRef = ref.child("activity");
+
+        databaseActivities = new ArrayList<>();
+
+
+
+        activitysRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Activity activity = postSnapshot.getValue(Activity.class);
+                    databaseActivities.add(activity);
                 }
 
             }
@@ -309,7 +409,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         switch (v.getId()){
 
             case R.id.location_btn:
-                checkLoctionAndUpdateText();
+                checkLocationAndUpdateText();
+                userSelectedLocationSearch = true;
+                break;
+            case R.id.search_btn:
+                Search();
+                break;
+                default:
+                    Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
 
         }
 
@@ -318,6 +425,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     @Override
     public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+        userSelectedLocationSearch = false;
         if (i == EditorInfo.IME_ACTION_SEARCH) {
             Search();
             return true;

@@ -239,9 +239,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         imm.hideSoftInputFromWindow(freeTextTv.getWindowToken(), 0);
 
         ArrayList<String> activities = new ArrayList<>();
-        usersMatchedBySearch = new ArrayList<>();
-        activitiesByUsers =  new ArrayList<>();
-        nearByActivities = new ArrayList<>();
+        cleanLists();
 
 
         for (int i = 0; i < chipGroup.getChildCount(); ++i) {
@@ -259,7 +257,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         }
         /*If user select location method search*/
         if(userSelectedLocationSearch) //return all users with same location
-        {
+        {//userSelectedLocationSearch=true if user press location
             String location = freeTextTv.getText().toString();
             nearByActivities = getActivitiesByLocation(location);
         }
@@ -269,6 +267,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         }
 
         updateRecyclerView();
+    }
+
+    private void cleanLists() {
+        usersMatchedBySearch = new ArrayList<>();
+        activitiesByUsers =  new ArrayList<>();
+        nearByActivities = new ArrayList<>();
     }
 
     private ArrayList<Activity> getActivitiesByLocation(String location) {

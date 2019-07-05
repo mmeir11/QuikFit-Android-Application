@@ -85,6 +85,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private ArrayList<Activity> activitiesByUsers;
     private boolean userSelectedLocationSearch = false;
     private ArrayList<Activity> nearByActivities;
+    private RecyclerView.LayoutManager layoutManager;
 
 
     public SearchFragment() {
@@ -266,6 +267,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         {
             Toast.makeText(getActivity(), "Please select chip or search by location / input text", Toast.LENGTH_SHORT).show();
         }
+
+        updateRecyclerView();
     }
 
     private ArrayList<Activity> getActivitiesByLocation(String location) {
@@ -279,7 +282,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
             }
         return allDatabaseActivitiesByChips;
     }
-
 
     private ArrayList<User> getMatchUsers(ArrayList<String> activities) {
         ArrayList<User> usersBySameActivities = new ArrayList<>();
@@ -311,13 +313,24 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         for (String activity: activities) {
             for(Activity activity1: databaseActivities)
             {
-                if(activity1.getType().equals(activity))
+                if(activity1.getType().toLowerCase().equals(activity.toLowerCase()))
                 {
                     allDatabaseActivitiesByChips.add(activity1);
                 }
             }
         }
                 return allDatabaseActivitiesByChips;
+    }
+
+    private void updateRecyclerView() {
+        searchBg.setVisibility(View.GONE);
+        layoutManager = new LinearLayoutManager(getActivity());
+        ((LinearLayoutManager) layoutManager).setOrientation(0);
+        SearchRv.setLayoutManager(layoutManager);
+        activityRvAdapter = new ActivityRvAdapter(getActivity(),activitiesByUsers) ;
+        SearchRv.setAdapter(activityRvAdapter);
+        activityRvAdapter.notifyDataSetChanged();
+
     }
 
     public void getAllActivitysTypeList_And_Add_choices(){

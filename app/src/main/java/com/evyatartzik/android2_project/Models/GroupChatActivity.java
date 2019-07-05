@@ -118,7 +118,6 @@ public class GroupChatActivity extends AppCompatActivity {
             messageInfoMap.put("time", currentTime);
 
             mGroupMessageRef.updateChildren(messageInfoMap);
-
             // notify to all the users with thier Uids.
 
 

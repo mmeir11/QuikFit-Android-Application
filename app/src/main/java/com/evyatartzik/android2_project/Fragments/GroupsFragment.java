@@ -23,7 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Models.Activity;
-import com.evyatartzik.android2_project.Models.GroupChatActivity;
+import com.evyatartzik.android2_project.Models.ChatActivity;
 import com.evyatartzik.android2_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -76,7 +76,7 @@ public class GroupsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 String currentGroupName =  parent.getItemAtPosition(position).toString();
-                Intent intent = new Intent(getContext(), GroupChatActivity.class);
+                Intent intent = new Intent(getContext(), ChatActivity.class);
                 intent.putExtra("groupName", currentGroupName);
                 startActivity(intent);
             }

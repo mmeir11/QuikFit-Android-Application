@@ -3,18 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:id="@+id/top_action_bar"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/topbar"
+        android:elevation="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="@color/white"
+            android:text="@string/app_name"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
 
 
     <TextView
         android:id="@+id/title_my_activates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/top_action_bar"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="0dp"
         android:layout_marginEnd="0dp"
         android:text="My Activitys"
-        android:textSize="30sp" />
+        android:textSize="20sp"
+        android:fontFamily="@font/heebo_bold_xml"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -31,8 +49,9 @@
         android:layout_height="wrap_content"
         android:text="Near Activitys"
         android:layout_below="@+id/recycler_my_activitys"
-        android:textSize="30sp"
-        android:id="@+id/title_near_activates"/>
+        android:textSize="20sp"
+        android:id="@+id/title_near_activates"
+        android:fontFamily="@font/heebo_bold_xml"/>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
@@ -54,9 +73,9 @@
         android:src="@drawable/ic_add_black_24dp"/>
 
     <RelativeLayout
+        android:id="@+id/home_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/home_fragment">
+        android:layout_height="match_parent">
 
     </RelativeLayout>
 

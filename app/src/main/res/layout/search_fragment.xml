@@ -38,12 +38,19 @@
                     android:id="@+id/search_results_rv">
                 </android.support.v7.widget.RecyclerView>
 
-                <ImageView
+
+
+                <com.airbnb.lottie.LottieAnimationView
                     android:id="@+id/search_bg"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:scaleType="fitCenter"
                     android:layout_centerInParent="true"
-                    android:src="@drawable/ic_worker" />
+                    app:lottie_autoPlay="true"
+                    app:lottie_fileName="search.json"
+                    app:lottie_loop="true" />
             </RelativeLayout>
 
         </LinearLayout>

@@ -3,54 +3,91 @@
     android:id="@+id/card_view_id"
     android:foreground="?android:attr/selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="120dp"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="2dp"
-    cardview:cardCornerRadius="8dp"
-    android:elevation="5dp">
+    cardview:cardCornerRadius="3dp"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginTop="10dp"
+    android:elevation="8dp">
 
     <RelativeLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
         xmlns:tools="http://schemas.android.com/tools">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:transitionName="image_transition"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:padding="5dp"
-            app:civ_border_color="#FF000000"
-            app:civ_border_width="2dp"
-            android:layout_marginEnd="20dp"
-            tools:layout_editor_absoluteX="40dp"
-            tools:layout_editor_absoluteY="41dp"
-            android:src="@drawable/avatar"
-            android:id="@+id/profileActivity"/>
-
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/activity_details"
+        android:layout_marginHorizontal="15dp">
         <TextView
             android:layout_width="wrap_content"
             android:transitionName="text_transition"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@+id/profileActivity"
-            android:layout_centerVertical="true"
             android:text="Title"
             android:textColor="#000"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:fontFamily="@font/heebo_bold_xml"
             android:id="@+id/titleActivity"/>
 
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rishon Lezion"
+            android:textSize="15sp"
+            android:textColor="@color/colorTextNormal"
+            android:id="@+id/locationActivity"/>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:background="#F3F3F3"
+        android:layout_below="@+id/activity_details">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ebeef2"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/profileActivity"
+            android:layout_width="58dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="20dp"
+            android:padding="5dp"
+            android:src="@drawable/weights_icon"
+            android:transitionName="image_transition"
+            android:layout_centerVertical="true"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp"
+            tools:layout_editor_absoluteX="40dp"
+            tools:layout_editor_absoluteY="41dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="football"
+            android:textSize="15sp"
+            android:textColor="@color/colorTextNormal"
+            android:layout_toEndOf="@+id/profileActivity"
+            android:id="@+id/typeActivity"
+            android:layout_centerVertical="true"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_below="@id/titleActivity"
-            android:layout_marginTop="20dp"
-            android:layout_toEndOf="@id/profileActivity">
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp">
 
 
             <TextView
@@ -76,36 +113,15 @@
                 android:transitionName="text_transition"
                 android:layout_height="wrap_content"
                 android:text="20"
-                android:textSize="10sp"
+                android:textSize="15sp"
                 android:fontFamily="@font/heebo_bold_xml"
                 android:id="@+id/amountMaxNumber"/>
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:orientation="vertical">
+    </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="football"
-            android:textSize="20sp"
-            android:textColor="@color/accent"
-            android:id="@+id/typeActivity"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Rishon Lezion"
-            android:textSize="20sp"
-            android:textColor="@color/colorTextNormal"
-            android:id="@+id/locationActivity"/>
-    </LinearLayout>
+    </android.support.v7.widget.CardView>
 
     </RelativeLayout>
 

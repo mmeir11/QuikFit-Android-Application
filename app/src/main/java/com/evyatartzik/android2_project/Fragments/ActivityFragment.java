@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ChatActivity;
 import com.evyatartzik.android2_project.R;
@@ -19,10 +20,12 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
 
     View root;
     Activity activity;
+    private FragmentToActivity callback;
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
+
 
         root =  inflater.inflate(R.layout.activity_fragment, container, false);
 
@@ -65,6 +68,13 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void setOnActivityOpenListener(FragmentToActivity callback) {
+        this.callback = callback;
+    }
 
-
+    @Override
+    public void onPause() {
+        callback.finish_task();
+        super.onPause();
+    }
 }

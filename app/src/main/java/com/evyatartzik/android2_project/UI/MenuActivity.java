@@ -13,11 +13,14 @@ import android.view.MenuItem;
 
 import com.evyatartzik.android2_project.Fragments.ActivityFragment;
 import com.evyatartzik.android2_project.Fragments.ChatFragment;
+import com.evyatartzik.android2_project.Fragments.CreateActivityFragment;
 import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
 import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Fragments.SettingsFragment;
+import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
+import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity implements FragmentToActivity {
 
     private FirebaseAuth mAuth;
     DatabaseReference users;
@@ -175,6 +178,14 @@ public class MenuActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void finish_task() {
+
+
+        homeFragment.ShowFloatingButton();
+
+    }
+
 
     public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
@@ -222,5 +233,19 @@ public class MenuActivity extends AppCompatActivity {
             }
 
 
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        if(fragment instanceof CreateActivityFragment){
+          CreateActivityFragment createActivityFragment =  (CreateActivityFragment) fragment;
+          createActivityFragment.setOnActivityCreatedListener(this);
+        }
+        if(fragment instanceof ActivityFragment) {
+            ActivityFragment activityFragment = (ActivityFragment) fragment;
+            activityFragment.setOnActivityOpenListener(this);
+        }
+
+        super.onAttachFragment(fragment);
     }
 }

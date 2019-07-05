@@ -38,6 +38,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Interfaces.SignupListener;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
@@ -115,7 +116,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
     private LocationRequest locationRequest;
     static Location current_location;
     final Calendar myCalendar = Calendar.getInstance();
-
+    private FragmentToActivity callback;
 
 
     @Nullable
@@ -163,6 +164,14 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
 
         return rootView;
     }
+
+
+
+    public void setOnActivityCreatedListener(FragmentToActivity callback) {
+        this.callback = callback;
+    }
+
+
 
 
     @Override
@@ -467,8 +476,15 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                         if(task.isSuccessful()){
                             Toast.makeText(getActivity(), "Chat "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
                             getActivity().getSupportFragmentManager().popBackStack();
+
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onPause() {
+        callback.finish_task();
+        super.onPause();
     }
 }

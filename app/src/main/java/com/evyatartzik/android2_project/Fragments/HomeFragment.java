@@ -2,6 +2,7 @@ package com.evyatartzik.android2_project.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -153,6 +154,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         switch(v.getId())
         {
             case R.id.add_fb:
+                floatingActionButton.hide();
                 CreateActivityFragment createActivityFragment = new CreateActivityFragment();
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.home_fragment, createActivityFragment , "CREATE_ACTIVITY_FRAGMENT"). // give your fragment container id in first parameter
@@ -208,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
         Activity activity = activitiesArrayList.get(pos);
 
-//        floatingActionButton.hide();
+        floatingActionButton.hide();
         ActivityFragment activityFragment = new ActivityFragment();
 
         Bundle bundle=new Bundle();
@@ -223,5 +225,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                 addToBackStack("test").commit();
     }
 
+    public void ShowFloatingButton(){floatingActionButton.show();}
 
 }

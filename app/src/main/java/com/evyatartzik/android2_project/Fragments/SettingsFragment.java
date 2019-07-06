@@ -133,12 +133,20 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         buttonSignOut.setOnClickListener(this);
         saveProfile.setOnClickListener(this);
         camera_fab.setOnClickListener(this);
-/*        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    //get state of notification and implement it
+                if(isChecked)
+                {
+                    Toast.makeText(context, "Notification enabled", Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(context, "Notification disabled", Toast.LENGTH_SHORT).show();
+
+                }
             }
-        });*/
+        });
 
 
         return rootView;
@@ -193,8 +201,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
 
     }
-
+    //All notification logic
     private void enableDisableNotification() {
+        
+        if(notificationSwitch.isChecked())
+        {
+            Toast.makeText(context, "ON", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(context, "Off", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void saveUploadData() {

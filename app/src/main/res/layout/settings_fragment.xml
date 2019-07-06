@@ -99,7 +99,7 @@
                             android:layout_height="wrap_content"
                             android:text="Enable Notification"/>
 
-                        <android.support.v7.widget.SwitchCompat
+                        <Switch
                             android:id="@+id/notification_sw"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"/>

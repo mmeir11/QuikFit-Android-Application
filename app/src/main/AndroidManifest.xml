@@ -27,7 +27,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Models.ChatActivity" />
+        <activity
+            android:name=".Models.ChatActivity"
+            android:windowSoftInputMode="adjustResize"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

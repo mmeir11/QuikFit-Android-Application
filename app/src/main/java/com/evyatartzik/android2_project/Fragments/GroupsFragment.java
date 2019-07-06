@@ -41,9 +41,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Set;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class GroupsFragment extends Fragment {
 
     private View groupFragmentView;

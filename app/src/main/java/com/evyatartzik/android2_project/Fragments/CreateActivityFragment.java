@@ -38,6 +38,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Interfaces.SignupListener;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
@@ -115,7 +116,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
     private LocationRequest locationRequest;
     static Location current_location;
     final Calendar myCalendar = Calendar.getInstance();
-
+    private FragmentToActivity callback;
 
 
     @Nullable
@@ -163,6 +164,14 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
 
         return rootView;
     }
+
+
+
+    public void setOnActivityCreatedListener(FragmentToActivity callback) {
+        this.callback = callback;
+    }
+
+
 
 
     @Override
@@ -266,7 +275,8 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                     return;
                 }
                 else {
-                    RequestNewGroup(name,location,type);}
+                    RequestNewGroup(name, location, type);
+                }
                 break;
 
             case R.id.location_btn:
@@ -299,9 +309,9 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                 new DatePickerDialog(getContext(), date, myCalendar
                         .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
-
                 break;
+
+
             case R.id.timePickerBtn:
                 Calendar mcurrentTime = Calendar.getInstance();
                 int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
@@ -435,7 +445,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                 Activity activity = new Activity(name, location ,type, datePickerBtn.getText().toString(), timePickerBtn.getText().toString(), 30,"לא לאחר!!", null);
                 CreateNewChat(activity);
                 dataBaseActivity.child(activity.getTitle()).setValue(activity);
-                getActivity().getSupportFragmentManager().popBackStack();
+
 
     }
 
@@ -465,8 +475,16 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             Toast.makeText(getActivity(), "Chat "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
+                            getActivity().getSupportFragmentManager().popBackStack();
+
                         }
                     }
                 });
+    }
+
+    @Override
+    public void onPause() {
+        callback.finish_task();
+        super.onPause();
     }
 }

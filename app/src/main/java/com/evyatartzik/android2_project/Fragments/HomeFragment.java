@@ -2,6 +2,7 @@ package com.evyatartzik.android2_project.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
@@ -153,15 +154,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         switch(v.getId())
         {
             case R.id.add_fb:
-               //RequestNewGroup();
-
+                floatingActionButton.hide();
                 CreateActivityFragment createActivityFragment = new CreateActivityFragment();
-
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.home_fragment, createActivityFragment , "test"). // give your fragment container id in first parameter
-                        addToBackStack("test").commit();
-
-
+                        .replace(R.id.home_fragment, createActivityFragment , "CREATE_ACTIVITY_FRAGMENT"). // give your fragment container id in first parameter
+                        addToBackStack("CREATE_ACTIVITY_FRAGMENT").commit();
                 break;
             default:
                 Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
@@ -169,129 +166,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
 
         }
-    }
-
-
-    /* open display activity fragment */
-
-
-
-
-
-    private void RequestNewGroup() {
-
-        View dialog_createGroup = getLayoutInflater().inflate(R.layout.dialog_create_activity, null, false);
-        final EditText titleEt = dialog_createGroup.findViewById(R.id.groupName_Et);
-        final EditText countryLocationEt = dialog_createGroup.findViewById(R.id.country_Et);
-        final EditText cityLocationEt = dialog_createGroup.findViewById(R.id.city_Et);
-        final EditText activityTypeEt = dialog_createGroup.findViewById(R.id.activityType_Et);
-        final Button timePickerBtn = dialog_createGroup.findViewById(R.id.timePickerBtn);
-        final Button datePickerBtn = dialog_createGroup.findViewById(R.id.datePickerBtn);
-
-        datePickerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                          int dayOfMonth) {
-                        // TODO Auto-generated method stub
-                        myCalendar.set(Calendar.YEAR, year);
-                        myCalendar.set(Calendar.MONTH, monthOfYear);
-                        myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        String myFormat = "MM/dd/yy"; //In which you need put here
-                        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
-
-                        datePickerBtn.setText(sdf.format(myCalendar.getTime()));
-                    }
-
-                };
-
-                // TODO Auto-generated method stub
-                new DatePickerDialog(getContext(), date, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-
-
-            }
-        });
-
-
-        timePickerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
-                TimePickerDialog mTimePicker;
-                mTimePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                        timePickerBtn.setText(selectedHour + ":" + selectedMinute);
-                    }
-                }, hour, minute, true);//Yes 24 hour time
-                mTimePicker.setTitle("Select Time");
-                mTimePicker.show();
-
-            }
-        });
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext(),R.style.AlertDialog);
-        builder.setTitle("New activity");
-        builder.setView(dialog_createGroup);
-
-
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-                String title = titleEt.getText().toString();
-                String county = countryLocationEt.getText().toString();
-                String city = cityLocationEt.getText().toString();
-                String activityType = activityTypeEt.getText().toString();
-                String date = datePickerBtn.getText().toString();
-                String time = timePickerBtn.getText().toString();
-
-
-                if(title.isEmpty() || county.isEmpty() || city.isEmpty() || activityType.isEmpty() || time.isEmpty()){
-                    Toast.makeText(getContext(), "Please fill all the  filed", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Activity activity = new Activity(title, city,activityType, date, time, 30,"לא לאחר!!", null);
-                    CreateNewChat(activity);
-                    dataBaseActivity.child(activity.getTitle()).setValue(activity);
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-
-
-    }
-
-
-    private void CreateNewChat(final Activity activity) {
-        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("database/chats");
-
-        mReference.child(activity.getTitle()).setValue(activity.getTitle())
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful()){
-                            Toast.makeText(getContext(), "Chat "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
 
@@ -336,7 +210,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
         Activity activity = activitiesArrayList.get(pos);
 
-//        floatingActionButton.hide();
+        floatingActionButton.hide();
         ActivityFragment activityFragment = new ActivityFragment();
 
         Bundle bundle=new Bundle();
@@ -351,5 +225,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                 addToBackStack("test").commit();
     }
 
+    public void ShowFloatingButton(){floatingActionButton.show();}
 
 }

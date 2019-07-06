@@ -1,6 +1,8 @@
 package com.evyatartzik.android2_project.Models;
 
-public class UserPreferences {
+import java.io.Serializable;
+
+public class UserPreferences implements Serializable {
 
     private String name;
     private Boolean isSelected;

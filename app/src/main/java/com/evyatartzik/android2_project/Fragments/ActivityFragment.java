@@ -62,11 +62,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
         maxNumParticipantsTv.setText(activity.getMaxParticipents() + "");
 
-        if(activity.getUsersIDList().contains(currentUser.getUid()))
-            activity.setConfirm(true);
-        else
-            activity.setConfirm(false);
-
+        activity.isInActivity(currentUser.getUid());
         confirmArravSwtich.setChecked(activity.getConfirm());
         confirmArravSwtich.setOnCheckedChangeListener(this);
         chatBtn.setOnClickListener(this);
@@ -98,9 +94,11 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         super.onPause();
     }
 
+
+
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        activity.setConfirm(isChecked);
+//        activity.setConfirm(isChecked);
         String currentUserId = currentUser.getUid();
 
         if(buttonView.getId() == R.id.confirmArravSwtich){
@@ -121,9 +119,10 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
     private void changeCurrentActivityInDatabase()
     {
-        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("database/chats");
+        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("database/activity");
 
-        mReference.child(activity.getTitle()).setValue(activity.getTitle());
+        mReference.child(activity.getTitle()).child("usersIDList").setValue(activity.getUsersIDList());
+        mReference.child(activity.getTitle()).child("amountOfParticipents").setValue(activity.getAmountOfParticipents());
 
 
     }

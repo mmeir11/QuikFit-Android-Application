@@ -138,10 +138,10 @@ public class Activity implements Serializable {
         return usersIDList.size();
     }
 
-    public boolean isInActivity(UUID uuid){
-        if(usersIDList.contains(uuid))
-            isConfirm = true;
+    public boolean isInActivity(String uuid){
 
+        if(usersIDList != null && usersIDList.contains(uuid))
+            isConfirm = true;
         else
             isConfirm = false;
 
@@ -150,6 +150,9 @@ public class Activity implements Serializable {
     }
 
     public  void addParticipents(String uuid){
+        if(usersIDList == null)
+            usersIDList = new ArrayList<>();
+
         usersIDList.add(uuid);
     }
 

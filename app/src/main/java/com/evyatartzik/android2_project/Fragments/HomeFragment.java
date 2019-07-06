@@ -169,10 +169,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     Activity activitysRef = postSnapshot.getValue(Activity.class);
-                    GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {};
-                    ArrayList<String> usersIDList = postSnapshot.child("usersIDList").getValue(t);
-                    activitysRef.setUsersIDList(usersIDList);
-
                     activitiesArrayList.add(activitysRef);
                 }
 

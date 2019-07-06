@@ -1,8 +1,9 @@
 package com.evyatartzik.android2_project.Models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class User {
+public class User implements Serializable {
 
     private String Name;
     private String Email;

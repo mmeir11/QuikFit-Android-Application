@@ -86,9 +86,6 @@ public class UsersRvAdapter extends RecyclerView.Adapter<UsersRvAdapter.MyViewHo
                 @Override
                 public void onClick(View v) {
                     if(listener != null){
-//                        if( listener.getClass()!= SearchFragment.class)
-                        context = GlobalApplication.getAppContext();
-                        Toast.makeText(context, "User item clicked", Toast.LENGTH_SHORT).show();
                             listener.onUserObjectClicked(getAdapterPosition(), v);
                     }
                 }

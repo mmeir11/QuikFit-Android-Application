@@ -144,6 +144,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         getAllActivitysTypeList_And_Add_choices();
 
         getAllUsers();
+
         getAllActivities();
 
         ImageView advancedSearchBtn = rootView.findViewById(R.id.advanced_search_btn);
@@ -515,6 +516,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     @Override
     public void onUserObjectClicked(int pos, View view) {
+
+        User user = usersMatchedBySearch.get(pos);
+        ProfileFragment profileFragment = new ProfileFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("user",user);
+        profileFragment.setArguments(bundle);
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.open_result, profileFragment , "test"). // give your fragment container id in first parameter
+                addToBackStack("test").commit();
+
+
 
     }
 }

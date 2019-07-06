@@ -162,23 +162,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
 //        ActivitysList = new ArrayList<>();
 
-
-
         activitysRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 activitiesArrayList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
-//                    GenericTypeIndicator<ArrayList<String>> genericTypeIndicator = new GenericTypeIndicator<ArrayList<String>>() {};
-//                    ArrayList<String> usersIDList = dataSnapshot.getValue(genericTypeIndicator );
-
                     Activity activitysRef = postSnapshot.getValue(Activity.class);
+                    GenericTypeIndicator<ArrayList<String>> t = new GenericTypeIndicator<ArrayList<String>>() {};
+                    ArrayList<String> usersIDList = postSnapshot.child("usersIDList").getValue(t);
+                    activitysRef.setUsersIDList(usersIDList);
+
                     activitiesArrayList.add(activitysRef);
                 }
 
                 activityRvAdapter.notifyDataSetChanged();
-
 
             }
 

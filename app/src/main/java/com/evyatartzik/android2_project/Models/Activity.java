@@ -33,7 +33,8 @@ public class Activity implements Serializable {
         this.maxParticipents = maxParticipents;
         isConfirm = false;
     }*/
-    public Activity(String date, String description, String location, int maxParticipents, String time, String title,  String type,  ArrayList<String> usersIDList) {
+
+    public Activity( String title, int maxParticipents, String description,  String time, String location, String date, ArrayList<String> usersIDList,  String type) {
         this.title = title;
         this.location = location;
         this.type = type;
@@ -44,7 +45,6 @@ public class Activity implements Serializable {
         this.maxParticipents = maxParticipents;
         isConfirm = false;
     }
-
     public String getTitle() {
         return title;
     }
@@ -101,11 +101,11 @@ public class Activity implements Serializable {
         this.description = description;
     }
 
-    public ArrayList getUsersIDList() {
+    public ArrayList<String> getUsersIDList() {
         return usersIDList;
     }
 
-    public void setUsersIDList(ArrayList usersIDList) {
+    public void setUsersIDList(ArrayList<String> usersIDList) {
         this.usersIDList = usersIDList;
     }
 

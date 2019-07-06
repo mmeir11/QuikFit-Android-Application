@@ -2,7 +2,6 @@ package com.evyatartzik.android2_project.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Models.Activity;
@@ -18,13 +18,8 @@ import com.evyatartzik.android2_project.Models.ChatActivity;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.ArrayList;
 
 
 public class ActivityFragment extends Fragment implements View.OnClickListener, Switch.OnCheckedChangeListener {
@@ -32,6 +27,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
     View root;
     Activity activity;
     private FragmentToActivity callback;
+    TextView numParticipantsTv;
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -51,7 +47,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         TextView locationTv = root.findViewById(R.id.location_activity);
         TextView dateTv = root.findViewById(R.id.date_activity);
         TextView timeTv = root.findViewById(R.id.time_activity);
-        TextView numParticipantsTv = root.findViewById(R.id.numParticipants);
+        /*TextView*/ numParticipantsTv = root.findViewById(R.id.numParticipants);
         TextView maxNumParticipantsTv = root.findViewById(R.id.maxNumParticipants);
         Switch confirmArravSwtich = root.findViewById(R.id.confirmArravSwtich);
         Button chatBtn = root.findViewById(R.id.chatBtn);
@@ -65,6 +61,12 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         timeTv.setText(activity.getTime());
         numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
         maxNumParticipantsTv.setText(activity.getMaxParticipents() + "");
+
+        if(activity.getUsersIDList().contains(currentUser.getUid()))
+            activity.setConfirm(true);
+        else
+            activity.setConfirm(false);
+
         confirmArravSwtich.setChecked(activity.getConfirm());
         confirmArravSwtich.setOnCheckedChangeListener(this);
         chatBtn.setOnClickListener(this);
@@ -103,21 +105,23 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
         if(buttonView.getId() == R.id.confirmArravSwtich){
             if(isChecked){
-                activity.addParticipents(currentUserId);
+                if(activity.getAmountOfParticipents() <= activity.getMaxParticipents())
+                    activity.addParticipents(currentUserId);
+                else
+                    Toast.makeText(getContext(), "Sorry the activity is full, Try again later", Toast.LENGTH_SHORT).show();
             }else{
                 activity.removeParticipents(currentUserId);
             }
         }
-
-        changeCurrentActivity();
+        numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
+        changeCurrentActivityInDatabase();
     }
 
 
 
-    private void changeCurrentActivity()
+    private void changeCurrentActivityInDatabase()
     {
         DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("database/chats");
-
 
         mReference.child(activity.getTitle()).setValue(activity.getTitle());
 

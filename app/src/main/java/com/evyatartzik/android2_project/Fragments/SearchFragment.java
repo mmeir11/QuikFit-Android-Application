@@ -361,6 +361,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         activitySearchRv.setLayoutManager(activityLayoutManager);
         activityRvAdapter = new ActivityRvAdapter(getActivity(),activitiesByUsers) ;
         activitySearchRv.setAdapter(activityRvAdapter);
+        activityRvAdapter.setListener(this);
 
 //        userLayoutManager = new LinearLayoutManager(getActivity());
 //        ((LinearLayoutManager) userLayoutManager).setOrientation(1);
@@ -368,6 +369,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         userSearchRv.setLayoutManager(userLayoutManager);
         usersRvAdapter = new UsersRvAdapter(getActivity(),usersMatchedBySearch) ;
         userSearchRv.setAdapter(usersRvAdapter);
+        usersRvAdapter.setListener(this);
 
 
         activityRvAdapter.notifyDataSetChanged();
@@ -492,6 +494,22 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     @Override
     public void onActivityObjectClicked(int pos, View view) {
+
+        Activity activity = activitiesByUsers.get(pos);
+
+
+        ActivityFragment activityFragment = new ActivityFragment();
+
+        Bundle bundle=new Bundle();
+
+        bundle.putSerializable("activity", activity);
+        //set Fragment Arguments
+        activityFragment.setArguments(bundle);
+        Toast.makeText(getActivity(), activity.getTitle(), Toast.LENGTH_SHORT).show();
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.open_result, activityFragment , "test"). // give your fragment container id in first parameter
+                addToBackStack("test").commit();
+
 
     }
 

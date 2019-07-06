@@ -85,7 +85,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private DatabaseReference usersRef;
     private String user_id;
     private FloatingActionButton camera_fab;
-    private SwitchCompat notificationSwitch;
+    private Switch notificationSwitch;
 
     public SettingsFragment() {
     }
@@ -146,7 +146,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private void initLayoutByID() {
 
-        //notificationSwitch = rootView.findViewById(R.id.notification_sw);
+        notificationSwitch = (Switch) rootView.findViewById(R.id.notification_sw);
         userName = rootView.findViewById(R.id.username_ET);
         password = rootView.findViewById(R.id.password_ET);
         rePassword = rootView.findViewById(R.id.re_password_ET);

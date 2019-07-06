@@ -92,10 +92,6 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
 
 
-
-
-
-
     }
 
      private void
@@ -112,6 +108,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          Bundle bundle = new Bundle();
          bundle.putSerializable("user",myUser);
          profileFragment.setArguments(bundle);
+         settingsFragment.setArguments(bundle);
 
          adapter.addFragment(homeFragment);
          adapter.addFragment(searchFragment);
@@ -147,6 +144,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          });
 
      }
+
     private void setBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -251,6 +249,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
         super.onAttachFragment(fragment);
     }
+
 
     private void initFirebase() {
         database = FirebaseDatabase.getInstance();

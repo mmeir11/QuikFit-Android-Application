@@ -14,6 +14,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.chip.Chip;
+import android.support.design.chip.ChipGroup;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -33,6 +35,7 @@ import android.widget.Toast;
 import com.evyatartzik.android2_project.Adapters.GlobalApplication;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
 import com.evyatartzik.android2_project.Models.User;
+import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.UI.LoginRegister;
 import com.google.android.gms.tasks.Continuation;
@@ -72,6 +75,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     User post = null;
     private View rootView;
     Context context;
+    private User user;
     private TextView userName;
     private EditText password,rePassword;
     private Button buttonSignOut ,saveProfile;
@@ -86,6 +90,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private String user_id;
     private FloatingActionButton camera_fab;
     private Switch notificationSwitch;
+    private ArrayList<UserPreferences> userPreferences;
+    private ArrayList<UserPreferences> PreferencesList;
+    private ChipGroup chipGroup;
 
     public SettingsFragment() {
     }
@@ -95,58 +102,43 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = GlobalApplication.getAppContext();
         rootView = inflater.inflate(R.layout.settings_fragment, container, false);
+        user = (User) getArguments().getSerializable("user");
+        userPreferences = user.getUserPreferences();
         initFirebase();
         initLayoutByID();
 
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
+        // check user activists
+        getAllActivitysTypeList_And_Add_choices();
 
-                try{
-                    post = dataSnapshot.getValue(User.class);
-                }
-                catch (Exception ex)
-                {
-                    Toast.makeText(context, "Error", Toast.LENGTH_SHORT).show();
-                }
-                if(post!=null && !(post.getName().isEmpty())) {
-                    initLayoutByID();
-                    userName.setText(post.getName());
-                    if(!post.getProfile_pic_path().equals("profile.image"))
-                    {
-                        Picasso.get().load(post.getProfile_pic_path()).into(profile_Image);
 
-                    }
 
-                }
-                // ...
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                // ...
-            }
-        };
-        databaseUsers.addValueEventListener(postListener);
+        userName.setText(user.getName());
+        if(!user.getProfile_pic_path().equals("profile.image"))
+        {
+            Picasso.get().load(user.getProfile_pic_path()).into(profile_Image);
+
+        }
+
+
+
         buttonSignOut.setOnClickListener(this);
         saveProfile.setOnClickListener(this);
         camera_fab.setOnClickListener(this);
-      notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                {
-                    Toast.makeText(context, "Notification enabled", Toast.LENGTH_SHORT).show();
-                }
-                else
-                {
-                    Toast.makeText(context, "Notification disabled", Toast.LENGTH_SHORT).show();
+          notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if(isChecked)
+                    {
+                        Toast.makeText(context, "Notification enabled", Toast.LENGTH_SHORT).show();
+                    }
+                    else
+                    {
+                        Toast.makeText(context, "Notification disabled", Toast.LENGTH_SHORT).show();
 
+                    }
                 }
-            }
-        });
+            });
 
 
         return rootView;
@@ -162,6 +154,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         saveProfile = rootView.findViewById(R.id.save_btn);
         profile_Image = rootView.findViewById(R.id.imageview_account_profile);
         camera_fab = rootView.findViewById(R.id.profile_pic_fab);
+        chipGroup = rootView.findViewById(R.id.user_preferences);
 
     }
 
@@ -216,9 +209,23 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private void saveUploadData() {
 
+
+        final ArrayList<UserPreferences> updatedUserPref;
+        updatedUserPref = new ArrayList<>();
         final String username_input = userName.getText().toString();
         final String password_input = password.getText().toString();
         final String rePassword_input = rePassword.getText().toString();
+
+        for (int i = 0; i < chipGroup.getChildCount(); ++i) {
+            Chip chip = (Chip) chipGroup.getChildAt(i);
+            if (chip.isChecked()) {
+                updatedUserPref.add(PreferencesList.get(i));
+            }
+        }
+
+
+        // updatedUserPref contains the user new preferences
+
         if(checkInputs(username_input,password_input,rePassword_input))
         {
             currentUser.updatePassword(password_input).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -238,6 +245,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         if(uploadPhotoUri ==null && imageUri==null) {
             Toast.makeText(context, "Please upload photo", Toast.LENGTH_SHORT).show();
         }
+
 
         else
         {
@@ -352,4 +360,46 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         }
     }
+
+
+    public void getAllActivitysTypeList_And_Add_choices(){
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("database");
+        DatabaseReference preferencesRef = ref.child("preferences");
+
+        PreferencesList = new ArrayList<>();
+
+        preferencesRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    UserPreferences preferencesRef = postSnapshot.getValue(UserPreferences.class);
+                    PreferencesList.add(preferencesRef);
+                }
+                for(UserPreferences user_Preference : PreferencesList){
+                    Chip chip = new Chip(getActivity(), null , R.style.Widget_MaterialComponents_Chip_Filter);
+
+                    for (UserPreferences userpef : userPreferences){
+                        chip.setText(user_Preference.getName());
+                        chip.setClickable(true);
+                        chip.setCheckable(true);
+                        chip.setChipBackgroundColorResource(R.color.chip);
+
+                        if(userpef.getName().equals(user_Preference.getName())){
+                            chip.setChecked(true);
+                            chip.setCheckedIconVisible(true);
+                        }
+                    }
+
+
+                    chipGroup.addView(chip);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
+
 }

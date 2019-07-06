@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -46,6 +47,7 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -57,6 +59,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.karumi.dexter.Dexter;
@@ -75,6 +78,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class RegisterFragment extends Fragment implements SignupListener, View.OnClickListener {
 
     private EditText PasswordET;
+    private ProgressBar progressBar;
     private android.widget.EditText RePasswordET;
     private EditText EmailET;
     private EditText NameET;
@@ -126,7 +130,7 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
         chipGroup = rootView.findViewById(R.id.user_preferences);
         LocationImage = rootView.findViewById(R.id.location_btn);
         LocationET = rootView.findViewById(R.id.input_location);
-
+        progressBar = rootView.findViewById(R.id.progress_bar);
 
         profile_Image.setOnClickListener(this);
         RegisterButton.setOnClickListener(this);
@@ -273,15 +277,21 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                                     }
                                     else {
                                         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                                        Toast.makeText(getActivity(), R.string.sucess_register, Toast.LENGTH_SHORT).show();
-                                        DonelottieAnimationView.setVisibility(View.VISIBLE);
-                                        DonelottieAnimationView.playAnimation();
                                         //usersRef.child(UUID.randomUUID().toString()).setValue(user);
                                         user_id = firebaseUser.getUid();
                                         User user = new User(user_id,name,email,userFavoriteList,0,0,location,"profile.image","about");
                                         usersRef.child(firebaseUser.getUid()).setValue(user);
                                         uploadProfilePhoto(email);
-                                        afterSucessAuth();
+                                        if(uploadPhotoUri == null){
+
+                                            Toast.makeText(getActivity(), R.string.sucess_register, Toast.LENGTH_SHORT).show();
+                                            DonelottieAnimationView.setVisibility(View.VISIBLE);
+                                            DonelottieAnimationView.playAnimation();
+                                            afterSucessAuth();
+
+
+                                        }
+
                                     }
                                 }
                             });
@@ -304,8 +314,17 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
         {
             return;
         }
+        progressBar.setVisibility(View.VISIBLE);
         final StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()+".jpg");
-        fileReference.putFile(uploadPhotoUri).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+        fileReference.putFile(uploadPhotoUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                double progress = (100.0*taskSnapshot.getBytesTransferred())/(taskSnapshot.getTotalByteCount());
+                progressBar.setProgress((int)progress);
+
+            }
+        }).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
                 if (!task.isSuccessful()) {
@@ -322,9 +341,18 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                     String uploadID = uploadRef.push().getKey();
                     uploadRef.child(uploadID).setValue(profileImageUpload);
                     usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
+                    Toast.makeText(getActivity(), R.string.sucess_register, Toast.LENGTH_SHORT).show();
+                    DonelottieAnimationView.setVisibility(View.VISIBLE);
+                    DonelottieAnimationView.playAnimation();
+                    afterSucessAuth();
                 } else {
                     Toast.makeText(getActivity(), "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
             }
         });
 

@@ -3,58 +3,65 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="200dp"
     android:layout_height="wrap_content"
-    android:layout_alignParentStart="true"
+    android:layout_gravity="right"
+    android:layout_alignParentRight="true"
     android:padding="8dp"
     android:background="@drawable/background_right"
     android:layout_marginBottom="5dp">
 
-    <RelativeLayout
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
+        android:layout_marginRight="5dp"
+        android:text="Meir"
         android:layout_alignParentRight="true"
-        android:id="@+id/layout_nameTime">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="Meir"
-            android:padding="8dp"
-            android:textSize="18sp"
-            android:id="@+id/name"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:text="20/01/93"
-            android:padding="8dp"
-            android:textSize="8sp"
-            android:visibility="gone"
-            android:id="@+id/date"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="20:30"
-            android:padding="8dp"
-            android:textSize="18sp"
-            android:layout_toLeftOf="@id/name"
-            android:id="@+id/time"/>
-
-
-    </RelativeLayout>
+        android:padding="8dp"
+        android:background="@drawable/background_right"
+        android:textSize="18sp"
+        android:id="@+id/name"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_nameTime"
-        android:layout_alignParentRight="true"
-        android:text="hello"
+        android:layout_marginLeft="5dp"
+        android:text="20/01/93"
         android:padding="8dp"
-        android:textColor="@color/accent"
+        android:background="@drawable/background_right"
         android:textSize="18sp"
-        android:id="@+id/show_message"/>
+        android:layout_toEndOf="@id/name"
+        android:visibility="gone"
+        android:id="@+id/date"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/massage_and_time"
+        android:layout_below="@id/name"
+        android:layout_alignParentRight="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="20:30"
+            android:padding="8dp"
+            android:background="@drawable/background_right"
+            android:textSize="10sp"
+            android:layout_toEndOf="@id/show_message"
+            android:id="@+id/time"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="hello"
+            android:padding="8dp"
+            android:textColor="@color/accent"
+            android:background="@drawable/background_right"
+            android:textSize="18sp"
+            android:id="@+id/show_message"/>
+
+
+    </LinearLayout>
 
 </RelativeLayout>

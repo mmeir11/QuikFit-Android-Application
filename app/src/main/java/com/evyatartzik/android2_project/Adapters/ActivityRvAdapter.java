@@ -91,7 +91,6 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
                 @Override
                 public void onClick(View v) {
                     if(listener != null){
-                       if( listener.getClass()!= SearchFragment.class)
                             listener.onActivityObjectClicked(getAdapterPosition(), v);
                     }
                 }

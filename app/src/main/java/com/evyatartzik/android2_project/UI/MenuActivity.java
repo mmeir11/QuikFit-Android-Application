@@ -213,9 +213,11 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
     @Override
     public void onBackPressed() {
 
-        if(viewPager.getCurrentItem() != 0){
-            getSupportFragmentManager().popBackStack();
-            viewPager.setCurrentItem(0,true);
+        if(viewPager.getCurrentItem() != 0 ){
+
+            if(getSupportFragmentManager().getBackStackEntryCount() == 0)
+                viewPager.setCurrentItem(0,true);
+            else {getSupportFragmentManager().popBackStack();}
 
         }
         else if (viewPager.getCurrentItem() == 0 && getSupportFragmentManager().getBackStackEntryCount() == 0) {
@@ -229,7 +231,10 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
         }
         else
             {
-                getSupportFragmentManager().popBackStack();
+                if(getSupportFragmentManager().getBackStackEntryCount() != 0)
+                    getSupportFragmentManager().popBackStack();
+//                if(viewPager.getCurrentItem() == 1){viewPager.setCurrentItem(0,true);}
+
             }
 
 

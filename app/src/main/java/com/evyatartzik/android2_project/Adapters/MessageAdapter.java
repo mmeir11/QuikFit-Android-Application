@@ -6,11 +6,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.evyatartzik.android2_project.Models.Chat;
+import com.evyatartzik.android2_project.Models.ChatMessage;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,13 +21,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TYPE_LEFT = 0;
     public static final int MSG_TYPE_RIGHT = 1;
     private Context mContext;
-    private List<Chat> mChatList;
+    private List<ChatMessage> mChatMessageList;
 
     FirebaseUser fuser;
 
-    public MessageAdapter(Context mContext, List<Chat> mChatList) {
+    public MessageAdapter(Context mContext, List<ChatMessage> mChatMessageList) {
         this.mContext = mContext;
-        this.mChatList = mChatList;
+        this.mChatMessageList = mChatMessageList;
     }
 
 
@@ -50,17 +48,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull MessageAdapter.ViewHolder viewHolder, int i) {
 
-        Chat chat = mChatList.get(i);
-        viewHolder.show_message.setText(chat.getMessage());
-        viewHolder.name.setText(chat.getName());
-        viewHolder.date.setText(chat.getDate());
-        viewHolder.time.setText(chat.getTime());
+        ChatMessage chatMessage = mChatMessageList.get(i);
+        viewHolder.show_message.setText(chatMessage.getMessage());
+        viewHolder.name.setText(chatMessage.getName());
+        viewHolder.date.setText(chatMessage.getDate());
+        viewHolder.time.setText(chatMessage.getTime());
 
     }
 
     @Override
     public int getItemCount() {
-        return mChatList.size();
+        return mChatMessageList.size();
     }
 
 
@@ -86,7 +84,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public int getItemViewType(int position) {
         fuser = FirebaseAuth.getInstance().getCurrentUser();
-        if(mChatList.get(position).getUuid().equals(fuser.getUid())){
+        if(mChatMessageList.get(position).getUuid().equals(fuser.getUid())){
             return MSG_TYPE_RIGHT;
         }
         else

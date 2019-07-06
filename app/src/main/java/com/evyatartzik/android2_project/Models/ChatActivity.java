@@ -2,7 +2,6 @@ package com.evyatartzik.android2_project.Models;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import com.evyatartzik.android2_project.Adapters.MessageAdapter;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
@@ -51,7 +48,7 @@ public class ChatActivity extends AppCompatActivity {
     private String currentDate, currentTime;
 
     private MessageAdapter messageAdapter;
-    List<Chat> mChat;
+    List<ChatMessage> mChatMessage;
 
     RecyclerView recyclerView;
 
@@ -136,11 +133,11 @@ public class ChatActivity extends AppCompatActivity {
             mGroupMessageRef = mChatNameRef.child(messageKey);
 
 
-            //Chat(String date, String message, String name, String time,  String uuid)
-            Chat chat = new Chat(currentDate, message, currentUserName,  currentTime,  currentUserId);
+            //ChatMessage(String date, String message, String name, String time,  String uuid)
+            ChatMessage chatMessage = new ChatMessage(currentDate, message, currentUserName,  currentTime,  currentUserId);
 
-//            mGroupMessageRef.updateChildren(chat);
-            mGroupMessageRef.setValue(chat);
+//            mGroupMessageRef.updateChildren(chatMessage);
+            mGroupMessageRef.setValue(chatMessage);
 
             //Save to DB
          /*   HashMap<String, Object> messageInfoMap = new HashMap<>();
@@ -239,16 +236,16 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void DisplayMessages(DataSnapshot dataSnapshot) {
-        mChat = new ArrayList<>();
+        mChatMessage = new ArrayList<>();
 //        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("chats");
 
-        mChat.clear();
+        mChatMessage.clear();
         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-            Chat chat = snapshot.getValue(Chat.class);
-            mChat.add(chat);
+            ChatMessage chatMessage = snapshot.getValue(ChatMessage.class);
+            mChatMessage.add(chatMessage);
         }
 
-        messageAdapter = new MessageAdapter(ChatActivity.this, mChat);
+        messageAdapter = new MessageAdapter(ChatActivity.this, mChatMessage);
         recyclerView.setAdapter(messageAdapter);
 
        /* Iterator iterator = dataSnapshot.getChildren().iterator();
@@ -269,21 +266,21 @@ public class ChatActivity extends AppCompatActivity {
 
 
     private void readMessage(final String myId, final String userId, final String imageUrl) {
-        mChat = new ArrayList<>();
+        mChatMessage = new ArrayList<>();
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mChat.clear();
+                mChatMessage.clear();
                 for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Chat chat = snapshot.getValue(Chat.class);
-                    if (chat.getReceiver().equals(myId) && chat.getSender().equals(userId) ||
-                            chat.getReceiver().equals(userId) && chat.getSender().equals(myId)) {
-                        mChat.add(chat);
+                    ChatMessage chatMessage = snapshot.getValue(ChatMessage.class);
+                    if (chatMessage.getReceiver().equals(myId) && chatMessage.getSender().equals(userId) ||
+                            chatMessage.getReceiver().equals(userId) && chatMessage.getSender().equals(myId)) {
+                        mChatMessage.add(chatMessage);
                     }
 
-                    messageAdapter = new MessageAdapter(ChatActivity.this, mChat);
+                    messageAdapter = new MessageAdapter(ChatActivity.this, mChatMessage);
                     recyclerView.setAdapter(messageAdapter);
                 }
             }

@@ -1,10 +1,7 @@
 package com.evyatartzik.android2_project.Models;
 
-import android.location.Location;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.UUID;
 
 public class Activity implements Serializable {
@@ -17,21 +14,33 @@ public class Activity implements Serializable {
     private String date;
     private String time;
     private String description;
-    private ArrayList<UUID> users;
+    private ArrayList<String> usersIDList;
     private int maxParticipents;
     private Boolean isConfirm;
 
 
+
     public Activity(){}
 
-    public Activity(String title, String location, String type, String date, String time, int maxParticipents, String description, ArrayList users) {
+/*    public Activity(String title, String location, String type, String date, String time, int maxParticipents, String description, ArrayList usersIDList) {
         this.title = title;
         this.location = location;
         this.type = type;
         this.date = date;
         this.time = time;
         this.description = description;
-        this.users = users;
+        this.usersIDList = usersIDList;
+        this.maxParticipents = maxParticipents;
+        isConfirm = false;
+    }*/
+    public Activity(String date, String description, String location, int maxParticipents, String time, String title,  String type,  ArrayList<String> usersIDList) {
+        this.title = title;
+        this.location = location;
+        this.type = type;
+        this.date = date;
+        this.time = time;
+        this.description = description;
+        this.usersIDList = usersIDList;
         this.maxParticipents = maxParticipents;
         isConfirm = false;
     }
@@ -92,12 +101,12 @@ public class Activity implements Serializable {
         this.description = description;
     }
 
-    public ArrayList getUsers() {
-        return users;
+    public ArrayList getUsersIDList() {
+        return usersIDList;
     }
 
-    public void setUsers(ArrayList users) {
-        this.users = users;
+    public void setUsersIDList(ArrayList usersIDList) {
+        this.usersIDList = usersIDList;
     }
 
     public String getTime() {
@@ -125,12 +134,12 @@ public class Activity implements Serializable {
     }
 
     public int getAmountOfParticipents(){
-        if(users == null) return 0;
-        return users.size();
+        if(usersIDList == null) return 0;
+        return usersIDList.size();
     }
 
     public boolean isInActivity(UUID uuid){
-        if(users.contains(uuid))
+        if(usersIDList.contains(uuid))
             isConfirm = true;
 
         else
@@ -138,6 +147,14 @@ public class Activity implements Serializable {
 
         return isConfirm;
 
+    }
+
+    public  void addParticipents(String uuid){
+        usersIDList.add(uuid);
+    }
+
+    public  void removeParticipents(String uuid){
+        usersIDList.remove(uuid);
     }
 
 

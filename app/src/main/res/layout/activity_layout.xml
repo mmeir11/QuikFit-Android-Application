@@ -141,7 +141,7 @@
         android:layout_below="@id/confirmArravSwtich"
         android:layout_centerInParent="true"
         android:layout_marginTop="100dp"
-        android:text="Chat"/>
+        android:text="ChatMessage"/>
 
 -->
 

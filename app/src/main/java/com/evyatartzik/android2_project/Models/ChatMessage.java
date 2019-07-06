@@ -2,7 +2,7 @@ package com.evyatartzik.android2_project.Models;
 
 import java.util.UUID;
 
-public class Chat {
+public class ChatMessage {
 
     private String sender;
     private String receiver;
@@ -13,18 +13,11 @@ public class Chat {
     private String time;
     private String uuid;
 
-    public Chat() {
+    public ChatMessage() {
     }
 
-/*    public Chat(String name, String date, String time, String message, String uuid) {
-        this.message = message;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-        this.uuid = uuid;
-    }*/
 
-    public Chat(String date, String message, String name, String time,  String uuid) {
+    public ChatMessage(String date, String message, String name, String time, String uuid) {
         this.message = message;
         this.name = name;
         this.date = date;
@@ -34,11 +27,11 @@ public class Chat {
 
     }
 
-    public Chat(String sender, String receiver, String message) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.message = message;
-    }
+//    public ChatMessage(String sender, String receiver, String message) {
+//        this.sender = sender;
+//        this.receiver = receiver;
+//        this.message = message;
+//    }
 
 
     public String getSender() {

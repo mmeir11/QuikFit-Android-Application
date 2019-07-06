@@ -2,11 +2,13 @@ package com.evyatartzik.android2_project.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -14,13 +16,28 @@ import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ChatActivity;
 import com.evyatartzik.android2_project.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 
 
-public class ActivityFragment extends Fragment implements View.OnClickListener {
+public class ActivityFragment extends Fragment implements View.OnClickListener, Switch.OnCheckedChangeListener {
 
     View root;
     Activity activity;
     private FragmentToActivity callback;
+
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser currentUser = mAuth.getCurrentUser();
+
+//    ArrayList<Activity>  activitiesArrayList= new ArrayList<>();
+
 
 
     @Override
@@ -49,6 +66,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
         numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
         maxNumParticipantsTv.setText(activity.getMaxParticipents() + "");
         confirmArravSwtich.setChecked(activity.getConfirm());
+        confirmArravSwtich.setOnCheckedChangeListener(this);
         chatBtn.setOnClickListener(this);
 
 
@@ -77,4 +95,35 @@ public class ActivityFragment extends Fragment implements View.OnClickListener {
         callback.finish_task();
         super.onPause();
     }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        activity.setConfirm(isChecked);
+        String currentUserId = currentUser.getUid();
+
+        if(buttonView.getId() == R.id.confirmArravSwtich){
+            if(isChecked){
+                activity.addParticipents(currentUserId);
+            }else{
+                activity.removeParticipents(currentUserId);
+            }
+        }
+
+        changeCurrentActivity();
+    }
+
+
+
+    private void changeCurrentActivity()
+    {
+        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference("database/chats");
+
+
+        mReference.child(activity.getTitle()).setValue(activity.getTitle());
+
+
+    }
+
+
+
 }

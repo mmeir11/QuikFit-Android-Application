@@ -94,7 +94,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
     private ArrayList<UserPreferences> userFavoriteList;
     private ArrayList<UserPreferences> userPreferencesList;
     private View rootView;
-    private FirebaseAuth auth;
+    private FirebaseAuth auth ;
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private DatabaseReference usersRef, preferencesRef,uploadRef;
@@ -442,7 +442,12 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
 
     private void RequestNewGroup(String name,String location,String type) {
 
-                Activity activity = new Activity(name, location ,type, datePickerBtn.getText().toString(), timePickerBtn.getText().toString(), 30,"לא לאחר!!", null);
+        String currentUID = auth.getCurrentUser().getUid();
+        ArrayList<String> usersIDList = new ArrayList<>();
+        usersIDList.add(currentUID);
+
+//                Activity activity = new Activity(name, location ,type, datePickerBtn.getText().toString(), timePickerBtn.getText().toString(), 30,"לא לאחר!!", usersIDList);
+                Activity activity = new Activity(datePickerBtn.getText().toString(), "לא לאחר!!",location, 30, timePickerBtn.getText().toString() ,name, type, usersIDList );
                 CreateNewChat(activity);
                 dataBaseActivity.child(activity.getTitle()).setValue(activity);
 
@@ -474,7 +479,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(getActivity(), "Chat "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "ChatMessage "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
                             getActivity().getSupportFragmentManager().popBackStack();
 
                         }

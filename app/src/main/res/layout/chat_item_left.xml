@@ -33,6 +33,7 @@
         android:background="@drawable/background_left"
         android:textSize="18sp"
         android:layout_toEndOf="@id/name"
+        android:visibility="gone"
         android:id="@+id/date"/>
 
     <TextView

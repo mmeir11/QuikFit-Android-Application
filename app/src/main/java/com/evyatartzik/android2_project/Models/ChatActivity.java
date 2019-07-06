@@ -108,7 +108,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 mUserMessage.setText("");
 
-                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+//                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
 
@@ -136,7 +136,9 @@ public class ChatActivity extends AppCompatActivity {
             mGroupMessageRef = mChatNameRef.child(messageKey);
 
 
-            Chat chat = new Chat(currentChatName, currentDate, currentTime, message, currentUserId);
+            //Chat(String date, String message, String name, String time,  String uuid)
+            Chat chat = new Chat(currentDate, message, currentUserName,  currentTime,  currentUserId);
+
 //            mGroupMessageRef.updateChildren(chat);
             mGroupMessageRef.setValue(chat);
 

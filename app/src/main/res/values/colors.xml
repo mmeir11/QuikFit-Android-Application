@@ -14,6 +14,7 @@
     <color name="colorTextSecondary">#c2c2c2</color>
     <color name="colorRed">#FF0000</color>
     <color name="colorGreen">#68FF00</color>
+    <color name="colorGreen2">#9795FF00</color>
     <color name="colorBackground">#f9f9fa</color>
 
     <color name="colorTextNormal">#737373</color>

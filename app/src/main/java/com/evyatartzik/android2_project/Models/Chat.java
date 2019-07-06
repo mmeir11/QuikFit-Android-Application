@@ -16,23 +16,23 @@ public class Chat {
     public Chat() {
     }
 
-    public Chat(String name, String date, String time, String message, String uuid) {
+/*    public Chat(String name, String date, String time, String message, String uuid) {
         this.message = message;
         this.name = name;
         this.date = date;
         this.time = time;
         this.uuid = uuid;
-    }
-
-/*    public Chat(String date, String message, String name, String time,  String uuid) {
-        this.message = message;
-        this.name = name;
-        this.date = date;
-        this.time = time;
-        this.uuid = uuid;
-
-
     }*/
+
+    public Chat(String date, String message, String name, String time,  String uuid) {
+        this.message = message;
+        this.name = name;
+        this.date = date;
+        this.time = time;
+        this.uuid = uuid;
+
+
+    }
 
     public Chat(String sender, String receiver, String message) {
         this.sender = sender;

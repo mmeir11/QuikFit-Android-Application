@@ -144,7 +144,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/confirmArravSwtich"
         android:layout_centerInParent="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:text="Chat"
         android:id="@+id/chatBtn"/>
 

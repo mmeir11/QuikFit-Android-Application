@@ -336,6 +336,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Bitmap bitmapRotate = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
             profile_Image.setImageBitmap(bitmapRotate);
             uploadPhotoUri = imageUri;
+            Toast.makeText(context, "Profile photo updated", Toast.LENGTH_SHORT).show();
+
         }
 
         if(requestCode==PICK_IMAGE_REQUEST && resultCode==getActivity().RESULT_OK && data != null && data.getData() != null) {

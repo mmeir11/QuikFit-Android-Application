@@ -34,7 +34,6 @@
         android:id="@+id/title_my_activates"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/top_action_bar"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"

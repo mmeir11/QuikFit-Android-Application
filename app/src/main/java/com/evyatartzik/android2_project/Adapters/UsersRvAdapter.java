@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Models.Activity;
@@ -27,7 +28,7 @@ public class UsersRvAdapter extends RecyclerView.Adapter<UsersRvAdapter.MyViewHo
     private UsersRvAdapter.UserObjectListener listener;
 
     public interface UserObjectListener{
-        public void onUserObjectClicked(int pos, View view);
+        void onUserObjectClicked(int pos, View view);
     }
 
     public void setListener(UsersRvAdapter.UserObjectListener listener) {
@@ -70,7 +71,7 @@ public class UsersRvAdapter extends RecyclerView.Adapter<UsersRvAdapter.MyViewHo
         CircleImageView profilepic;
         TextView userName;
         TextView userAddress;
-
+        Context context;
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -86,6 +87,8 @@ public class UsersRvAdapter extends RecyclerView.Adapter<UsersRvAdapter.MyViewHo
                 public void onClick(View v) {
                     if(listener != null){
 //                        if( listener.getClass()!= SearchFragment.class)
+                        context = GlobalApplication.getAppContext();
+                        Toast.makeText(context, "User item clicked", Toast.LENGTH_SHORT).show();
                             listener.onUserObjectClicked(getAdapterPosition(), v);
                     }
                 }

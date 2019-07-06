@@ -106,20 +106,16 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
 
          homeFragment=new HomeFragment();
-//         activityFragment = new ActivityFragment();
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
-//         chatFragment = new ChatFragment();
          groupsFragment = new GroupsFragment();
 
          adapter.addFragment(homeFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
-//         adapter.addFragment(chatFragment);
          adapter.addFragment(groupsFragment);
          adapter.addFragment(settingsFragment);
-
 
          viewPager.setAdapter(adapter);
          viewPager.setOffscreenPageLimit(4);

@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
     TextView textViewUserLocation;
     ImageView imageViewProfilePicture;
 
+    User user;
 
     /*Firebase*/
     private FirebaseAuth mAuth;
@@ -75,83 +76,35 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         rootView =  inflater.inflate(R.layout.profile_fragment, container, false);
+        user = (User) getArguments().getSerializable("user");
+
 
 
         initFirebase();
-        ValueEventListener postListener = new ValueEventListener() {
-
-            @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    // Get Post object and use the values to update the UI
-
-                    User post = null;
-                    try{
-                        post = dataSnapshot.getValue(User.class);
-                    }
-                    catch (Exception ex)
-                    {
-                        Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
-                    }
-                    if(post!=null ){
-                        initLayoutByID();
-                        textViewUserName.setText(post.getName());
-
-                        textViewUserLocation.setText(post.getLocation_string());
-
-                        if(!post.getProfile_pic_path().equals("profile.image"))
-                        {
-                            Picasso.get().load(post.getProfile_pic_path()).into(imageViewProfilePicture);
-
-                        }
 
 
-                    }
-                    // ...
-                }
+        initLayoutByID();
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                // ...
-            }
-        };
+        textViewUserName.setText(user.getName());
 
+        textViewUserLocation.setText(user.getLocation_string());
 
-        Query query  = databaseUserPref;
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                userPreferences = new ArrayList<>();
-                for (DataSnapshot snap: dataSnapshot.getChildren())
-                {
-                    userPreferences.add(snap.getValue(UserPreferences.class));
+        if(!user.getProfile_pic_path().equals("profile.image"))
+        {
+            Picasso.get().load(user.getProfile_pic_path()).into(imageViewProfilePicture);
 
-                }
-                recyclerView = rootView.findViewById(R.id.user_preferences_logged_in);
-                layoutManager = new GridLayoutManager(getActivity(),4, LinearLayoutManager.VERTICAL, false);
-                userPreferencesAdapter = new UserPrefAdapter(userPreferences);
-                recyclerView.setLayoutManager(layoutManager);
-
-                recyclerView.setAdapter(userPreferencesAdapter);
-                userPreferencesAdapter.notifyDataSetChanged();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        databaseUsers.addValueEventListener(postListener);
-
-        userPreferencesAdapter = new UserPrefAdapter(userPreferences);
-
-        if(userPreferences!=null) {
-
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(userPreferencesAdapter);
         }
+        userPreferences = user.getUserPreferences();
+
+        recyclerView = rootView.findViewById(R.id.user_preferences_logged_in);
+        layoutManager = new GridLayoutManager(getActivity(),4, LinearLayoutManager.VERTICAL, false);
+        userPreferencesAdapter = new UserPrefAdapter(userPreferences);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setAdapter(userPreferencesAdapter);
+        userPreferencesAdapter.notifyDataSetChanged();
 
         return rootView;
 

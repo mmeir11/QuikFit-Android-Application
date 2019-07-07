@@ -6,7 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/user_profile_background">
+    android:background="@color/white">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/user_profile_background"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"/>
 
         <RelativeLayout
             android:id="@+id/appbar"

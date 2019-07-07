@@ -9,14 +9,16 @@
         android:layout_height="70dp"
         android:id="@+id/top_action_bar"
         android:layout_alignParentTop="true"
-        android:background="@drawable/topbar"
+        android:background="@color/primary_dark"
         android:elevation="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15sp"
+            android:textAllCaps="true"
             android:textColor="@color/white"
+            android:fontFamily="@font/heebo_bold_xml"
             android:text="@string/app_name"
             android:layout_centerInParent="true"
            />
@@ -78,7 +80,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="30dp"
-        android:backgroundTint="@color/colorAccent"
+        android:backgroundTint="@color/primary_dark"
         android:src="@drawable/ic_add_black_24dp"/>
 
 

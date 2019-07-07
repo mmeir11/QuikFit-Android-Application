@@ -9,10 +9,14 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.evyatartzik.android2_project.Adapters.UserPrefAdapter;
 import com.evyatartzik.android2_project.Fragments.ActivityFragment;
-import com.evyatartzik.android2_project.Fragments.MyChatFragment;
+import com.evyatartzik.android2_project.Fragments.ChatFragment;
 import com.evyatartzik.android2_project.Fragments.CreateActivityFragment;
 import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
@@ -20,12 +24,19 @@ import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Fragments.SettingsFragment;
 import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
+import com.evyatartzik.android2_project.Models.Activity;
+import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +44,7 @@ import java.util.List;
 public class MenuActivity extends AppCompatActivity implements FragmentToActivity {
 
     private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
     DatabaseReference users;
     List<User> userList;
     FirebaseDatabase database;
@@ -45,10 +57,14 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
     SettingsFragment settingsFragment;
     SearchFragment searchFragment;
     ProfileFragment profileFragment;
-    MyChatFragment myChatFragment;
+    ChatFragment chatFragment;
     GroupsFragment groupsFragment;
-    MyChatFragment MyChatFragment;
     ActivityFragment activityFragment;
+
+    private DatabaseReference ref;
+    DatabaseReference databaseUsers;
+    private DatabaseReference databaseUserPref;
+    private User myUser;
 
     /*onStop calls when you want to kill all fragments ( == signout)*/
     @Override
@@ -65,38 +81,17 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
         /*Firebase data and user logged-in data */
         database = FirebaseDatabase.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
         users = database.getReference("users");
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        initFirebase();
 
         /*Config MenuActivity*/
         viewPager = findViewById(R.id.pager);
         bottomNavigationView = findViewById(R.id.bottom_nav);
-        setupViewPager(viewPager);
-        setBottomNavigation();
 
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
 
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                if (prevMenuItem != null) {
-                    prevMenuItem.setChecked(false);
-                } else {
-                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
-                }
-                bottomNavigationView.getMenu().getItem(i).setChecked(true);
-                prevMenuItem = bottomNavigationView.getMenu().getItem(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });
     }
 
      private void
@@ -110,12 +105,15 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
          groupsFragment = new GroupsFragment();
-         MyChatFragment = new MyChatFragment();
+         Bundle bundle = new Bundle();
+         bundle.putSerializable("user",myUser);
+         profileFragment.setArguments(bundle);
+         settingsFragment.setArguments(bundle);
 
          adapter.addFragment(homeFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
-         adapter.addFragment(MyChatFragment);
+         adapter.addFragment(groupsFragment);
          adapter.addFragment(settingsFragment);
 
          viewPager.setAdapter(adapter);
@@ -146,6 +144,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          });
 
      }
+
     private void setBottomNavigation() {
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -249,5 +248,50 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
         }
 
         super.onAttachFragment(fragment);
+    }
+
+
+    private void initFirebase() {
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("database");
+        databaseUsers = ref.child("users").child(currentUser.getUid());
+
+        databaseUsers.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myUser =  dataSnapshot.getValue(User.class);
+                setupViewPager(viewPager);
+
+                setBottomNavigation();
+
+
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int i, float v, int i1) {
+
+                    }
+
+                    @Override
+                    public void onPageSelected(int i) {
+                        if (prevMenuItem != null) {
+                            prevMenuItem.setChecked(false);
+                        } else {
+                            bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                        }
+                        bottomNavigationView.getMenu().getItem(i).setChecked(true);
+                        prevMenuItem = bottomNavigationView.getMenu().getItem(i);
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int i) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
     }
 }

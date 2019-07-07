@@ -2,6 +2,7 @@ package com.evyatartzik.android2_project.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.button.MaterialButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -72,6 +73,7 @@ public class UsersRvAdapter extends RecyclerView.Adapter<UsersRvAdapter.MyViewHo
         TextView userName;
         TextView userAddress;
         Context context;
+        MaterialButton details_button;
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -79,16 +81,21 @@ public class UsersRvAdapter extends RecyclerView.Adapter<UsersRvAdapter.MyViewHo
             profilepic = itemView.findViewById(R.id.profile_image);
             userName = itemView.findViewById(R.id.user_name);
             userAddress = itemView.findViewById(R.id.user_location);
+            details_button = itemView.findViewById(R.id.details_btn);
 
 
-
+            details_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(listener != null){
+                        listener.onUserObjectClicked(getAdapterPosition(), v);
+                    }
+                }
+            });
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(listener != null){
-//                        if( listener.getClass()!= SearchFragment.class)
-                        context = GlobalApplication.getAppContext();
-                        Toast.makeText(context, "User item clicked", Toast.LENGTH_SHORT).show();
                             listener.onUserObjectClicked(getAdapterPosition(), v);
                     }
                 }

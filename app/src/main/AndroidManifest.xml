@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.evyatartzik.android2_project">
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -9,6 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
+
     <application
         android:name=".Adapters.GlobalApplication"
         android:allowBackup="true"
@@ -17,10 +19,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.TutorialActivity"></activity>
-        <activity android:name=".UI.MenuActivity" />
-        <activity android:name=".UI.LoginRegister" />
-        <activity android:name=".UI.SplashActivity">
+        <activity
+            android:name=".UI.TutorialActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".UI.MenuActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.LoginRegister"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".UI.SplashActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -17,7 +17,9 @@ import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.MessageAdapter;
 import com.evyatartzik.android2_project.Interfaces.APIService;
+import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ChatMessage;
+import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Notifictions.Client;
 import com.evyatartzik.android2_project.Notifictions.Data;
 import com.evyatartzik.android2_project.Notifictions.MyResponse;
@@ -62,6 +64,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private MessageAdapter messageAdapter;
     List<ChatMessage> mChatMessage;
+
 
     Activity currentActivity;
 
@@ -169,7 +172,7 @@ public class ChatActivity extends AppCompatActivity {
                     if(currentActivity != null && currentActivity.getUsersIDList() != null
                             && currentActivity.getUsersIDList().contains(user.getuID()) ) {
                         if (notify) {
-                            sendNotification(currentChatName, user.getName(), msg);
+                            sendNotification(user.getuID(),currentUserName , msg);
                         }
                         notify = false;
                     }
@@ -217,6 +220,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
 
     }
 
@@ -294,7 +298,20 @@ public class ChatActivity extends AppCompatActivity {
 
     private void getCurrentActivty(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("database");
-        DatabaseReference databaseCurrentActivity = ref.child("users").child(currentChatName);
+        DatabaseReference databaseCurrentActivity = ref.child("activity").child(currentChatName);
+
+        databaseCurrentActivity.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                currentActivity = dataSnapshot.getValue(Activity.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         databaseCurrentActivity.addValueEventListener(new ValueEventListener() {
             @Override

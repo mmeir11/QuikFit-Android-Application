@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
+import com.evyatartzik.android2_project.Notifictions.Token;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,6 +110,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         databaseUsers.addValueEventListener(userListener);
         //dataBaseActivity.addValueEventListener(activityListener);
 
+
+        updateToken(FirebaseInstanceId.getInstance().getToken());
 
         return root;
     }
@@ -220,4 +224,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
     public void ShowFloatingButton(){floatingActionButton.show();}
 
+
+
+    private void updateToken(String token){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Token");
+        Token token1 = new Token(token);
+        reference.child(currentUser.getUid()).setValue(token1);
+    }
+
 }
+
+
+
+
+
+
+

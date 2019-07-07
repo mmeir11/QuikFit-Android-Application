@@ -16,10 +16,10 @@ import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.UserPrefAdapter;
 import com.evyatartzik.android2_project.Fragments.ActivityFragment;
-import com.evyatartzik.android2_project.Fragments.ChatFragment;
 import com.evyatartzik.android2_project.Fragments.CreateActivityFragment;
 import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
+import com.evyatartzik.android2_project.Fragments.MyChatFragment;
 import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Fragments.SettingsFragment;
@@ -57,9 +57,9 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
     SettingsFragment settingsFragment;
     SearchFragment searchFragment;
     ProfileFragment profileFragment;
-    ChatFragment chatFragment;
-    GroupsFragment groupsFragment;
+//    GroupsFragment groupsFragment;
     ActivityFragment activityFragment;
+    MyChatFragment myChatFragment;
 
     private DatabaseReference ref;
     DatabaseReference databaseUsers;
@@ -104,7 +104,8 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
-         groupsFragment = new GroupsFragment();
+//         groupsFragment = new GroupsFragment();
+         myChatFragment = new MyChatFragment();
          Bundle bundle = new Bundle();
          bundle.putSerializable("user",myUser);
          profileFragment.setArguments(bundle);
@@ -113,7 +114,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          adapter.addFragment(homeFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
-         adapter.addFragment(groupsFragment);
+         adapter.addFragment(myChatFragment);
          adapter.addFragment(settingsFragment);
 
          viewPager.setAdapter(adapter);

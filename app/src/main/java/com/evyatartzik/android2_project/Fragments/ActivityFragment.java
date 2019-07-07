@@ -15,11 +15,15 @@ import android.widget.Toast;
 import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ChatActivity;
+import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class ActivityFragment extends Fragment implements View.OnClickListener, Switch.OnCheckedChangeListener {
@@ -102,7 +106,10 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         String currentUserId = currentUser.getUid();
 
         if(buttonView.getId() == R.id.confirmArravSwtich){
+//======================================================================
+
             if(isChecked){
+
                 if(activity.getAmountOfParticipents() <= activity.getMaxParticipents())
                     activity.addParticipents(currentUserId);
                 else
@@ -126,7 +133,6 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
 
     }
-
 
 
 }

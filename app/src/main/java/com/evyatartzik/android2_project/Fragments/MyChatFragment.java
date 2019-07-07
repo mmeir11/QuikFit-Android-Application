@@ -11,11 +11,12 @@ import android.view.ViewGroup;
 
 import com.evyatartzik.android2_project.Adapters.ChatsListRvAdapter;
 import com.evyatartzik.android2_project.Adapters.UsersChatAdapter;
+import com.evyatartzik.android2_project.Interfaces.APIService;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.Chat;
 import com.evyatartzik.android2_project.Models.ChatActivity;
-import com.evyatartzik.android2_project.Models.ChatMessage;
 import com.evyatartzik.android2_project.Models.User;
+import com.evyatartzik.android2_project.Notifictions.Client;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +56,6 @@ public class MyChatFragment extends Fragment implements ChatsListRvAdapter.Objec
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.all_chat_fragment, container, false);
-
 
         recyclerView_chat = view.findViewById(R.id.recycler_view_chat);
         recyclerView_chat.setHasFixedSize(true);
@@ -93,7 +92,7 @@ public class MyChatFragment extends Fragment implements ChatsListRvAdapter.Objec
 
 
 
-        retrieveAndDisplayActivitys();
+        retrieveAndDisplayChats();
 
 
 
@@ -105,7 +104,7 @@ public class MyChatFragment extends Fragment implements ChatsListRvAdapter.Objec
 
 
 
-    private void retrieveAndDisplayActivitys()
+    private void retrieveAndDisplayChats()
     {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("database");

@@ -62,6 +62,7 @@
                 android:layout_width="match_parent"
                 android:id="@+id/input_group_message"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:layout_gravity="center"
                 android:hint="Please write your message...."/>
 

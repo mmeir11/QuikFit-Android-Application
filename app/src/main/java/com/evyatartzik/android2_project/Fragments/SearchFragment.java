@@ -419,6 +419,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
                         chip.setClickable(true);
                         chip.setCheckable(true);
                         chip.setChipBackgroundColorResource(R.color.chip);
+                        chip.setTextColor(getResources().getColor(R.color.white));
                         chipGroup.addView(chip);
                     }
                 }

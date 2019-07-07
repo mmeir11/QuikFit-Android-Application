@@ -1,4 +1,4 @@
-package com.evyatartzik.android2_project.Models;
+package com.evyatartzik.android2_project.UI;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.MessageAdapter;
 import com.evyatartzik.android2_project.Interfaces.APIService;
+import com.evyatartzik.android2_project.Models.ChatMessage;
 import com.evyatartzik.android2_project.Notifictions.Client;
 import com.evyatartzik.android2_project.Notifictions.Data;
 import com.evyatartzik.android2_project.Notifictions.MyResponse;

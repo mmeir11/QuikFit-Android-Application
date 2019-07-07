@@ -23,7 +23,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Models.Activity;
-import com.evyatartzik.android2_project.Models.ChatActivity;
+import com.evyatartzik.android2_project.UI.ChatActivity;
 import com.evyatartzik.android2_project.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

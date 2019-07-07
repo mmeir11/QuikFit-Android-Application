@@ -3,6 +3,7 @@ package com.evyatartzik.android2_project.Fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -97,6 +99,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private ArrayList<UserPreferences> PreferencesList;
     private ChipGroup chipGroup;
     private FragmentToActivity callback;
+
+    SharedPreferences prefs;
     Boolean spNotification;
 
     public SettingsFragment() {
@@ -104,15 +108,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
 
     @Override
-    public void onStart() {
-        super.onStart();
-        spNotification = getContext().getSharedPreferences("SETTINGS",MODE_PRIVATE).getBoolean("locked", false);
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = GlobalApplication.getAppContext();
+        prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        spNotification = false;
+
         rootView = inflater.inflate(R.layout.settings_fragment, container, false);
         user = (User) getArguments().getSerializable("user");
         userPreferences = user.getUserPreferences();
@@ -137,7 +137,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         buttonSignOut.setOnClickListener(this);
         saveProfile.setOnClickListener(this);
         camera_fab.setOnClickListener(this);
-          notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean b) {
                     if(b)
@@ -149,7 +149,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         Toast.makeText(context, "Notification disabled", Toast.LENGTH_SHORT).show();
 
                     }
-                    getContext().getSharedPreferences("settings", MODE_PRIVATE).edit().putBoolean("isNotificationOn", b).apply();
+                    prefs.edit().putBoolean("notification", b).commit();
 
                 }
             });
@@ -169,7 +169,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         profile_Image = rootView.findViewById(R.id.imageview_account_profile);
         camera_fab = rootView.findViewById(R.id.profile_pic_fab);
         chipGroup = rootView.findViewById(R.id.user_preferences);
-        //notificationSwitch.setEnabled(spNotification);
+        notificationSwitch.setChecked(prefs.getBoolean("notification", false));
 
     }
 
@@ -365,7 +365,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Bitmap bitmapRotate = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
             profile_Image.setImageBitmap(bitmapRotate);
             uploadPhotoUri = imageUri;
-            Toast.makeText(context, "Profile photo updated", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -406,6 +405,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         chip.setClickable(true);
                         chip.setCheckable(true);
                         chip.setChipBackgroundColorResource(R.color.chip);
+                        chip.setTextColor(getResources().getColor(R.color.white));
 
                         if(userpef.getName().equals(user_Preference.getName())){
                             chip.setChecked(true);

@@ -2,6 +2,7 @@ package com.evyatartzik.android2_project.Models;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -61,6 +62,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     List<ChatMessage> mChatMessage;
 
+    Activity currentActivity;
 
     RecyclerView recyclerView;
 
@@ -75,7 +77,12 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_chat);
 
 
+        currentChatName = getIntent().getExtras().get("groupName").toString();
+        mChatNameRef = FirebaseDatabase.getInstance().getReference("database/chats").child(currentChatName);
+        getCurrentActivty();
+
         apiService = Client.getClient("http://fcm.googleapis.com/").create(APIService.class);
+
 
 
         //=========================================
@@ -106,10 +113,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-        currentChatName = getIntent().getExtras().get("groupName").toString();
-
-//        mChatNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentChatName);
-        mChatNameRef = FirebaseDatabase.getInstance().getReference("database/chats").child(currentChatName);
 
         initFields();
 
@@ -155,17 +158,20 @@ public class ChatActivity extends AppCompatActivity {
 
             final String msg = message;
 
-            //קשור להתראות
-           /*
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(currentUserId);
+
+     // להתראות הצאט =============================
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("database/users").child(currentUserId);
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     User user = dataSnapshot.getValue(User.class);
-                    if(notify) {
-                        sendNotification(currentChatName, user.getName(), msg);
+                    if(currentActivity != null && currentActivity.getUsersIDList() != null
+                            && currentActivity.getUsersIDList().contains(user.getuID()) ) {
+                        if (notify) {
+                            sendNotification(currentChatName, user.getName(), msg);
+                        }
+                        notify = false;
                     }
-                    notify = false;
                 }
 
                 @Override
@@ -173,7 +179,6 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-            */
 
         }
     }
@@ -193,39 +198,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
-
-
-     /*   mChatNameRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists()){
-                    DisplayMessages(dataSnapshot);
-                }
-            }
-
-            @Override
-            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists()){
-                    DisplayMessages(dataSnapshot);
-                }
-            }
-
-            @Override
-            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });*/
     }
 
 
@@ -272,28 +244,15 @@ public class ChatActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(ChatActivity.this, mChatMessage);
         recyclerView.setAdapter(messageAdapter);
 
-       /* Iterator iterator = dataSnapshot.getChildren().iterator();
-        while (iterator.hasNext()){
-
-            String chatDate = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatMessage = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatName = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatTime = (String)((DataSnapshot)iterator.next()).getValue();
-
-
-            mDisplayMessages.append(chatName +"  "+chatTime+"    "+chatDate+":\n"+ chatMessage+"\n\n"  );
-            mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
-
-        }*/
     }
 
 
 
 
-    private void sendNotification(/*Reciver*/ String groupName, final String username, final String message)
+    private void sendNotification(String reciver, final String username, final String message)
     {
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
-        Query query = tokens.orderByKey().equalTo(groupName);
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("database/Tokens");
+        Query query = tokens.orderByKey().equalTo(reciver);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -331,6 +290,23 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
+
+    private void getCurrentActivty(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("database");
+        DatabaseReference databaseCurrentActivity = ref.child("users").child(currentChatName);
+
+        databaseCurrentActivity.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                currentActivity = dataSnapshot.getValue(Activity.class);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) { }
+        });
+    }
 
 
 

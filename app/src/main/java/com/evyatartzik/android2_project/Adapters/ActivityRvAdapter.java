@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Models.Activity;
+import com.evyatartzik.android2_project.Models.UserPreferences;
 import com.evyatartzik.android2_project.R;
 
 import org.w3c.dom.Text;
@@ -24,6 +25,8 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
     private Context mContext;
     private ArrayList<Activity> mData;
     private ObjectListener listener;
+    CircleImageView activityTypeImage;
+
 
     public interface ObjectListener{
        public void onActivityObjectClicked(int pos,View view);
@@ -55,12 +58,48 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
 
         Activity activity = mData.get(i);
 
-        myViewHolder.profilepic.setImageResource(R.drawable.avatar);
+        setImageForActivity(myViewHolder,i);
         myViewHolder.titleActivity.setText(activity.getTitle());
         myViewHolder.amountNumber.setText(activity.getAmountOfParticipents()+"");
         myViewHolder.amountMaxnumber.setText(activity.getMaxParticipents()+"");
         myViewHolder.typeActivity.setText(activity.getType());
         myViewHolder.location.setText(activity.getLocation());
+
+
+    }
+
+    private void setImageForActivity(MyViewHolder holder, int position) {
+
+        Activity activities = mData.get(position);
+
+        String name = activities.getType();
+        switch (name) {
+
+            case "Basketball":
+                holder.profilepic.setImageResource(R.drawable.basketball_icon);
+                break;
+            case "Soccer":
+                holder.profilepic.setImageResource(R.drawable.soccer_icon);
+                break;
+            case "Volley":
+                holder.profilepic.setImageResource(R.drawable.vallay_icon);
+                break;
+            case "Weightlifting":
+                holder.profilepic.setImageResource(R.drawable.weights_icon);
+                break;
+            case "Water sports":
+                holder.profilepic.setImageResource(R.drawable.watar_sport_icon);
+                break;
+            case "Tennis":
+                holder.profilepic.setImageResource(R.drawable.tennis_icon);
+                break;
+            case "Football":
+                holder.profilepic.setImageResource(R.drawable.football_icon);
+                break;
+            case "Running":
+                holder.profilepic.setImageResource(R.drawable.runnig_icon);
+                break;
+        }
     }
 
     @Override
@@ -70,12 +109,12 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
 
-        CircleImageView profilepic;
-        TextView titleActivity;
-        TextView amountNumber;
-        TextView amountMaxnumber;
-        TextView typeActivity;
-        TextView location;
+        public CircleImageView profilepic;
+        public TextView titleActivity;
+        public TextView amountNumber;
+        public TextView amountMaxnumber;
+        public TextView typeActivity;
+        public TextView location;
 
         public MyViewHolder(@NonNull final View itemView) {
             super(itemView);
@@ -86,6 +125,7 @@ public class ActivityRvAdapter extends RecyclerView.Adapter<ActivityRvAdapter.My
             amountMaxnumber = itemView.findViewById(R.id.amountMaxNumber);
             typeActivity = itemView.findViewById(R.id.typeActivity);
             location = itemView.findViewById(R.id.locationActivity);
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

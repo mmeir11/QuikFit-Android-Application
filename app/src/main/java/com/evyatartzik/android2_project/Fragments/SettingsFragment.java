@@ -97,10 +97,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private ArrayList<UserPreferences> PreferencesList;
     private ChipGroup chipGroup;
     private FragmentToActivity callback;
+    Boolean spNotification;
 
     public SettingsFragment() {
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        spNotification = getContext().getSharedPreferences("SETTINGS",MODE_PRIVATE).getBoolean("locked", false);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -161,6 +169,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         profile_Image = rootView.findViewById(R.id.imageview_account_profile);
         camera_fab = rootView.findViewById(R.id.profile_pic_fab);
         chipGroup = rootView.findViewById(R.id.user_preferences);
+        //notificationSwitch.setEnabled(spNotification);
 
     }
 

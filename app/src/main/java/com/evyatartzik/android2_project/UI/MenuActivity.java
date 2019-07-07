@@ -1,8 +1,15 @@
 package com.evyatartzik.android2_project.UI;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.icu.text.SimpleDateFormat;
+import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,23 +17,17 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import com.evyatartzik.android2_project.Adapters.UserPrefAdapter;
 import com.evyatartzik.android2_project.Fragments.ActivityFragment;
 import com.evyatartzik.android2_project.Fragments.CreateActivityFragment;
-import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
 import com.evyatartzik.android2_project.Fragments.MyChatFragment;
 import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Fragments.SettingsFragment;
 import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
-import com.evyatartzik.android2_project.Models.Activity;
-import com.evyatartzik.android2_project.Models.UserPreferences;
+import com.evyatartzik.android2_project.OpenActivityReceiver;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,12 +36,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class MenuActivity extends AppCompatActivity implements FragmentToActivity {
 
@@ -67,6 +69,10 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
     private DatabaseReference databaseUserPref;
     private User myUser;
 
+    private AlarmManager alarmManager;
+    private boolean is_notif_on;
+    private SharedPreferences prefs;
+
     /*onStop calls when you want to kill all fragments ( == signout)*/
     @Override
     protected void onStop() {
@@ -90,6 +96,11 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
         /*Config MenuActivity*/
         viewPager = findViewById(R.id.pager);
         bottomNavigationView = findViewById(R.id.bottom_nav);
+
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        is_notif_on = prefs.getBoolean("notification", false);
+
 
 
 
@@ -120,7 +131,6 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
          viewPager.setAdapter(adapter);
          viewPager.setOffscreenPageLimit(4);
-
 
          viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
              @Override
@@ -180,13 +190,33 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    public void finish_task(int id, String str) {
-        homeFragment.ShowFloatingButton();
+    public void finish_task(int id, String str, String str2) {
+        if(id != 4){ homeFragment.ShowFloatingButton();}
         if(id == 3){
 
             UpdateUserProfilePicURL(str);
         }
+        if(id == 4) {
+            if (is_notif_on) {
+                Intent intent = new Intent(MenuActivity.this, OpenActivityReceiver.class);
+                intent.putExtra("activity_id", str);
+                intent.putExtra("date", str2);
+
+                PendingIntent pendingIntent =  PendingIntent.getBroadcast(MenuActivity.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
+                Calendar calendar = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yy", Locale.ENGLISH);
+                try {
+                    calendar.setTime(sdf.parse(str2));// all done                PendingIntent pendingIntent =  PendingIntent.getBroadcast(MenuActivity.this, 0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+            }
+        }
+
     }
 
 

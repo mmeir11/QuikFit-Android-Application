@@ -318,7 +318,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     String uploadID = currentUser.getUid();
                     uploadRef.child(uploadID).setValue(profileImageUpload);
                     usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
-                    callback.finish_task(3,uploadName);
+                    callback.finish_task(3,uploadName,"");
                 } else {
                     Toast.makeText(getActivity(), "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }

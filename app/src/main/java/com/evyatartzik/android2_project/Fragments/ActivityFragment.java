@@ -29,10 +29,13 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
     private FragmentToActivity callback;
     TextView numParticipantsTv;
 
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser currentUser = mAuth.getCurrentUser();
 
 //    ArrayList<Activity>  activitiesArrayList= new ArrayList<>();
+
+
 
 
 
@@ -52,6 +55,10 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         Switch confirmArravSwtich = root.findViewById(R.id.confirmArravSwtich);
         Button chatBtn = root.findViewById(R.id.chatBtn);
 
+
+
+
+
         activity = (Activity)getArguments().getSerializable("activity");
 
         titleTv.setText(activity.getTitle());
@@ -66,6 +73,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         confirmArravSwtich.setChecked(activity.getConfirm());
         confirmArravSwtich.setOnCheckedChangeListener(this);
         chatBtn.setOnClickListener(this);
+
 
 
 
@@ -90,7 +98,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onPause() {
-        callback.finish_task(1,"");
+        callback.finish_task(1,"","");
         super.onPause();
     }
 
@@ -106,8 +114,13 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
             if(isChecked){
 
-                if(activity.getAmountOfParticipents() <= activity.getMaxParticipents())
+                if(activity.getAmountOfParticipents() <= activity.getMaxParticipents()) {
+
                     activity.addParticipents(currentUserId);
+                    callback.finish_task(4,activity.getTitle(),activity.getDate());
+
+                }
+
                 else
                     Toast.makeText(getContext(), "Sorry the activity is full, Try again later", Toast.LENGTH_SHORT).show();
             }else{

@@ -204,7 +204,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     @Override
     public void onActivityObjectClicked(int pos, View view) {
 
-
         Activity activity = activitiesNearByArrayList.get(pos);
 
         floatingActionButton.hide();

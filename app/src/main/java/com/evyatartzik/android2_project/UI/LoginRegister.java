@@ -115,6 +115,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
         initUserRefList();
 
 
+
         /*Firebase storage*/
         mStorageRef  = FirebaseStorage.getInstance().getReference("uploads");
         uploadRef =  FirebaseDatabase.getInstance().getReference("uploads");

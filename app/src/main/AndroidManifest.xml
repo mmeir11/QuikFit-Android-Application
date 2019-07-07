@@ -41,6 +41,7 @@
             android:name=".UI.ChatActivity"
             android:windowSoftInputMode="adjustResize"/>
 
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.evyatartzik.android2_project.provider"
@@ -68,7 +69,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
+        <receiver android:name=".OpenActivityReceiver" />
 
 
     </application>

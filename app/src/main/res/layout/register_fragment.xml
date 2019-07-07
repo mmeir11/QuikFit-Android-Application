@@ -245,6 +245,7 @@
             android:layout_height="wrap_content"
             android:textAllCaps="false"
             android:padding="12dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:text="@string/create_account"/>
     </android.support.v7.widget.CardView>
 

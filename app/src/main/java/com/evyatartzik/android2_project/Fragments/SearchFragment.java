@@ -321,10 +321,15 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
             for (User user: databaseUsers) {
                 for (UserPreferences userPreferences: user.getUserPreferences())
                 {
+
+                    //Match !
                     if(userPreferences.getName().equals(activity) || userPreferences.getName().equals(activity.toLowerCase()))
                     {
-                        //Match !
-                        usersBySameActivities.add(user);
+
+                        if(!userExistInList(user,usersBySameActivities))
+                        {
+                            usersBySameActivities.add(user);
+                        }
                         break;
                     }
                 }
@@ -337,6 +342,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
 
 
+    }
+
+    private boolean userExistInList(User user, ArrayList<User> usersBySameActivities) {
+        Boolean isExisted = false;
+
+        for (User temp: usersBySameActivities) {
+            if(temp.getEmail()==user.getEmail())
+            {
+                isExisted = true;
+            }
+
+        }
+        return  isExisted;
     }
 
     private ArrayList<Activity> getActivitiesByChips(ArrayList<String> activities) {

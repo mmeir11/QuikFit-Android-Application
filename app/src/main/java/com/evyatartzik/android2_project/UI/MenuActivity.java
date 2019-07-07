@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.evyatartzik.android2_project.Fragments.ActivityFragment;
-import com.evyatartzik.android2_project.Fragments.ChatFragment;
+import com.evyatartzik.android2_project.Fragments.MyChatFragment;
 import com.evyatartzik.android2_project.Fragments.CreateActivityFragment;
 import com.evyatartzik.android2_project.Fragments.GroupsFragment;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
@@ -20,7 +20,6 @@ import com.evyatartzik.android2_project.Fragments.ProfileFragment;
 import com.evyatartzik.android2_project.Fragments.SearchFragment;
 import com.evyatartzik.android2_project.Fragments.SettingsFragment;
 import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
-import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.Models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,8 +45,9 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
     SettingsFragment settingsFragment;
     SearchFragment searchFragment;
     ProfileFragment profileFragment;
-    ChatFragment chatFragment;
+    MyChatFragment myChatFragment;
     GroupsFragment groupsFragment;
+    MyChatFragment MyChatFragment;
     ActivityFragment activityFragment;
 
     /*onStop calls when you want to kill all fragments ( == signout)*/
@@ -110,11 +110,12 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
          groupsFragment = new GroupsFragment();
+         MyChatFragment = new MyChatFragment();
 
          adapter.addFragment(homeFragment);
          adapter.addFragment(searchFragment);
          adapter.addFragment(profileFragment);
-         adapter.addFragment(groupsFragment);
+         adapter.addFragment(MyChatFragment);
          adapter.addFragment(settingsFragment);
 
          viewPager.setAdapter(adapter);

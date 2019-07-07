@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.GlobalApplication;
+import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Models.UserPreferences;
@@ -95,10 +96,19 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private ArrayList<UserPreferences> userPreferences;
     private ArrayList<UserPreferences> PreferencesList;
     private ChipGroup chipGroup;
+    private FragmentToActivity callback;
+    Boolean spNotification;
 
     public SettingsFragment() {
     }
 
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        spNotification = getContext().getSharedPreferences("SETTINGS",MODE_PRIVATE).getBoolean("locked", false);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -118,7 +128,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         userName.setText(user.getName());
         if(!user.getProfile_pic_path().equals("profile.image"))
         {
-            Picasso.get().load(user.getProfile_pic_path()).into(profile_Image);
+            Picasso.get().load(user.getProfile_pic_path()).rotate(90).into(profile_Image);
 
         }
 
@@ -159,6 +169,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         profile_Image = rootView.findViewById(R.id.imageview_account_profile);
         camera_fab = rootView.findViewById(R.id.profile_pic_fab);
         chipGroup = rootView.findViewById(R.id.user_preferences);
+        //notificationSwitch.setEnabled(spNotification);
 
     }
 
@@ -185,12 +196,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.save_btn:
                 enableDisableNotification();//check switch state and update accordingly
+                uploadProfilePhoto(currentUser.getEmail());
                 saveUploadData();
+
                 break;
             case R.id.profile_pic_fab:
                 //get Photo and upload to database
                 takePhoto();
-                uploadProfilePhoto(currentUser.getEmail());
+
                 break;
                 default:
                     Toast.makeText(context, R.string.failure_task, Toast.LENGTH_SHORT).show();
@@ -305,12 +318,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     String uploadID = currentUser.getUid();
                     uploadRef.child(uploadID).setValue(profileImageUpload);
                     usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
+                    callback.finish_task(3,uploadName);
                 } else {
                     Toast.makeText(getActivity(), "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        signOut();
+
     }
 
     public void takePhoto()
@@ -409,4 +423,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    public void setOnUserChangeListener(FragmentToActivity callback) {
+        this.callback = callback;
+    }
 }

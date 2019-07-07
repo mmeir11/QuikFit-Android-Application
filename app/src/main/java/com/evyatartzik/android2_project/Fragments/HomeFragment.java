@@ -34,9 +34,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
     View root;
     FloatingActionButton floatingActionButton;
-    private ActivityRvAdapter activityRvAdapter;
-    private RecyclerView NearByActivitysRv;
-    private RecyclerView MyActivityRv;
+    private ActivityRvAdapter activityRvAdapter,activityNearByRvAdapter;
+    private RecyclerView NearByActivitysRv,MyActivityRv;
 
     /*Firebase*/
     private FirebaseAuth mAuth;
@@ -44,12 +43,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     private FirebaseDatabase database;
     private DatabaseReference ref , databaseUsers,dataBaseActivity;
     private DatabaseReference mReferenceActivity;
+    User user;
 
     /**Arraylist of activity**/
     ArrayList<User> userArrayList;
-    ArrayList<Activity> activitiesArrayList;
+    ArrayList<Activity> activitiesNearByArrayList,activitiesMyArrayList;
     final Calendar myCalendar = Calendar.getInstance();
-
 
 
     @Nullable
@@ -59,21 +58,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
         mReferenceActivity = FirebaseDatabase.getInstance().getReference("database/activity");
 
-        activitiesArrayList = new ArrayList<>();
-//        Activity activity = new Activity("כדורגל בשקמה", "Rishon Lezion","football", "30.5.19", "20:30", 30,"לא לאחר!!", null);
-//        activitiesArrayList.add(activity);
-
-        activityRvAdapter = new ActivityRvAdapter(getActivity(), activitiesArrayList);
+        activitiesNearByArrayList = new ArrayList<>();
+        activitiesMyArrayList = new ArrayList<>();
+        ///
+        activityRvAdapter = new ActivityRvAdapter(getActivity(), activitiesMyArrayList);
+        activityNearByRvAdapter = new ActivityRvAdapter(getActivity(), activitiesNearByArrayList);
+        ///
         NearByActivitysRv = root.findViewById(R.id.recycler_near_activates);
         NearByActivitysRv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        NearByActivitysRv.setAdapter(activityRvAdapter);
-
+        NearByActivitysRv.setAdapter(activityNearByRvAdapter);
+        ///
         MyActivityRv = root.findViewById(R.id.recycler_my_activitys);
         MyActivityRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         MyActivityRv.setAdapter(activityRvAdapter);
+        ///
 
 
         activityRvAdapter.setListener(this);
+        activityNearByRvAdapter.setListener(this);
 
         initDataStructe();
         initFragmentByID();
@@ -86,12 +88,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                User post = null;
+
                 try
                 {
 
-                    post = dataSnapshot.getValue(User.class);
-                    userArrayList.add(post);
+                    user = dataSnapshot.getValue(User.class);
+                    userArrayList.add(user);
 
                 }
                 catch (Exception ex)
@@ -160,19 +162,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         DatabaseReference ref = database.getReference("database");
         DatabaseReference activitysRef = ref.child("activity");
 
-//        ActivitysList = new ArrayList<>();
-
         activitysRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                activitiesArrayList.clear();
+                activitiesNearByArrayList.clear();
+                activitiesMyArrayList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
 
                     Activity activitysRef = postSnapshot.getValue(Activity.class);
-                    activitiesArrayList.add(activitysRef);
+                    //TODO- show specific activities: NearBy or Contains user
+                    String location = user.getLocation_string();
+                    if(activitysRef.getLocation().contains(location))
+                    {
+                        activitiesNearByArrayList.add(activitysRef);
+                    }
+                    for (String uID:activitysRef.getUsersIDList()) {
+                        if(uID.equals(user.getuID()))
+                        {
+                            activitiesMyArrayList.add(activitysRef);
+                        }
+                    }
+
                 }
 
                 activityRvAdapter.notifyDataSetChanged();
+                activityNearByRvAdapter.notifyDataSetChanged();
 
             }
 
@@ -187,7 +201,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
     public void onActivityObjectClicked(int pos, View view) {
 
 
-        Activity activity = activitiesArrayList.get(pos);
+        Activity activity = activitiesNearByArrayList.get(pos);
 
         floatingActionButton.hide();
         ActivityFragment activityFragment = new ActivityFragment();

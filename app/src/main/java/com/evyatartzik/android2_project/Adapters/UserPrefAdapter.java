@@ -106,8 +106,8 @@ public class UserPrefAdapter extends RecyclerView.Adapter<UserPrefAdapter.UserPr
             case "Basketball":
                 holder.activityTypeImage.setImageResource(R.drawable.basketball_icon);
                 break;
-            case "Football":
-                holder.activityTypeImage.setImageResource(R.drawable.football_icon);
+            case "Soccer":
+                holder.activityTypeImage.setImageResource(R.drawable.soccer_icon);
                 break;
             case "Volley":
                 holder.activityTypeImage.setImageResource(R.drawable.vallay_icon);
@@ -117,6 +117,15 @@ public class UserPrefAdapter extends RecyclerView.Adapter<UserPrefAdapter.UserPr
                 break;
             case "Water sports":
                 holder.activityTypeImage.setImageResource(R.drawable.watar_sport_icon);
+                break;
+            case "Tennis":
+                holder.activityTypeImage.setImageResource(R.drawable.tennis_icon);
+                break;
+            case "Football":
+                holder.activityTypeImage.setImageResource(R.drawable.football_icon);
+                break;
+            case "Running":
+                holder.activityTypeImage.setImageResource(R.drawable.runnig_icon);
                 break;
         }
     }

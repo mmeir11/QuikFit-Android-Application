@@ -93,7 +93,7 @@ public class ProfileFragment extends Fragment {
 
         if(!user.getProfile_pic_path().equals("profile.image"))
         {
-            Picasso.get().load(user.getProfile_pic_path()).into(imageViewProfilePicture);
+            Picasso.get().load(user.getProfile_pic_path()).rotate(90).into(imageViewProfilePicture);
 
         }
         userPreferences = user.getUserPreferences();

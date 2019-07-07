@@ -7,6 +7,7 @@ public class Chat {
     private String title;
     private ArrayList<String> usersIDList;
     private ArrayList<ChatMessage> chatMessageArrayList;
+//    private String uuid;
 
     public Chat(String title) {
         this.title = title;
@@ -16,6 +17,7 @@ public class Chat {
         this.title = title;
         this.usersIDList = usersIDList;
         this.chatMessageArrayList = chatMessageArrayList;
+//        this.uuid =
     }
 
     public String getTitle() {

@@ -227,7 +227,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
 
     private void updateToken(String token){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Token");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("database/Token");
         Token token1 = new Token(token);
         reference.child(currentUser.getUid()).setValue(token1);
     }

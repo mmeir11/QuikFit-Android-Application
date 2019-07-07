@@ -1,5 +1,6 @@
 package com.evyatartzik.android2_project.UI;
 
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -119,6 +120,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
          viewPager.setAdapter(adapter);
          viewPager.setOffscreenPageLimit(4);
+
 
          viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
              @Override

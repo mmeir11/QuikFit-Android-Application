@@ -21,11 +21,11 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        String sented = remoteMessage.getData().get("sented");
+        String sended = remoteMessage.getData().get("sended");
 
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(firebaseUser != null && sented.equals(firebaseUser.getUid())){
+        if(firebaseUser != null && sended.equals(firebaseUser.getUid())){
             sendNotification(remoteMessage);
         }
 
@@ -38,7 +38,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
         String body = remoteMessage.getData().get("body");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
-        int j = Integer.parseInt(user.replaceAll("[\\D]]", ""));
+        int j = Integer.parseInt(user.replaceAll("[\\D]", ""));
         Intent intent = new Intent(this, ChatActivity.class);    //MessageActivity.class
         Bundle bundle = new Bundle();
         bundle.putString("userid", user);
@@ -52,6 +52,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
+                .setSound(defualtSound)
                 .setContentIntent(pendingIntent);
         NotificationManager noti= (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 

@@ -164,10 +164,35 @@ public class ChatActivity extends AppCompatActivity {
 
 
      // להתראות הצאט =============================
-            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("database/users").child(currentUserId);
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("database/users")/*.child(currentUserId)*/;
+
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    ArrayList<String> UsersIDList = currentActivity.getUsersIDList();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        User user = snapshot.getValue(User.class);
+                        if(currentActivity != null && UsersIDList != null && UsersIDList.contains(user.getuID()) ) {
+                            if (notify) {
+                                sendNotification(user.getuID(),currentUserName , msg);
+//                                notify = false;
+                            }
+
+                        }
+
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        /*
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
                     User user = dataSnapshot.getValue(User.class);
                     if(currentActivity != null && currentActivity.getUsersIDList() != null
                             && currentActivity.getUsersIDList().contains(user.getuID()) ) {
@@ -183,7 +208,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-
+        */
         }
     }
 
@@ -203,7 +228,6 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
     private void GetUserInfo() {
@@ -256,7 +280,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private void sendNotification(String reciver, final String username, final String message)
     {
-        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("database/Tokens");
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("database/Token");   //"database/Token"
         Query query = tokens.orderByKey().equalTo(reciver);
         query.addValueEventListener(new ValueEventListener() {
             @Override
@@ -299,19 +323,6 @@ public class ChatActivity extends AppCompatActivity {
     private void getCurrentActivty(){
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("database");
         DatabaseReference databaseCurrentActivity = ref.child("activity").child(currentChatName);
-
-        databaseCurrentActivity.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                currentActivity = dataSnapshot.getValue(Activity.class);
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         databaseCurrentActivity.addValueEventListener(new ValueEventListener() {
             @Override

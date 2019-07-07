@@ -118,7 +118,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         userName.setText(user.getName());
         if(!user.getProfile_pic_path().equals("profile.image"))
         {
-            Picasso.get().load(user.getProfile_pic_path()).into(profile_Image);
+            Picasso.get().load(user.getProfile_pic_path()).rotate(90).into(profile_Image);
 
         }
 

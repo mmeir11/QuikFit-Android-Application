@@ -59,6 +59,8 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
 
@@ -127,8 +129,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         camera_fab.setOnClickListener(this);
           notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if(isChecked)
+                public void onCheckedChanged(CompoundButton buttonView, boolean b) {
+                    if(b)
                     {
                         Toast.makeText(context, "Notification enabled", Toast.LENGTH_SHORT).show();
                     }
@@ -137,6 +139,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         Toast.makeText(context, "Notification disabled", Toast.LENGTH_SHORT).show();
 
                     }
+                    getContext().getSharedPreferences("settings", MODE_PRIVATE).edit().putBoolean("isNotificationOn", b).apply();
+
                 }
             });
 
@@ -223,6 +227,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             }
         }
 
+        User userUpdated = user;
+        userUpdated.setUserPreferences(updatedUserPref);
+        databaseUsers.setValue(userUpdated);
 
         // updatedUserPref contains the user new preferences
 
@@ -246,11 +253,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(context, "Please upload photo", Toast.LENGTH_SHORT).show();
         }
 
-
         else
         {
             Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show();
         }
+
     }
 
     private void signOut() {

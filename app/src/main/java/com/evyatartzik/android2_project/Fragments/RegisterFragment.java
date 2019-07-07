@@ -389,6 +389,7 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                     chip.setText(user_Preference.getName());
                     chip.setClickable(true);
                     chip.setCheckable(true);
+                    chip.setTextColor(getResources().getColor(R.color.white));
                     chip.setChipBackgroundColorResource(R.color.chip);
                     chipGroup.addView(chip);
                 }

@@ -358,6 +358,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                     chip.setClickable(true);
                     chip.setCheckable(true);
                     chip.setChipBackgroundColorResource(R.color.chip);
+                    chip.setTextColor(getResources().getColor(R.color.white));
                     chipGroup.addView(chip);
                 }
             }

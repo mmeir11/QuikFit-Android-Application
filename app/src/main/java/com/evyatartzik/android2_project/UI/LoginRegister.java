@@ -241,7 +241,7 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
                 break;
 
             case R.id.link_signup:
-                getSupportFragmentManager().beginTransaction().add(R.id.signup_fragment, SignupFragment,"signup_fragment").commit();
+                getSupportFragmentManager().beginTransaction().add(R.id.signup_fragment, SignupFragment,"signup_fragment").addToBackStack("signup_fragment").commit();
 
 
 
@@ -251,10 +251,16 @@ public class LoginRegister extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onBackPressed() {
-        Intent a = new Intent(Intent.ACTION_MAIN);
-        a.addCategory(Intent.CATEGORY_HOME);
-        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(a);
+
+        if(getSupportFragmentManager().getBackStackEntryCount() != 0){
+            getSupportFragmentManager().popBackStack();
+        }
+        else {
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+        }
     }
 
     public void initUserRefList()

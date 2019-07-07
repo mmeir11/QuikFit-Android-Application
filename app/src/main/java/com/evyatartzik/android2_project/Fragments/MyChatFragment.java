@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 
 import com.evyatartzik.android2_project.Adapters.ChatsListRvAdapter;
 import com.evyatartzik.android2_project.Adapters.UsersChatAdapter;
-import com.evyatartzik.android2_project.Interfaces.APIService;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.Chat;
-import com.evyatartzik.android2_project.Models.ChatActivity;
+import com.evyatartzik.android2_project.UI.ChatActivity;
 import com.evyatartzik.android2_project.Models.User;
-import com.evyatartzik.android2_project.Notifictions.Client;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

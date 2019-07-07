@@ -9,9 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
-import com.evyatartzik.android2_project.Fragments.MyChatFragment;
-import com.evyatartzik.android2_project.Models.ChatActivity;
-import com.evyatartzik.android2_project.Models.ChatMessage;
+import com.evyatartzik.android2_project.UI.ChatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.messaging.FirebaseMessagingService;

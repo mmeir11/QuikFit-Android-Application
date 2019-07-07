@@ -127,6 +127,9 @@ public class UserPrefAdapter extends RecyclerView.Adapter<UserPrefAdapter.UserPr
             case "Running":
                 holder.activityTypeImage.setImageResource(R.drawable.runnig_icon);
                 break;
+            case "Bowling":
+                holder.activityTypeImage.setImageResource(R.drawable.booling_icon);
+                break;
         }
     }
 

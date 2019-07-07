@@ -365,7 +365,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Bitmap bitmapRotate = Bitmap.createBitmap(bitmap1, 0, 0, bitmap1.getWidth(), bitmap1.getHeight(), matrix, true);
             profile_Image.setImageBitmap(bitmapRotate);
             uploadPhotoUri = imageUri;
-            Toast.makeText(context, "Profile photo updated", Toast.LENGTH_SHORT).show();
 
         }
 
@@ -406,6 +405,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                         chip.setClickable(true);
                         chip.setCheckable(true);
                         chip.setChipBackgroundColorResource(R.color.chip);
+                        chip.setTextColor(getResources().getColor(R.color.white));
 
                         if(userpef.getName().equals(user_Preference.getName())){
                             chip.setChecked(true);

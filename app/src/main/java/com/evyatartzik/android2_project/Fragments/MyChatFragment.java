@@ -118,10 +118,8 @@ public class MyChatFragment extends Fragment implements ChatsListRvAdapter.Objec
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-
+                chatsList.clear();
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-
-                    chatsList.clear();
 
                     Activity activitysRef = postSnapshot.getValue(Activity.class);
                     if(activitysRef.getUsersIDList()!=null && activitysRef.getUsersIDList().contains(currentUser.getUid()))

@@ -487,7 +487,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
 
     @Override
     public void onPause() {
-        callback.finish_task();
+        callback.finish_task(2,"");
         super.onPause();
     }
 }

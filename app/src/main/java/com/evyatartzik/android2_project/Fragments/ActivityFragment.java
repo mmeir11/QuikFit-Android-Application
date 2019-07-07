@@ -90,7 +90,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public void onPause() {
-        callback.finish_task();
+        callback.finish_task(1,"");
         super.onPause();
     }
 

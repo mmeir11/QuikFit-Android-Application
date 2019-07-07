@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.GlobalApplication;
+import com.evyatartzik.android2_project.Interfaces.FragmentToActivity;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Models.UserPreferences;
@@ -95,6 +96,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private ArrayList<UserPreferences> userPreferences;
     private ArrayList<UserPreferences> PreferencesList;
     private ChipGroup chipGroup;
+    private FragmentToActivity callback;
 
     public SettingsFragment() {
     }
@@ -185,12 +187,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.save_btn:
                 enableDisableNotification();//check switch state and update accordingly
+                uploadProfilePhoto(currentUser.getEmail());
                 saveUploadData();
+
                 break;
             case R.id.profile_pic_fab:
                 //get Photo and upload to database
                 takePhoto();
-                uploadProfilePhoto(currentUser.getEmail());
+
                 break;
                 default:
                     Toast.makeText(context, R.string.failure_task, Toast.LENGTH_SHORT).show();
@@ -305,12 +309,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     String uploadID = currentUser.getUid();
                     uploadRef.child(uploadID).setValue(profileImageUpload);
                     usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
+                    callback.finish_task(3,uploadName);
                 } else {
                     Toast.makeText(getActivity(), "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
-        signOut();
+
     }
 
     public void takePhoto()
@@ -409,4 +414,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         });
     }
 
+    public void setOnUserChangeListener(FragmentToActivity callback) {
+        this.callback = callback;
+    }
 }

@@ -174,12 +174,16 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
         });
     }
 
+
+
+
     @Override
-    public void finish_task() {
-
-
+    public void finish_task(int id, String str) {
         homeFragment.ShowFloatingButton();
+        if(id == 3){
 
+            UpdateUserProfilePicURL(str);
+        }
     }
 
 
@@ -246,6 +250,10 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
             ActivityFragment activityFragment = (ActivityFragment) fragment;
             activityFragment.setOnActivityOpenListener(this);
         }
+        if(fragment instanceof SettingsFragment){
+            SettingsFragment settingsFragment = (SettingsFragment) fragment;
+            settingsFragment.setOnUserChangeListener(this);
+        }
 
         super.onAttachFragment(fragment);
     }
@@ -293,6 +301,11 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) { }
         });
+    }
+
+    public void UpdateUserProfilePicURL(String url){
+
+        myUser.setProfile_pic_path(url);
     }
 
 

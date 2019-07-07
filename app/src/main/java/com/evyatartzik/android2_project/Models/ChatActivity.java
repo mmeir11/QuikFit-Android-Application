@@ -15,12 +15,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.MessageAdapter;
+import com.evyatartzik.android2_project.Interfaces.APIService;
+import com.evyatartzik.android2_project.Notifictions.Client;
+import com.evyatartzik.android2_project.Notifictions.Data;
+import com.evyatartzik.android2_project.Notifictions.MyResponse;
+import com.evyatartzik.android2_project.Notifictions.Sender;
+import com.evyatartzik.android2_project.Notifictions.Token;
 import com.evyatartzik.android2_project.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -28,6 +35,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -50,15 +61,21 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     List<ChatMessage> mChatMessage;
 
+
     RecyclerView recyclerView;
 
+    APIService apiService;
 
+    boolean notify = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
+
+
+        apiService = Client.getClient("http://fcm.googleapis.com/").create(APIService.class);
 
 
         //=========================================
@@ -101,11 +118,10 @@ public class ChatActivity extends AppCompatActivity {
         mSendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                notify = true;
                 SaveMessageInToDatabase();
 
                 mUserMessage.setText("");
-
-//                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
             }
         });
 
@@ -133,27 +149,35 @@ public class ChatActivity extends AppCompatActivity {
             mGroupMessageRef = mChatNameRef.child(messageKey);
 
 
-            //ChatMessage(String date, String message, String name, String time,  String uuid)
             ChatMessage chatMessage = new ChatMessage(currentDate, message, currentUserName,  currentTime,  currentUserId);
 
-//            mGroupMessageRef.updateChildren(chatMessage);
             mGroupMessageRef.setValue(chatMessage);
 
-            //Save to DB
-         /*   HashMap<String, Object> messageInfoMap = new HashMap<>();
-            messageInfoMap.put("name", currentUserName);
-            messageInfoMap.put("message",message);
-            messageInfoMap.put("date", currentDate);
-            messageInfoMap.put("time", currentTime);
+            final String msg = message;
 
-            mGroupMessageRef.updateChildren(messageInfoMap);*/
-            // notify to all the users with thier Uids.
+            //קשור להתראות
+           /*
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(currentUserId);
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    if(notify) {
+                        sendNotification(currentChatName, user.getName(), msg);
+                    }
+                    notify = false;
+                }
 
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-
+                }
+            });
+            */
 
         }
     }
+
 
     @Override
     protected void onStart() {
@@ -265,23 +289,38 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
-    private void readMessage(final String myId, final String userId, final String imageUrl) {
-        mChatMessage = new ArrayList<>();
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("chats");
-        reference.addValueEventListener(new ValueEventListener() {
+    private void sendNotification(/*Reciver*/ String groupName, final String username, final String message)
+    {
+        DatabaseReference tokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = tokens.orderByKey().equalTo(groupName);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                mChatMessage.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    ChatMessage chatMessage = snapshot.getValue(ChatMessage.class);
-                    if (chatMessage.getReceiver().equals(myId) && chatMessage.getSender().equals(userId) ||
-                            chatMessage.getReceiver().equals(userId) && chatMessage.getSender().equals(myId)) {
-                        mChatMessage.add(chatMessage);
-                    }
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Token token = snapshot.getValue(Token.class);
+                    Data data = new Data(currentUserId, R.mipmap.ic_launcher, username +": " + message, "News Message",
+                            currentUserId);
 
-                    messageAdapter = new MessageAdapter(ChatActivity.this, mChatMessage);
-                    recyclerView.setAdapter(messageAdapter);
+                    Sender sender = new Sender(data, token.getToken());
+
+                    apiService.sendNotification(sender)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if(response.code() == 200){
+                                        if(response.body().success != 1){
+                                            Toast.makeText(ChatActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+
+                                }
+                            });
+
                 }
             }
 
@@ -290,15 +329,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-
     }
-
-
-
-
-
-
-
 
 
 

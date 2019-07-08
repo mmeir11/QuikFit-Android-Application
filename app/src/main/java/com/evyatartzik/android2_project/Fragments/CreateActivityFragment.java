@@ -67,6 +67,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -451,6 +452,9 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
         String currentUID = auth.getCurrentUser().getUid();
         ArrayList<String> usersIDList = new ArrayList<>();
         usersIDList.add(currentUID);
+        FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
+        firebaseMessaging.subscribeToTopic(title);
+
 
 //                Activity activity = new Activity(name, location ,type, datePickerBtn.getText().toString(), timePickerBtn.getText().toString(), 30,"לא לאחר!!", usersIDList);
                   Activity activity = new Activity( title, 30, "לא לאחר",  timePickerBtn.getText().toString(), location, datePickerBtn.getText().toString(), usersIDList, type);

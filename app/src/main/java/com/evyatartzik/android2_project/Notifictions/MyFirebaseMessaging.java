@@ -1,13 +1,17 @@
 package com.evyatartzik.android2_project.Notifictions;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.evyatartzik.android2_project.Adapters.GlobalApplication;
 import com.evyatartzik.android2_project.Fragments.HomeFragment;
@@ -26,12 +30,67 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
 //        super.onMessageReceived(remoteMessage);
 
         if(remoteMessage.getData().size() > 0){
-            sendNotificationData(remoteMessage);
+//            sendNotificationData(remoteMessage);
+
+            Intent intent2 = new Intent(context, ChatActivity.class);    //MessageActivity.class
+            Bundle bundle = new Bundle();
+            String topics = remoteMessage.getFrom();
+            String[] output = topics.split("/");
+            String title = output[2] ;
+            bundle.putString("groupName", title);
+            intent2.putExtras(bundle);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent2, PendingIntent.FLAG_ONE_SHOT);
+
+
+            Intent intent = new Intent("message_recived");
+            intent.putExtra("message", remoteMessage.getData().get("message"));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+            NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            Notification.Builder builder = new Notification.Builder(this);
+            if(Build.VERSION.SDK_INT >=26) {
+                NotificationChannel channel = new NotificationChannel("id_1", "name_1", NotificationManager.IMPORTANCE_HIGH);
+                manager.createNotificationChannel(channel);
+                builder.setChannelId("id_1")/*.setContentIntent(pendingIntent)*/;
+            }
+
+            builder.setContentTitle(title).setContentText(remoteMessage.getData().get("message"))
+                    .setSmallIcon(android.R.drawable.star_on).setContentIntent(pendingIntent);
+
+            manager.notify(1, builder.build());
+
 
         }
 
         if(remoteMessage.getNotification() != null){
-            sendNotificationNotification(remoteMessage);
+
+            Intent intent2 = new Intent(context, ChatActivity.class);    //MessageActivity.class
+            Bundle bundle = new Bundle();
+            String topics = remoteMessage.getFrom();
+            String[] output = topics.split("/");
+            String title = output[2] ;
+            bundle.putString("groupName", title);
+            intent2.putExtras(bundle);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 1, intent2, PendingIntent.FLAG_ONE_SHOT);
+
+
+            Intent intent = new Intent("message_recived");
+            intent.putExtra("message", remoteMessage.getData().get("message"));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
+            NotificationManager manager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+            Notification.Builder builder = new Notification.Builder(this);
+            if(Build.VERSION.SDK_INT >=26) {
+                NotificationChannel channel = new NotificationChannel("id_1", "name_1", NotificationManager.IMPORTANCE_HIGH);
+                manager.createNotificationChannel(channel);
+                builder.setChannelId("id_1");
+            }
+
+            builder.setContentTitle(title).setContentText(remoteMessage.getData().get("message"))
+                    .setSmallIcon(android.R.drawable.star_on);
+
+            manager.notify(1, builder.build());
+
         }
 
 
@@ -48,7 +107,8 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
     private void sendNotificationData(RemoteMessage remoteMessage){
         String user = remoteMessage.getData().get("user");
         String title = remoteMessage.getData().get("title");
-        String body = remoteMessage.getData().get("body");
+//        String body = remoteMessage.getData().get("body");
+        String body = remoteMessage.getData().get("message");
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
         int j = Integer.parseInt(user.replaceAll("[\\D]", ""));

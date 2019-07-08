@@ -1,7 +1,12 @@
 package com.evyatartzik.android2_project.UI;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +20,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.evyatartzik.android2_project.Adapters.MessageAdapter;
 import com.evyatartzik.android2_project.Interfaces.APIService;
 import com.evyatartzik.android2_project.Models.Activity;
@@ -33,12 +44,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,6 +81,8 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     List<ChatMessage> mChatMessage;
 
+    final String API_TOKEN_KEY = "AAAA5WZ4Jj4:APA91bGA8UjHxmKqKQNNnArxNTgIA87WLiSHG_W3UKPcHHmyI_6KgJNxcEGOlSqPAzTSgPnU5BcMO8AlEYMyHDrNX2jgrmMhYjGH8smr9qS0VxZv1dGIOoFBT8Ne2tZGRsRoZv4_GfJf";
+
 
     Activity currentActivity;
 
@@ -73,6 +91,8 @@ public class ChatActivity extends AppCompatActivity {
     APIService apiService;
 
     boolean notify = false;
+
+    BroadcastReceiver receiver;
 
 
     @Override
@@ -86,6 +106,7 @@ public class ChatActivity extends AppCompatActivity {
         getCurrentActivty();
 
         apiService = Client.getClient("http://fcm.googleapis.com/").create(APIService.class);
+
 
 
 
@@ -125,12 +146,23 @@ public class ChatActivity extends AppCompatActivity {
         mSendMessageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                notify = true;
+//                notify = true;
                 SaveMessageInToDatabase();
 
                 mUserMessage.setText("");
             }
         });
+
+        receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Toast.makeText(context, intent.getStringExtra("message"), Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("message_recived");
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, filter);
+
 
 
     }
@@ -160,34 +192,48 @@ public class ChatActivity extends AppCompatActivity {
 
             mGroupMessageRef.setValue(chatMessage);
 
-            final String msg = message;
 
+            final JSONObject rootObject = new JSONObject();
+//            if()
+            try {
+                rootObject.put("to", "/topics/" + currentChatName);
+                rootObject.put("data", new JSONObject().put("message", message));
 
-     // להתראות הצאט =============================
-/*            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("database/users")*//*.child(currentUserId)*//*;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
-            reference.addValueEventListener(new ValueEventListener() {
+            String url = "https://fcm.googleapis.com/fcm/send";
+
+            RequestQueue queue = Volley.newRequestQueue(ChatActivity.this);
+            StringRequest request = new StringRequest(Request.Method.POST, url, new com.android.volley.Response.Listener<String>() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    ArrayList<String> UsersIDList = currentActivity.getUsersIDList();
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        User user = snapshot.getValue(User.class);
-                        if(currentActivity != null && UsersIDList != null && UsersIDList.contains(user.getuID()) ) {
-                            if (notify) {
-                                sendNotification(user.getuID(),currentUserName , msg);
-//                                notify = false;
-                            }
+                public void onResponse(String response) {
 
-                        }
+                }
+            }, new com.android.volley.Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
 
-                    }
+                }
+            }){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Content-Type", "application/json");
+                    headers.put("Authorization", "key=" + API_TOKEN_KEY);
+
+                    return headers;
                 }
 
                 @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                public byte[] getBody() throws AuthFailureError {
+                    return rootObject.toString().getBytes();
                 }
-            });*/
+            };
+
+            queue.add(request);
+            queue.start();
 
         }
     }
@@ -319,9 +365,9 @@ public class ChatActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
 }

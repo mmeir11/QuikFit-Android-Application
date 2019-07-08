@@ -72,6 +72,8 @@
         </service>
         <receiver android:name=".OpenActivityReceiver" />
 
+        <receiver android:name=".OpenActivityReceiver"/>
+
     </application>
 
 </manifest>

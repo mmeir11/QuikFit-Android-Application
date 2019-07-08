@@ -323,7 +323,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         ArrayList<Activity> allDatabaseActivitiesByChips = new ArrayList<>();
          for(Activity activity1: databaseActivities)
             {
-                if(activity1.getLocation().contains(location))
+                if(activity1.getLocation().contains(location) || activity1.getTitle().contains(location))
                 {
                     allDatabaseActivitiesByChips.add(activity1);
                 }

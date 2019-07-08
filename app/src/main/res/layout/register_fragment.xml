@@ -7,7 +7,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:src="@drawable/runnig_background"/>
 
 <ScrollView
     android:layout_width="fill_parent"
@@ -206,7 +207,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="@string/select_user_preferences"
+                android:text="Select user preferences"
                 android:layout_marginStart="10dp"
                 android:textSize="18sp"
                 android:layout_marginTop="10dp"

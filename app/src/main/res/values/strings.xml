@@ -72,6 +72,7 @@
     <string name="Number_of_participants">Number of participants</string>
     <string name="confirming_arrival">Confirming arrival</string>
     <string name="chat">Chat</string>
+    <string name="welcome">welcome</string>
 
 
 </resources>

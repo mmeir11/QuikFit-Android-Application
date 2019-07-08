@@ -221,8 +221,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         activityFragment.setArguments(bundle);
 
         getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.home_fragment, activityFragment , "test"). // give your fragment container id in first parameter
-                addToBackStack("test").commit();
+                .replace(R.id.home_fragment, activityFragment , "ACTIVITY_FRAGMENT"). // give your fragment container id in first parameter
+                addToBackStack("ACTIVITY_FRAGMENT").commit();
     }
 
     public void ShowFloatingButton(){floatingActionButton.show();}

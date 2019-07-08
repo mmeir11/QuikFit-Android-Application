@@ -19,7 +19,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="56dp"
+        android:paddingTop="15dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
@@ -199,8 +199,19 @@
         </android.support.v7.widget.CardView>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="@string/select_user_preferences"
+                android:layout_marginStart="10dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                />
 
             <android.support.design.chip.ChipGroup
                 android:id="@+id/user_preferences"
@@ -209,26 +220,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp" />
 
-            <!--<view class="android.support.v7.widget.RecyclerView"-->
-            <!--android:id="@+id/user_preferences"-->
-            <!--android:orientation="horizontal"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content">-->
 
-            <!--</view>-->
         </LinearLayout>
 
-        <!-- Signup Button -->
-        <!--
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/camera_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
-            android:padding="12dp"
-            android:text="@string/take_photo" />
-        -->
 
     <android.support.v7.widget.CardView
         android:layout_width="wrap_content"

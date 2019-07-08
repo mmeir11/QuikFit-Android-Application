@@ -116,7 +116,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
                  getString(R.string.welcome), Snackbar.LENGTH_LONG);
          snackBar.show();
 
-         homeFragment=new HomeFragment();
+         homeFragment = new HomeFragment();
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();

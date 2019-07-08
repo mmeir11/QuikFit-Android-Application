@@ -178,7 +178,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                     Activity activitysRef = postSnapshot.getValue(Activity.class);
                     //TODO- show specific activities: NearBy or Contains user
                     String location = user.getLocation_string();
-                    if(activitysRef!=null && activitysRef.getUsersIDList()!=null) {
+                    if(activitysRef!=null && activitysRef.getUsersIDList()!=null && location != null) {
                         if (activitysRef.getLocation().contains(location)) {
                             activitiesNearByArrayList.add(activitysRef);
                         }

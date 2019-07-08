@@ -81,7 +81,7 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_chat);
 
 
-        currentChatName = getIntent().getExtras().get("groupName").toString();
+        currentChatName = getIntent().getExtras().getString("groupName");
         mChatNameRef = FirebaseDatabase.getInstance().getReference("database/chats").child(currentChatName);
         getCurrentActivty();
 

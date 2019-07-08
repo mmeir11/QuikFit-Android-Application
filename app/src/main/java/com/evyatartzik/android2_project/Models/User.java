@@ -15,7 +15,7 @@ public class User implements Serializable {
     private float longitude;
     private String profile_pic_path;
     private String location_string;
-    public FirebaseMessaging firebaseMessaging;
+//    public FirebaseMessaging firebaseMessaging = FirebaseMessaging.getInstance();
 
 
 
@@ -35,7 +35,7 @@ public class User implements Serializable {
         this.profile_pic_path = profile_pic_path;
         this.about = about;
         this.location_string = location_string;
-        firebaseMessaging = FirebaseMessaging.getInstance();
+//        firebaseMessaging = FirebaseMessaging.getInstance();
     }
 
     public float getLatitude() {
@@ -109,11 +109,11 @@ public class User implements Serializable {
         this.location_string = location_string;
     }
 
-    public FirebaseMessaging getFirebaseMessaging() {
+/*    public FirebaseMessaging getFirebaseMessaging() {
         return firebaseMessaging;
     }
 
     public void setFirebaseMessaging(FirebaseMessaging firebaseMessaging) {
         this.firebaseMessaging = firebaseMessaging;
-    }
+    }*/
 }

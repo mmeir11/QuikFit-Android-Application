@@ -13,6 +13,7 @@
 
 
 
+
     <application
         android:name=".Adapters.GlobalApplication"
         android:allowBackup="true"
@@ -70,7 +71,6 @@
             </intent-filter>
         </service>
         <receiver android:name=".OpenActivityReceiver" />
-
 
     </application>
 

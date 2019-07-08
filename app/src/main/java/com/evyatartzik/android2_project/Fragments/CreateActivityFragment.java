@@ -270,6 +270,10 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
             case R.id.save_activitiy_btn:
                 String type = null;
                 final String name = NameET.getText().toString().trim();
+                if(isAnyHebrewLetter(name)){
+                    Toast.makeText(getContext(), getString(R.string.failure_task), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 final String location = LocationET.getText().toString().trim();
 
                 for (int i = 0; i < chipGroup.getChildCount(); ++i) {
@@ -513,6 +517,19 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                         }
                     }
                 });
+    }
+
+    public  boolean isAnyHebrewLetter(String myString)
+    {
+        boolean isHebrew = false;
+        for (char c: myString.toCharArray()) {
+            if (Character.UnicodeBlock.of(c) == Character.UnicodeBlock.HEBREW) {
+                isHebrew = true;
+                break;
+            }
+        }
+        return isHebrew;
+
     }
 
     @Override

@@ -112,9 +112,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
      {
          ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-         Snackbar snackBar = Snackbar.make(this.findViewById(android.R.id.content),
-                 getString(R.string.welcome), Snackbar.LENGTH_LONG);
-         snackBar.show();
+//
 
          homeFragment = new HomeFragment();
          settingsFragment = new SettingsFragment();
@@ -201,25 +199,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
 
             UpdateUserProfilePicURL(str);
         }
-        if(id == 4) {
-            if (is_notif_on) {
-                Intent intent = new Intent(MenuActivity.this, OpenActivityReceiver.class);
-                intent.putExtra("activity_id", str);
-                intent.putExtra("date", str2);
 
-                PendingIntent pendingIntent =  PendingIntent.getBroadcast(MenuActivity.this, 0, intent,PendingIntent.FLAG_UPDATE_CURRENT);
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yy", Locale.ENGLISH);
-                try {
-                    calendar.setTime(sdf.parse(str2));// all done
-                    // PendingIntent pendingIntent =  PendingIntent.getBroadcast(MenuActivity.this, 0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
-
-            }
-        }
 
     }
 

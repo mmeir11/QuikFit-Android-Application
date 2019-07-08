@@ -55,7 +55,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
 
             builder.setContentTitle(title).setContentText(remoteMessage.getData().get("message"))
-                    .setSmallIcon(android.R.drawable.star_on).setContentIntent(pendingIntent);
+                    .setSmallIcon(R.drawable.quickfix_logo).setContentIntent(pendingIntent);
 
             manager.notify(1, builder.build());
 
@@ -87,7 +87,7 @@ public class MyFirebaseMessaging extends FirebaseMessagingService {
             }
 
             builder.setContentTitle(title).setContentText(remoteMessage.getData().get("message"))
-                    .setSmallIcon(android.R.drawable.star_on);
+                    .setSmallIcon(R.drawable.quickfix_logo);
 
             manager.notify(1, builder.build());
 

@@ -194,6 +194,8 @@
                 android:inputType="textPassword"
                 android:hint="@string/repeat_password"/>
         </android.support.design.widget.TextInputLayout>
+
+
         </android.support.v7.widget.CardView>
 
         <LinearLayout

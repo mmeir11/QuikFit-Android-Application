@@ -78,4 +78,6 @@
     <string name="Notification_enabled">התראות פעילות</string>
     <string name="Notification_disabled">התראות כבויות</string>
     <string name="please_wait">אנא המתן</string>
+    <string name="cancel">ביטול</string>
+    <string name="details">פרטים</string>
 </resources>

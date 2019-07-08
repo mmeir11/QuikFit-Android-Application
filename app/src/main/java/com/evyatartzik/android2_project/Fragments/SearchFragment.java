@@ -15,8 +15,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -33,7 +31,6 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
-import com.evyatartzik.android2_project.Adapters.NearByActivityRvAdapter;
 import com.evyatartzik.android2_project.Adapters.UsersRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
@@ -58,7 +55,6 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
@@ -74,7 +70,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private ArrayList<UserPreferences> PreferencesList;
     private ArrayList<User> databaseUsers;
 
-    private ArrayList<User> usersMatchedBySearch;
+    private ArrayList<User> usersMatchedByChipSearch;
     private  ArrayList<Activity> databaseActivities;
     private ArrayList<Activity> SearchActivityList;
 
@@ -93,7 +89,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     LinearLayout advancedLayout;
     LottieAnimationView searchBg;
     Button buttonSearch;
-    private ArrayList<Activity> activitiesByUsers;
+    private ArrayList<Activity> activitiesByText;
     private boolean userSelectedLocationSearch = false;
     private ArrayList<Activity> nearByActivities;
     private RecyclerView.LayoutManager activityLayoutManager;
@@ -118,8 +114,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         activitySearchRv.setAdapter(activityRvAdapter);
         activityRvAdapter.setListener(this);
 
-        usersMatchedBySearch = new ArrayList<>();
-        usersRvAdapter = new UsersRvAdapter(getActivity(), usersMatchedBySearch);
+        usersMatchedByChipSearch = new ArrayList<>();
+        usersRvAdapter = new UsersRvAdapter(getActivity(), usersMatchedByChipSearch);
         userSearchRv = rootView.findViewById(R.id.user_search_results_rv);
         userSearchRv.setLayoutManager(new GridLayoutManager(getActivity(),3, LinearLayoutManager.VERTICAL, false));
         userSearchRv.setAdapter(usersRvAdapter);
@@ -269,29 +265,31 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
             }//Get all user's selected activities
 
             }
-        if(activities.size()!=0)/*If user select search by chips*/
+
+
+
+
+        if(activities.size()!=0) /*If user selected at least 1 chip*/
         {
-            usersMatchedBySearch = getMatchUsers(activities); //return all users with same preferences
-            activitiesByUsers = getActivitiesByChips(activities);//return all activities with same title
+            usersMatchedByChipSearch = getMatchUsers(activities); //return all users with same preferences
+            activitiesByText = getActivitiesByChips(activities);//return all activities with same title
 
         }
-        /*If user select location method search*/
-        if(userSelectedLocationSearch) //return all users with same location
+        if(!freeTextTv.getText().toString().isEmpty())
         {
-            //userSelectedLocationSearch ===> true if user press location
-            String location = freeTextTv.getText().toString();
-            nearByActivities = getActivitiesByLocation(location);
-            userSelectedLocationSearch = false;
-        }
-        else if (!freeTextTv.getText().toString().isEmpty())
-        {
-            String userSearchKey  = freeTextTv.getText().toString();
-            activitiesByUsers.addAll(searchByText(userSearchKey));
+            String textToSearch = freeTextTv.getText().toString();
+            activitiesByText.addAll(getActivitiesByLocation(textToSearch));
+
         }
         else
         {
             Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
         }
+
+
+
+
+
         if(getListSize()!=0)
         {
             updateRecyclerView();
@@ -312,12 +310,12 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     }
 
     private int getListSize() {
-        return usersMatchedBySearch.size()+activitiesByUsers.size()+nearByActivities.size();
+        return usersMatchedByChipSearch.size()+ activitiesByText.size()+nearByActivities.size();
     }
 
     private void cleanLists() {
-        usersMatchedBySearch = new ArrayList<>();
-        activitiesByUsers =  new ArrayList<>();
+        usersMatchedByChipSearch = new ArrayList<>();
+        activitiesByText =  new ArrayList<>();
         nearByActivities = new ArrayList<>();
     }
 
@@ -325,7 +323,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         ArrayList<Activity> allDatabaseActivitiesByChips = new ArrayList<>();
          for(Activity activity1: databaseActivities)
             {
-                if(location.contains(activity1.getLocation()))
+                if(activity1.getLocation().contains(location))
                 {
                     allDatabaseActivitiesByChips.add(activity1);
                 }
@@ -393,8 +391,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     private void updateRecyclerView() {
 
         ArrayList<Activity> totalActivities = new ArrayList<>();
-        if(activitiesByUsers.size()!=0)
-            totalActivities.addAll(activitiesByUsers);
+        if(activitiesByText.size()!=0)
+            totalActivities.addAll(activitiesByText);
 
         if(nearByActivities.size()!=0)
             totalActivities.addAll(nearByActivities);
@@ -413,7 +411,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 //        ((LinearLayoutManager) userLayoutManager).setOrientation(1);
         userLayoutManager = new GridLayoutManager(getActivity(),3, LinearLayoutManager.VERTICAL, false);
         userSearchRv.setLayoutManager(userLayoutManager);
-        usersRvAdapter = new UsersRvAdapter(getActivity(),usersMatchedBySearch) ;
+        usersRvAdapter = new UsersRvAdapter(getActivity(), usersMatchedByChipSearch) ;
         userSearchRv.setAdapter(usersRvAdapter);
         usersRvAdapter.setListener(this);
 
@@ -542,7 +540,8 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     @Override
     public void onActivityObjectClicked(int pos, View view) {
 
-        Activity activity = activitiesByUsers.get(pos);
+        Activity activity;
+        activity = activitiesByText.get(pos);
 
 
         ActivityFragment activityFragment = new ActivityFragment();
@@ -552,7 +551,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         bundle.putSerializable("activity", activity);
         //set Fragment Arguments
         activityFragment.setArguments(bundle);
-        Toast.makeText(getActivity(), activity.getTitle(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), activity.getTitle(), Toast.LENGTH_SHORT).show();
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.open_result, activityFragment , "test"). // give your fragment container id in first parameter
                 addToBackStack("test").commit();
@@ -563,7 +562,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     @Override
     public void onUserObjectClicked(int pos, View view) {
 
-        User user = usersMatchedBySearch.get(pos);
+        User user = usersMatchedByChipSearch.get(pos);
         ProfileFragment profileFragment = new ProfileFragment();
 
         Bundle bundle = new Bundle();

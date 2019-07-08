@@ -69,4 +69,8 @@
     <string name="Chat_Message">הצ\'אט</string>
     <string name="created_successfully">נוצר בהצלחה</string>
     <string name="searching">מחפש...</string>
+    <string name="Scheduled">בתאריך</string>
+    <string name="Number_of_participants">" מספר משתתפים"</string>
+    <string name="confirming_arrival">אישור השתתפות</string>
+    <string name="chat">שיחה</string>
 </resources>

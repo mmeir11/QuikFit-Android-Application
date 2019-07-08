@@ -68,6 +68,10 @@
     <string name="Chat_Message">Chat Message</string>
     <string name="created_successfully">Created Successfully</string>
     <string name="searching">Searching...</string>
+    <string name="Scheduled">Scheduled</string>
+    <string name="Number_of_participants">Number of participants</string>
+    <string name="confirming_arrival">Confirming arrival</string>
+    <string name="chat">Chat</string>
 
 
 </resources>

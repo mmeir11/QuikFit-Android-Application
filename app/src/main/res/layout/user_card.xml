@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@color/fillColor"
-            android:text="@string/details"
+            android:text="Details"
             android:textColor="@color/white" />
 
 

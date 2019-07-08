@@ -2,7 +2,8 @@
 <RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#012348">
+    android:background="#012348"
+    >
 
     <ImageView
         android:layout_width="match_parent"
@@ -143,8 +144,20 @@
             android:id="@+id/timePickerBtn"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Select user preferences"
+                android:layout_marginStart="10dp"
+                android:textSize="18sp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                />
+
             <android.support.design.chip.ChipGroup
                 android:id="@+id/user_preferences"
                 style="@style/Widget.MaterialComponents.Chip.Filter"
@@ -152,15 +165,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp" />
 
-            <!--<view class="android.support.v7.widget.RecyclerView"-->
-                <!--android:id="@+id/user_preferences"-->
-                <!--android:orientation="horizontal"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content">-->
 
-            <!--</view>-->
         </LinearLayout>
-
         <!-- Signup Button -->
         <!--
         <android.support.v7.widget.AppCompatButton
@@ -173,23 +179,24 @@
             android:text="@string/take_photo" />
         -->
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-            android:layout_marginTop="200dp">
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_marginTop="50dp"
+            android:gravity="center">
 
             <Button
-                android:layout_width="150dp"
-                android:layout_height="70dp"
-                android:text="@string/save_activity"
                 android:id="@+id/save_activitiy_btn"
-                android:layout_gravity="center"
-                android:layout_marginEnd="10dp"/>
-            <Button
                 android:layout_width="150dp"
                 android:layout_height="70dp"
-                android:text="Cancel"
-                android:id="@+id/cancel_activitiy_btn"/>
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:text="Save" />
+
+            <Button
+                android:id="@+id/cancel_activitiy_btn"
+                android:layout_width="150dp"
+                android:layout_height="70dp"
+                android:text="Cancel" />
 
 
         </LinearLayout>

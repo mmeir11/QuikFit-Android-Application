@@ -5,19 +5,68 @@
     android:id="@+id/activity_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/user_profile_background">
 
-    <View
-        android:id="@+id/view"
+    <!--<View-->
+        <!--android:id="@+id/view"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="250dp"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_alignParentTop="true"-->
+        <!--android:layout_marginBottom="20dp"-->
+        <!--android:background="@color/colorPrimary" />-->
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:id="@+id/view"
+        android:layout_height="300dp"
+        android:background="@color/colorPrimary"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="50dp"
-        android:background="@color/colorPrimary" />
+        android:layout_marginBottom="20dp"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageview_account_profile"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/background_step1"
+            app:civ_border_color="#FFFFFF"
+            app:civ_border_width="2dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignEnd="@+id/imageview_account_profile"
+            android:layout_marginTop="70dp"
+            android:backgroundTint="@color/fillColor"
+            android:src="@drawable/ic_edit_white_24dp"
+            android:id="@+id/profile_pic_fab" />
+
+        <TextView
+            android:id="@+id/username_ET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:hint="your name"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            android:layout_alignParentBottom="true"
+            android:textColorHint="@color/colorWhite"
+            android:layout_marginBottom="20dp"/>
+
+
+    </RelativeLayout>
+    <!--<View/>-->
 
     <ScrollView
         android:id="@+id/scrolView_account"
+        android:layout_below="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -31,7 +80,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="100dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -39,26 +87,44 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_marginTop="100dp"
                     android:orientation="vertical">
 
-                    <TextView
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="@string/Name"
-                        android:textStyle="bold" />
-
+                        android:layout_marginBottom="10dp">
 
                         <TextView
-                            android:id="@+id/username_ET"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="your name"
-                            android:imeOptions="actionNext"
-                            android:textAlignment="viewStart"
-                            android:textSize="30sp"
-                            android:textColorHint="@color/colorPrimary" />
+                            android:text="@string/enable_notification"/>
+
+                        <Switch
+                            android:id="@+id/notification_sw"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="100dp"
+                            android:layout_marginStart="15dp"
+                            />
+                        <Button
+                            android:id="@+id/signout_btn"
+                            android:text="@string/logout"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+
+                            />
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/colorTextSecondary" />
+
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -77,8 +143,21 @@
                             android:layout_marginHorizontal="10dp" />
                     </LinearLayout>
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/colorTextSecondary" />
 
 
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Change Password"
+                        android:textStyle="bold" />
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -108,34 +187,24 @@
                             android:textColorHint="@color/colorPrimary" />
                     </android.support.design.widget.TextInputLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/enable_notification"/>
-
-                        <Switch
-                            android:id="@+id/notification_sw"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                    </LinearLayout>
-
-
-
-                    <Button
-                        android:id="@+id/signout_btn"
-                        android:text="@string/logout"
+                    <View
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="2dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:background="@color/colorTextSecondary" />
+
+
+
+
                     <Button
                         android:id="@+id/save_btn"
                         android:text="@string/save"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_width="200dp"
+                        android:layout_height="80dp"
+                        android:backgroundTint="@color/chip"
+                        android:layout_gravity="center"/>
 
                 </LinearLayout>
                 <TextView
@@ -145,33 +214,7 @@
                     android:text="@string/notice"/>
             </LinearLayout>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="24dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageview_account_profile"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/background_step1"
-                    app:civ_border_color="#FFFFFF"
-                    app:civ_border_width="2dp" />
-
-                <android.support.design.widget.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignEnd="@+id/imageview_account_profile"
-                    android:layout_marginTop="10dp"
-                    android:backgroundTint="@color/fillColor"
-                    android:src="@drawable/ic_edit_white_24dp"
-                    android:id="@+id/profile_pic_fab" />
-
-            </RelativeLayout>
 
 
         </RelativeLayout>

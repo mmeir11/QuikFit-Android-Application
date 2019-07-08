@@ -94,7 +94,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private DatabaseReference usersRef;
     private String user_id;
     private FloatingActionButton camera_fab;
-    private Switch notificationSwitch;
     private ArrayList<UserPreferences> userPreferences;
     private ArrayList<UserPreferences> PreferencesList;
     private ChipGroup chipGroup;
@@ -137,22 +136,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         buttonSignOut.setOnClickListener(this);
         saveProfile.setOnClickListener(this);
         camera_fab.setOnClickListener(this);
-        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean b) {
-                    if(b)
-                    {
-                        Toast.makeText(context, getString(R.string.enable_notification), Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(context, "Notification disabled", Toast.LENGTH_SHORT).show();
 
-                    }
-                    prefs.edit().putBoolean("notification", b).commit();
-
-                }
-            });
 
 
         return rootView;
@@ -160,14 +144,14 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private void initLayoutByID() {
 
-        notificationSwitch = (Switch) rootView.findViewById(R.id.notification_sw);
+
         userName = rootView.findViewById(R.id.username_ET);
         buttonSignOut = rootView.findViewById(R.id.signout_btn);
         saveProfile = rootView.findViewById(R.id.save_btn);
         profile_Image = rootView.findViewById(R.id.imageview_account_profile);
         camera_fab = rootView.findViewById(R.id.profile_pic_fab);
         chipGroup = rootView.findViewById(R.id.user_preferences);
-        notificationSwitch.setChecked(prefs.getBoolean("notification", false));
+
 
 
     }
@@ -195,7 +179,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 getActivity().finish();
                 break;
             case R.id.save_btn:
-                enableDisableNotification();//check switch state and update accordingly
                 uploadProfilePhoto(currentUser.getEmail());
                 saveUploadData();
 //                signOut();
@@ -212,18 +195,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    //All notification logic
-    private void enableDisableNotification() {
-        
-        if(notificationSwitch.isChecked())
-        {
-            Toast.makeText(context, "ON", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Toast.makeText(context, "Off", Toast.LENGTH_SHORT).show();
-        }
-    }
 
     private void saveUploadData() {
         final ArrayList<UserPreferences> updatedUserPref;

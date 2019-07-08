@@ -27,7 +27,8 @@
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".UI.MenuActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".UI.LoginRegister"
             android:screenOrientation="portrait"/>
         <activity android:name=".UI.SplashActivity"

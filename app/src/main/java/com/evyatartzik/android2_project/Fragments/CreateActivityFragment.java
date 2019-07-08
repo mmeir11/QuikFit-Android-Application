@@ -3,6 +3,7 @@ package com.evyatartzik.android2_project.Fragments;
 import android.Manifest;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -24,6 +25,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
 import android.support.v4.app.ActivityCompat;
@@ -48,6 +50,7 @@ import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.ProfileImageUpload;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Models.UserPreferences;
+import com.evyatartzik.android2_project.OpenActivityReceiver;
 import com.evyatartzik.android2_project.R;
 import com.evyatartzik.android2_project.UI.MenuActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -79,16 +82,22 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.content.Context.ALARM_SERVICE;
+
 public class CreateActivityFragment extends Fragment implements SignupListener, View.OnClickListener {
 
+    private AlarmManager alarmManager;
 
     private EditText NameET;
     private EditText LocationET;
@@ -122,8 +131,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
     static Location current_location;
     final Calendar myCalendar = Calendar.getInstance();
     private FragmentToActivity callback;
-
-
+    Time timeSelected;
 
 
     @Nullable
@@ -148,6 +156,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
         SaveButton.setOnClickListener(this);
         LocationImage.setOnClickListener(this);
         CancelButton.setOnClickListener(this);
+        alarmManager = (AlarmManager) getActivity().getSystemService(ALARM_SERVICE);
 
         chipGroup.setSingleSelection(true);
 
@@ -328,6 +337,8 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                     @Override
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                         timePickerBtn.setText(selectedHour + ":" + selectedMinute);
+                        timeSelected = new Time(selectedHour,selectedMinute,0);
+
                     }
                 }, hour, minute, true);//Yes 24 hour time
                 mTimePicker.setTitle("Select Time");
@@ -338,6 +349,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
 
         }
     }
+
 
 
     private void afterSucessAuth()

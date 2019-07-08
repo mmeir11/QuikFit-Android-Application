@@ -17,7 +17,7 @@
     <application
         android:name=".Adapters.GlobalApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/quickfix_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -27,7 +27,8 @@
             android:screenOrientation="portrait">
         </activity>
         <activity android:name=".UI.MenuActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".UI.LoginRegister"
             android:screenOrientation="portrait"/>
         <activity android:name=".UI.SplashActivity"

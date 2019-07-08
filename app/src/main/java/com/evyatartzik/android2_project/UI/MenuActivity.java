@@ -116,7 +116,7 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
                  getString(R.string.welcome), Snackbar.LENGTH_LONG);
          snackBar.show();
 
-         homeFragment=new HomeFragment();
+         homeFragment = new HomeFragment();
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
@@ -211,7 +211,8 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yy", Locale.ENGLISH);
                 try {
-                    calendar.setTime(sdf.parse(str2));// all done                PendingIntent pendingIntent =  PendingIntent.getBroadcast(MenuActivity.this, 0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    calendar.setTime(sdf.parse(str2));// all done
+                    // PendingIntent pendingIntent =  PendingIntent.getBroadcast(MenuActivity.this, 0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

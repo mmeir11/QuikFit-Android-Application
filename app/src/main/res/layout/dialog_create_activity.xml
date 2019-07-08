@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Activity name: "
+            android:text="@string/activity_name"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="#000"/>
@@ -34,7 +34,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Location: "
+            android:text="@string/address"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="#000"/>
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="ישראל"
+            android:text="@string/Israel"
             android:id="@+id/country_Et"/>
         <Space
             android:layout_width="5dp"
@@ -66,7 +66,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Activity type: "
+            android:text="@string/activity_type"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="#000"/>
@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date: "
+            android:text="@string/date"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="#000"/>
@@ -93,7 +93,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose Date"
+            android:text="@string/choose_date"
             android:id="@+id/datePickerBtn"/>
 
 
@@ -107,7 +107,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time: "
+            android:text="@string/time"
             android:textStyle="bold"
             android:textSize="15sp"
             android:textColor="#000"/>
@@ -115,14 +115,14 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose Time"
+            android:text="@string/choose_time"
             android:id="@+id/timePickerBtn"/>
     </LinearLayout>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save Activity"
+        android:text="@string/save_activity"
         android:id="@+id/save_activitiy_btn"/>
 
 

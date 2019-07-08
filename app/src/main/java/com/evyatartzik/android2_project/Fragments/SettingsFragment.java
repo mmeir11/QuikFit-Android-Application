@@ -193,6 +193,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             case R.id.signout_btn:
                 mAuth.signOut();
                 startActivity(new Intent(getActivity(), LoginRegister.class));
+                getActivity().finish();
                 break;
             case R.id.save_btn:
                 enableDisableNotification();//check switch state and update accordingly

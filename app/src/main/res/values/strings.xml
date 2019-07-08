@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">QuickFit</string>
-    <string name="header1">header1</string>
-    <string name="header2">Header2</string>
-    <string name="header3">Header3</string>
-    <string name="description1">Description1</string>
-    <string name="description2">Description2</string>
-    <string name="description3">Description3</string>
+    <string name="header1">Welcome !</string>
+    <string name="header2">"This app allow you create sport activity "</string>
+    <string name="header3">You can join existing groups, create and even chat You can join existing groups, create and even chat You can join existing groups, create and even chatYou can join existing groups, create</string>
+    <string name="description1">It\'s time to keep fit</string>
+    <string name="description2">"How ? By the QuickFit social network "</string>
+    <string name="description3">This app allow you create social sport activity</string>
     <string name="next">Next</string>
     <string name="prev">Prev</string>
     <string name="mail_sent">Reset email sent</string>
@@ -43,7 +43,31 @@
     <string name="sub_title">Sub title</string>
     <string name="search_hint">Name, City, Overview, etc.</string>
     <string name="selcet_pref">"You must select at least one category "</string>
-
+    <string name="Activity_full">Sorry the activity is full, Try again later</string>
+    <string name="new_User">New User?</string>
+    <string name="address">Address</string>
+    <string name="login">Log In</string>
+    <string name="my_activities">My Activities</string>
+    <string name="nearby_activities">Nearby Activities</string>
+    <string name="filter_cat">Filter categories</string>
+    <string name="search">Search</string>
+    <string name="chats">My Chats</string>
+    <string name="edit_pref">Edit preferences</string>
+    <string name="logout">Logout</string>
+    <string name="save">Save profile</string>
+    <string name="enable_notification">Enable Notification</string>
+    <string name="activity_name">Activity name</string>
+    <string name="Israel">ישראל</string>
+    <string name="activity_type">Activity type</string>
+    <string name="time">Time</string>
+    <string name="date">Date</string>
+    <string name="choose_time">Choose Time</string>
+    <string name="choose_date">Choose Date</string>
+    <string name="save_activity">Save activity</string>
+    <string name="notice">Notice! After changing any of settings you will sign out</string>
+    <string name="Chat_Message">Chat Message</string>
+    <string name="created_successfully">Created Successfully</string>
+    <string name="searching">Searching...</string>
 
 
 </resources>

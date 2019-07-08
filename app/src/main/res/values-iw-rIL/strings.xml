@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">QuickFit</string>
-    <string name="header1">כותרת 1</string>
-    <string name="header2">כותרת 2</string>
-    <string name="header3">כותרת 3</string>
-    <string name="description1">תיאור 1</string>
-    <string name="description2">תיאור 2</string>
-    <string name="description3">תיאור 3</string>
+    <string name="header1">ברוך הבא</string>
+    <string name="header2">"אפליקציה זו מאפשרת לך ליצור פעילויות ספורט "</string>
+    <string name="header3">ניתן להצטרף לקבוצות קיימות , ליצור ואפילו לדבר בצ\'אט</string>
+    <string name="description1">הגיע הזמן לשמור על כושר</string>
+    <string name="description2">איך ? על ידי הרשת החברתית QuickFit</string>
+    <string name="description3">אפליקציה זו מאפשרת לך ליצור פעילות ספורט חברתית</string>
     <string name="next">הבא</string>
     <string name="prev">הקודם</string>
     <string name="mail_sent">מייל לאיפוס נשלח</string>
@@ -44,4 +44,29 @@
     <string name="sub_title">כותרת משנה</string>
     <string name="search_hint">שם, עיר, חוות דעת, וכו\'</string>
     <string name="selcet_pref">עליך לבחור קטגוריה אחת לפחות</string>
+    <string name="Activity_full">פעילות מלא , נסה שוב מאוחר יותר</string>
+    <string name="new_User">משתמש חדש ?</string>
+    <string name="address">מיקום</string>
+    <string name="login">התחבר</string>
+    <string name="my_activities">הפעילויות שלי</string>
+    <string name="nearby_activities">פעילויות קרובות</string>
+    <string name="filter_cat">סנן לפי</string>
+    <string name="search">חפש/י</string>
+    <string name="chats">הצ\'אטים שלי</string>
+    <string name="edit_pref">ערוך העדפות</string>
+    <string name="logout">התנתק</string>
+    <string name="save">שמור הגדרות</string>
+    <string name="enable_notification">אפשר התראות</string>
+    <string name="activity_name">שם הפעילות</string>
+    <string name="Israel">Israel</string>
+    <string name="activity_type">סוג הפעילות</string>
+    <string name="time">שעה</string>
+    <string name="date">תאריך</string>
+    <string name="choose_time">בחר שעה</string>
+    <string name="choose_date">בחר תאריך</string>
+    <string name="save_activity">שמור פעילות</string>
+    <string name="notice">שים לב ! לאחר שמירה , תנותנק מהמערכת</string>
+    <string name="Chat_Message">הצ\'אט</string>
+    <string name="created_successfully">נוצר בהצלחה</string>
+    <string name="searching">מחפש...</string>
 </resources>

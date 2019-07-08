@@ -433,7 +433,7 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
 
                         @Override
                         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                            Toast.makeText(getActivity(), "Request Denied", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
                         }
                     }).check();
 
@@ -485,7 +485,13 @@ public class CreateActivityFragment extends Fragment implements SignupListener, 
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
-                            Toast.makeText(getActivity(), "ChatMessage "+activity.getTitle() +" Created Successfully", Toast.LENGTH_SHORT).show();
+                            StringBuilder stringBuilder = new StringBuilder();
+                            stringBuilder.append(getString(R.string.Chat_Message));
+                            stringBuilder.append(" ");
+                            stringBuilder.append(activity.getTitle());
+                            stringBuilder.append(" ");
+                            stringBuilder.append(getString(R.string.created_successfully));
+                            Toast.makeText(getActivity(), stringBuilder.toString(), Toast.LENGTH_SHORT).show();
                             getActivity().getSupportFragmentManager().popBackStack();
 
                         }

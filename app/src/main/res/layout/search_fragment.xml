@@ -160,7 +160,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="Filter categories"
+                    android:text="@string/filter_cat"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 
@@ -212,7 +212,7 @@
                     android:layout_marginBottom="10dp"
                     android:backgroundTint="@color/white"
                     android:padding="16dp"
-                    android:text="Search" />
+                    android:text="@string/search" />
 
             </LinearLayout>
 

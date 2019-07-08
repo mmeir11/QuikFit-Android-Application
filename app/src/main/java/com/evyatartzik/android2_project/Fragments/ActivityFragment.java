@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class ActivityFragment extends Fragment implements View.OnClickListener, Switch.OnCheckedChangeListener {
 
@@ -28,6 +30,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
     Activity activity;
     private FragmentToActivity callback;
     TextView numParticipantsTv;
+    CircleImageView activityImage;
 
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -54,6 +57,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         TextView maxNumParticipantsTv = root.findViewById(R.id.maxNumParticipants);
         Switch confirmArravSwtich = root.findViewById(R.id.confirmArravSwtich);
         Button chatBtn = root.findViewById(R.id.chatBtn);
+        activityImage = root.findViewById(R.id.image_activity);
 
 
 
@@ -66,6 +70,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         locationTv.setText(activity.getLocation());
         dateTv.setText(activity.getDate());
         timeTv.setText(activity.getTime());
+        setImageOfActivity(activity.getType());
         numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
         maxNumParticipantsTv.setText(activity.getMaxParticipents() + "");
 
@@ -78,6 +83,40 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
 
         return root;
+    }
+
+    private void setImageOfActivity(String name) {
+        switch (name){
+
+            case "Basketball":
+                activityImage.setImageResource(R.drawable.basketball_icon);
+                break;
+            case "Soccer":
+                activityImage.setImageResource(R.drawable.soccer_icon);
+                break;
+            case "Volley":
+                activityImage.setImageResource(R.drawable.vallay_icon);
+                break;
+            case "Weightlifting":
+                activityImage.setImageResource(R.drawable.weights_icon);
+                break;
+            case "Water sports":
+                activityImage.setImageResource(R.drawable.watar_sport_icon);
+                break;
+            case "Tennis":
+                activityImage.setImageResource(R.drawable.tennis_icon);
+                break;
+            case "Football":
+                activityImage.setImageResource(R.drawable.football_icon);
+                break;
+            case "Running":
+                activityImage.setImageResource(R.drawable.runnig_icon);
+                break;
+            case "Bowling":
+                activityImage.setImageResource(R.drawable.booling_icon);
+                break;
+        }
+
     }
 
 
@@ -122,7 +161,7 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
                 }
 
                 else
-                    Toast.makeText(getContext(), "Sorry the activity is full, Try again later", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.Activity_full, Toast.LENGTH_SHORT).show();
             }else{
                 activity.removeParticipents(currentUserId);
             }

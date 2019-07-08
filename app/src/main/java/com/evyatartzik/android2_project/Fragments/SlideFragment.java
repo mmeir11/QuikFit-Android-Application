@@ -33,6 +33,7 @@ public class SlideFragment extends Fragment {
         TextView header = root.findViewById(R.id.slide_heading);
         TextView desc = root.findViewById(R.id.slide_desc);
         LottieAnimationView lottieAnimationView= root.findViewById(R.id.slide_image);
+        LottieAnimationView lottieAnimationViewSlide1= root.findViewById(R.id.sec_lottie);
         Step step = Step.values()[getArguments().getInt("step")];
         int backgrounds[] = {R.drawable.background_step1, R.drawable.background_step2, R.drawable.background_step3};
 
@@ -43,12 +44,14 @@ public class SlideFragment extends Fragment {
                 header.setText(R.string.header1);
                 desc.setText(R.string.description1);
                 lottieAnimationView.setAnimation("loading.json");
+                lottieAnimationViewSlide1.setAnimation("socialSport.json");
                 root.setBackgroundResource(backgrounds[0]);
                 break;
             case Step2:
                 root.setBackgroundResource(backgrounds[1]);
                 header.setText(R.string.header2);
                 desc.setText(R.string.description2);
+                lottieAnimationViewSlide1.setVisibility(View.GONE);
                 lottieAnimationView.setAnimation("sport.json");
 
                 break;
@@ -56,6 +59,7 @@ public class SlideFragment extends Fragment {
                 root.setBackgroundResource(backgrounds[2]);
                 header.setText(R.string.header3);
                 desc.setText(R.string.description3);
+                lottieAnimationViewSlide1.setVisibility(View.GONE);
                 lottieAnimationView.setAnimation("done.json");
                 break;
         }

@@ -46,7 +46,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="profile Details"
+                        android:text="@string/Name"
                         android:textStyle="bold" />
 
 
@@ -56,13 +56,14 @@
                             android:layout_height="wrap_content"
                             android:hint="your name"
                             android:imeOptions="actionNext"
+                            android:textAlignment="viewStart"
                             android:textSize="30sp"
                             android:textColorHint="@color/colorPrimary" />
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Edit Prefrences"
+                        android:text="@string/edit_pref"
                         android:textStyle="bold" />
 
                     <LinearLayout
@@ -86,7 +87,7 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="password"
+                            android:hint="@string/password"
                             android:id="@+id/password_ET"
                             android:imeOptions="actionNext"
                             android:inputType="textPassword"
@@ -100,7 +101,7 @@
                         <EditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Re enter password"
+                            android:hint="@string/repeat_password"
                             android:id="@+id/re_password_ET"
                             android:imeOptions="actionNext"
                             android:inputType="textPassword"
@@ -114,7 +115,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Enable Notification"/>
+                            android:text="@string/enable_notification"/>
 
                         <Switch
                             android:id="@+id/notification_sw"
@@ -132,7 +133,7 @@
                         android:layout_height="wrap_content" />
                     <Button
                         android:id="@+id/save_btn"
-                        android:text="Save"
+                        android:text="@string/save"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
@@ -141,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Notice !\n After changing any of settings you will sign out"/>
+                    android:text="@string/notice"/>
             </LinearLayout>
 
             <RelativeLayout

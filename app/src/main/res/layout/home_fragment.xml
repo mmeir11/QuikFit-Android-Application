@@ -39,7 +39,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
         android:layout_marginStart="15dp"
-        android:text="My Activitys"
+        android:text="@string/my_activities"
         android:gravity="center"
         android:textSize="20sp"
         android:fontFamily="@font/heebo_bold_xml"/>
@@ -58,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Near Activitys"
+        android:text="@string/nearby_activities"
         android:layout_below="@+id/recycler_my_activitys"
         android:textSize="20sp"
         android:layout_marginStart="15dp"

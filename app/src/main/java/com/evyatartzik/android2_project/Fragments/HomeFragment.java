@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
+import com.evyatartzik.android2_project.Adapters.NearByActivityRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
 import com.evyatartzik.android2_project.Notifictions.Token;
@@ -23,20 +24,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Map;
 
-public class HomeFragment extends Fragment implements View.OnClickListener, ActivityRvAdapter.ObjectListener  {
+public class HomeFragment extends Fragment implements View.OnClickListener, ActivityRvAdapter.ObjectListener ,NearByActivityRvAdapter.ObjectListener {
 
 
     View root;
     FloatingActionButton floatingActionButton;
-    private ActivityRvAdapter activityRvAdapter,activityNearByRvAdapter;
+    private ActivityRvAdapter activityRvAdapter;
+    private NearByActivityRvAdapter activityNearByRvAdapter;
     private RecyclerView NearByActivitysRv,MyActivityRv;
 
     /*Firebase*/
@@ -64,7 +64,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         activitiesMyArrayList = new ArrayList<>();
         ///
         activityRvAdapter = new ActivityRvAdapter(getActivity(), activitiesMyArrayList);
-        activityNearByRvAdapter = new ActivityRvAdapter(getActivity(), activitiesNearByArrayList);
+        activityNearByRvAdapter = new NearByActivityRvAdapter(getActivity(), activitiesNearByArrayList);
         ///
         NearByActivitysRv = root.findViewById(R.id.recycler_near_activates);
         NearByActivitysRv.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -176,14 +176,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
                     Activity activitysRef = postSnapshot.getValue(Activity.class);
                     //TODO- show specific activities: NearBy or Contains user
                     String location = user.getLocation_string();
-                    if(activitysRef.getLocation().contains(location))
-                    {
-                        activitiesNearByArrayList.add(activitysRef);
-                    }
-                    for (String uID:activitysRef.getUsersIDList()) {
-                        if(uID.equals(user.getuID()))
-                        {
-                            activitiesMyArrayList.add(activitysRef);
+                    if(activitysRef!=null && activitysRef.getUsersIDList()!=null) {
+                        if (activitysRef.getLocation().contains(location)) {
+                            activitiesNearByArrayList.add(activitysRef);
+                        }
+
+                        for (String uID : activitysRef.getUsersIDList()) {
+                            if (uID.equals(user.getuID())) {
+                                activitiesMyArrayList.add(activitysRef);
+                            }
                         }
                     }
 
@@ -202,7 +203,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
 
     @Override
-    public void onActivityObjectClicked(int pos, View view) {
+    public void onNearByActivityObjectClicked(int pos, View view) {
+
 
         Activity activity = activitiesNearByArrayList.get(pos);
 
@@ -231,6 +233,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         reference.child(currentUser.getUid()).setValue(token1);
     }
 
+    @Override
+    public void onActivityObjectClicked(int pos, View view) {
+        Activity activity = activitiesMyArrayList.get(pos);
+
+        floatingActionButton.hide();
+        ActivityFragment activityFragment = new ActivityFragment();
+
+        Bundle bundle=new Bundle();
+
+
+        bundle.putSerializable("activity", activity);
+        //set Fragment Arguments
+        activityFragment.setArguments(bundle);
+
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.home_fragment, activityFragment , "test"). // give your fragment container id in first parameter
+                addToBackStack("test").commit();
+
+    }
 }
 
 

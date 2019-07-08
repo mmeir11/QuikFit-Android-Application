@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.evyatartzik.android2_project.Adapters.ActivityRvAdapter;
+import com.evyatartzik.android2_project.Adapters.NearByActivityRvAdapter;
 import com.evyatartzik.android2_project.Adapters.UsersRvAdapter;
 import com.evyatartzik.android2_project.Models.Activity;
 import com.evyatartzik.android2_project.Models.User;
@@ -57,6 +58,7 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -120,7 +122,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         usersRvAdapter = new UsersRvAdapter(getActivity(), usersMatchedBySearch);
         userSearchRv = rootView.findViewById(R.id.user_search_results_rv);
         userSearchRv.setLayoutManager(new GridLayoutManager(getActivity(),3, LinearLayoutManager.VERTICAL, false));
-        //userSearchRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         userSearchRv.setAdapter(usersRvAdapter);
         usersRvAdapter.setListener(this);
 
@@ -129,7 +130,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         loctionButton = rootView.findViewById(R.id.location_btn);
         advancedLayout = rootView.findViewById(R.id.advanced_layout);
         searchBg = rootView.findViewById(R.id.search_bg);
-        final TextView rangeTv = rootView.findViewById(R.id.range_tv);
 
         freeTextTv = rootView.findViewById(R.id.free_text_tv);
 
@@ -222,7 +222,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
                     @Override
                     public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        Toast.makeText(getActivity(), "Request Denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
                     }
                 }).check();
 
@@ -252,7 +252,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
 
     private void Search(){
 
-        Toast.makeText(getActivity(), "Searching...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), getString(R.string.searching), Toast.LENGTH_SHORT).show();
         isAdvancedSearchOpen = false;
         advancedLayout.setVisibility(View.GONE);
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -277,19 +277,38 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         }
         /*If user select location method search*/
         if(userSelectedLocationSearch) //return all users with same location
-        {//userSelectedLocationSearch=true if user press location
+        {
+            //userSelectedLocationSearch ===> true if user press location
             String location = freeTextTv.getText().toString();
             nearByActivities = getActivitiesByLocation(location);
+            userSelectedLocationSearch = false;
         }
-        else if (freeTextTv.getText().toString().isEmpty())
+        else if (!freeTextTv.getText().toString().isEmpty())
+        {
+            String userSearchKey  = freeTextTv.getText().toString();
+            activitiesByUsers.addAll(searchByText(userSearchKey));
+        }
+        else
         {
             Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
-
         }
         if(getListSize()!=0)
         {
             updateRecyclerView();
         }
+    }
+
+    private ArrayList<Activity> searchByText(String key) {
+        ArrayList<Activity> allDatabaseActivitiesByChips = new ArrayList<>();
+        for(Activity activity1: databaseActivities)
+        {
+            if(activity1.getTitle().contains(key))
+            {
+                allDatabaseActivitiesByChips.add(activity1);
+            }
+        }
+        return allDatabaseActivitiesByChips;
+
     }
 
     private int getListSize() {
@@ -306,7 +325,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
         ArrayList<Activity> allDatabaseActivitiesByChips = new ArrayList<>();
          for(Activity activity1: databaseActivities)
             {
-                if(activity1.getTitle().equals(location))
+                if(location.contains(activity1.getLocation()))
                 {
                     allDatabaseActivitiesByChips.add(activity1);
                 }
@@ -372,13 +391,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener, Te
     }
 
     private void updateRecyclerView() {
-        searchBg.setVisibility(View.GONE);
 
+        ArrayList<Activity> totalActivities = new ArrayList<>();
+        if(activitiesByUsers.size()!=0)
+            totalActivities.addAll(activitiesByUsers);
+
+        if(nearByActivities.size()!=0)
+            totalActivities.addAll(nearByActivities);
+
+
+        searchBg.setVisibility(View.GONE);
 
         activityLayoutManager = new LinearLayoutManager(getActivity());
         ((LinearLayoutManager) activityLayoutManager).setOrientation(1);
         activitySearchRv.setLayoutManager(activityLayoutManager);
-        activityRvAdapter = new ActivityRvAdapter(getActivity(),activitiesByUsers) ;
+        activityRvAdapter = new ActivityRvAdapter(getActivity(),totalActivities) ;
         activitySearchRv.setAdapter(activityRvAdapter);
         activityRvAdapter.setListener(this);
 

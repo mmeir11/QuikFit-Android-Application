@@ -21,16 +21,28 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_gravity="center"
-
         android:id="@+id/slide_heading"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
+        android:gravity="center"
+        android:textSize="25sp"
         android:text="Testt"/>
     <TextView
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="50dp"
+        android:textSize="15sp"
+        android:gravity="center"
         android:id="@+id/slide_desc"
         android:text="Testt"/>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/sec_lottie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:scaleType="fitCenter"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="socialSport.json"
+        app:lottie_loop="true" />
 </LinearLayout>

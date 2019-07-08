@@ -21,6 +21,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.chip.Chip;
 import android.support.design.chip.ChipGroup;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -287,8 +288,6 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
                                         usersRef.child(firebaseUser.getUid()).setValue(user);
                                         uploadProfilePhoto(email);
                                         if(uploadPhotoUri == null){
-
-                                            Toast.makeText(getActivity(), R.string.sucess_register, Toast.LENGTH_SHORT).show();
                                             DonelottieAnimationView.setVisibility(View.VISIBLE);
                                             DonelottieAnimationView.playAnimation();
                                             afterSucessAuth();
@@ -457,7 +456,7 @@ public class RegisterFragment extends Fragment implements SignupListener, View.O
 
                         @Override
                         public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                            Toast.makeText(getActivity(), "Request Denied", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.failure_task, Toast.LENGTH_SHORT).show();
                         }
                     }).check();
 

@@ -11,6 +11,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -111,12 +112,14 @@ public class MenuActivity extends AppCompatActivity implements FragmentToActivit
      {
          ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
+         Snackbar snackBar = Snackbar.make(this.findViewById(android.R.id.content),
+                 getString(R.string.welcome), Snackbar.LENGTH_LONG);
+         snackBar.show();
 
          homeFragment=new HomeFragment();
          settingsFragment = new SettingsFragment();
          searchFragment = new SearchFragment();
          profileFragment = new ProfileFragment();
-//         groupsFragment = new GroupsFragment();
          myChatFragment = new MyChatFragment();
          Bundle bundle = new Bundle();
          bundle.putSerializable("user",myUser);

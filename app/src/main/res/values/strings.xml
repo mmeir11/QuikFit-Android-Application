@@ -72,6 +72,11 @@
     <string name="Number_of_participants">Number of participants</string>
     <string name="confirming_arrival">Confirming arrival</string>
     <string name="chat">Chat</string>
+    <string name="welcome">welcome</string>
+    <string name="all_fields">Please fill all fields</string>
+    <string name="Notification_enabled">Notification enabled</string>
+    <string name="Notification_disabled">Notification disabled</string>
+    <string name="please_wait">Please wait....</string>
 
 
 </resources>

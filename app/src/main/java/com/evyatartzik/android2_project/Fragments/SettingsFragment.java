@@ -1,6 +1,7 @@
 package com.evyatartzik.android2_project.Fragments;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -142,7 +143,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 public void onCheckedChanged(CompoundButton buttonView, boolean b) {
                     if(b)
                     {
-                        Toast.makeText(context, "Notification enabled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getString(R.string.enable_notification), Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
@@ -170,6 +171,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         camera_fab = rootView.findViewById(R.id.profile_pic_fab);
         chipGroup = rootView.findViewById(R.id.user_preferences);
         notificationSwitch.setChecked(prefs.getBoolean("notification", false));
+
 
     }
 
@@ -199,7 +201,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 enableDisableNotification();//check switch state and update accordingly
                 uploadProfilePhoto(currentUser.getEmail());
                 saveUploadData();
-
                 break;
             case R.id.profile_pic_fab:
                 //get Photo and upload to database
@@ -212,6 +213,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
 
     }
+
     //All notification logic
     private void enableDisableNotification() {
         
@@ -226,8 +228,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void saveUploadData() {
-
-
         final ArrayList<UserPreferences> updatedUserPref;
         updatedUserPref = new ArrayList<>();
         final String username_input = userName.getText().toString();
@@ -247,30 +247,34 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         // updatedUserPref contains the user new preferences
 
-        if(checkInputs(username_input,password_input,rePassword_input))
+        if(checkInputs(password_input,rePassword_input))
         {
-            currentUser.updatePassword(password_input).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if(task.isSuccessful())
-                    {
-                        signOut();
+            if(!(password.getText().toString()==""&& rePassword.getText().toString()==""))
+            {
+                currentUser.updatePassword(password_input).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful())
+                        {
+                            signOut();
+                        }
+                        else
+                        {
+                            Toast.makeText(context, getString(R.string.failure_task), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                    else
-                    {
-                        Toast.makeText(context, R.string.failure_task, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-        if(uploadPhotoUri ==null && imageUri==null) {
-            Toast.makeText(context, "Please upload photo", Toast.LENGTH_SHORT).show();
-        }
+                });
+            }
 
+        }
+/*        if(uploadPhotoUri ==null && imageUri==null) {
+            Toast.makeText(context, "Please upload photo", Toast.LENGTH_SHORT).show();
+        }*/
+/*
         else
         {
-            Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show();
-        }
+            Toast.makeText(context, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
+        }*/
 
     }
 
@@ -280,9 +284,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    private boolean checkInputs(String username_input, String password_input, String rePassword_input) {
+    private boolean checkInputs(String password_input, String rePassword_input) {
                 boolean isSucess  = true;
-                if(username_input.trim().isEmpty()  || password_input.trim().isEmpty()
+                if(password_input.trim().isEmpty()
                         || rePassword_input.trim().isEmpty())
                 {
                     isSucess = false;
@@ -321,7 +325,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     usersRef.child(user_id).child("profile_pic_path").setValue(uploadName);
                     callback.finish_task(3,uploadName,"");
                 } else {
-                    Toast.makeText(getActivity(), "upload failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getString(R.string.failure_task), Toast.LENGTH_SHORT).show();
                 }
             }
         });

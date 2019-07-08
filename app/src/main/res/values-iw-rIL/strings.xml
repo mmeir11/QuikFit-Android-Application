@@ -73,4 +73,9 @@
     <string name="Number_of_participants">" מספר משתתפים"</string>
     <string name="confirming_arrival">אישור השתתפות</string>
     <string name="chat">שיחה</string>
+    <string name="welcome">ברוך הבא</string>
+    <string name="all_fields">אנא מלא את כל השדות</string>
+    <string name="Notification_enabled">התראות פעילות</string>
+    <string name="Notification_disabled">התראות כבויות</string>
+    <string name="please_wait">אנא המתן</string>
 </resources>

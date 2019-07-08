@@ -65,14 +65,14 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
         activity = (Activity)getArguments().getSerializable("activity");
 
-        titleTv.setText(activity.getTitle());
-        typeTv.setText(activity.getType());
-        locationTv.setText(activity.getLocation());
-        dateTv.setText(activity.getDate());
-        timeTv.setText(activity.getTime());
-        setImageOfActivity(activity.getType());
-        numParticipantsTv.setText(activity.getAmountOfParticipents() + "");
-        maxNumParticipantsTv.setText(activity.getMaxParticipents() + "");
+        titleTv.setText(" " +activity.getTitle());
+        typeTv.setText(" " +activity.getType()+ " " );
+        locationTv.setText(" " + activity.getLocation());
+        dateTv.setText(" " + activity.getDate());
+        timeTv.setText(" " + activity.getTime());
+        setImageOfActivity(" " + activity.getType());
+        numParticipantsTv.setText(" " + activity.getAmountOfParticipents() + "");
+        maxNumParticipantsTv.setText(" " + activity.getMaxParticipents() + "");
 
         activity.isInActivity(currentUser.getUid());
         confirmArravSwtich.setChecked(activity.getConfirm());
@@ -86,37 +86,52 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
     }
 
     private void setImageOfActivity(String name) {
-        switch (name){
-
-            case "Basketball":
-                activityImage.setImageResource(R.drawable.basketball_icon);
-                break;
-            case "Soccer":
-                activityImage.setImageResource(R.drawable.soccer_icon);
-                break;
-            case "Volley":
-                activityImage.setImageResource(R.drawable.vallay_icon);
-                break;
-            case "Weightlifting":
-                activityImage.setImageResource(R.drawable.weights_icon);
-                break;
-            case "Water sports":
-                activityImage.setImageResource(R.drawable.watar_sport_icon);
-                break;
-            case "Tennis":
-                activityImage.setImageResource(R.drawable.tennis_icon);
-                break;
-            case "Football":
-                activityImage.setImageResource(R.drawable.football_icon);
-                break;
-            case "Running":
-                activityImage.setImageResource(R.drawable.runnig_icon);
-                break;
-            case "Bowling":
-                activityImage.setImageResource(R.drawable.booling_icon);
-                break;
+        String str = name.trim();
+        if(str.equals("Tennis"))
+        {
+            activityImage.setImageResource(R.drawable.tennis_icon);
+            return;
         }
-
+        if(str.equals("Basketball"))
+        {
+            activityImage.setImageResource(R.drawable.basketball_icon);
+            return;
+        }
+        if(str.equals("Soccer"))
+        {
+            activityImage.setImageResource(R.drawable.soccer_icon);
+            return;
+        }
+        if(str.equals("Volley"))
+        {
+            activityImage.setImageResource(R.drawable.vallay_icon);
+            return;
+        }
+        if(str.equals("Weightlifting"))
+        {
+            activityImage.setImageResource(R.drawable.weights_icon);
+            return;
+        }
+        if(str.equals("Water sports"))
+        {
+            activityImage.setImageResource(R.drawable.watar_sport_icon);
+            return;
+        }
+        if(str.equals("Bowling"))
+        {
+            activityImage.setImageResource(R.drawable.booling_icon);
+            return;
+        }
+        if(str.equals("Running"))
+        {
+            activityImage.setImageResource(R.drawable.runnig_icon);
+            return;
+        }
+        if(str.equals("Football"))
+        {
+            activityImage.setImageResource(R.drawable.football_icon);
+            return;
+        }
     }
 
 

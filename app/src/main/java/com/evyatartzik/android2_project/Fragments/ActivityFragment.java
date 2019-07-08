@@ -1,7 +1,9 @@
 package com.evyatartzik.android2_project.Fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +34,8 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
     private FragmentToActivity callback;
     TextView numParticipantsTv;
     CircleImageView activityImage;
+    private boolean is_notif_on;
+    private SharedPreferences prefs;
 
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -60,6 +64,9 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
         Switch confirmArravSwtich = root.findViewById(R.id.confirmArravSwtich);
         Button chatBtn = root.findViewById(R.id.chatBtn);
         activityImage = root.findViewById(R.id.image_activity);
+
+
+
 
 
 
@@ -170,9 +177,11 @@ public class ActivityFragment extends Fragment implements View.OnClickListener, 
 
             if(isChecked){
 
+
                 if(activity.getAmountOfParticipents() <= activity.getMaxParticipents()) {
 
                     activity.addParticipents(currentUserId);
+
                     firebaseMessaging.subscribeToTopic(activity.getTitle());
                     callback.finish_task(4,activity.getTitle(),activity.getDate());
 

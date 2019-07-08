@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
         initFirebase();
         floatingActionButton.setOnClickListener(this);
 
-        retrieveAndDisplayActivitys();
+
 
         ValueEventListener userListener = new ValueEventListener() {
 
@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener, Acti
 
                     user = dataSnapshot.getValue(User.class);
                     userArrayList.add(user);
+                    retrieveAndDisplayActivitys();
 
                 }
                 catch (Exception ex)

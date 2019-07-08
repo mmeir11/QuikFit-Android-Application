@@ -83,7 +83,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     Context context;
     private User user;
     private TextView userName;
-    private EditText password,rePassword;
     private Button buttonSignOut ,saveProfile;
     private File file;
     private Uri imageUri;
@@ -163,8 +162,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         notificationSwitch = (Switch) rootView.findViewById(R.id.notification_sw);
         userName = rootView.findViewById(R.id.username_ET);
-        password = rootView.findViewById(R.id.password_ET);
-        rePassword = rootView.findViewById(R.id.re_password_ET);
         buttonSignOut = rootView.findViewById(R.id.signout_btn);
         saveProfile = rootView.findViewById(R.id.save_btn);
         profile_Image = rootView.findViewById(R.id.imageview_account_profile);
@@ -201,6 +198,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 enableDisableNotification();//check switch state and update accordingly
                 uploadProfilePhoto(currentUser.getEmail());
                 saveUploadData();
+//                signOut();
                 break;
             case R.id.profile_pic_fab:
                 //get Photo and upload to database
@@ -231,8 +229,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         final ArrayList<UserPreferences> updatedUserPref;
         updatedUserPref = new ArrayList<>();
         final String username_input = userName.getText().toString();
-        final String password_input = password.getText().toString();
-        final String rePassword_input = rePassword.getText().toString();
+
 
         for (int i = 0; i < chipGroup.getChildCount(); ++i) {
             Chip chip = (Chip) chipGroup.getChildAt(i);
@@ -247,40 +244,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
         // updatedUserPref contains the user new preferences
 
-        if(checkInputs(password_input,rePassword_input))
-        {
-            if(!(password.getText().toString()==""&& rePassword.getText().toString()==""))
-            {
-                currentUser.updatePassword(password_input).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful())
-                        {
-                            signOut();
-                        }
-                        else
-                        {
-                            Toast.makeText(context, getString(R.string.failure_task), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-            }
-
-        }
-/*        if(uploadPhotoUri ==null && imageUri==null) {
-            Toast.makeText(context, "Please upload photo", Toast.LENGTH_SHORT).show();
-        }*/
-/*
-        else
-        {
-            Toast.makeText(context, getString(R.string.all_fields), Toast.LENGTH_SHORT).show();
-        }*/
 
     }
 
     private void signOut() {
         mAuth.signOut();
         startActivity(new Intent(getActivity(), LoginRegister.class));
+        getActivity().finish();
 
     }
 

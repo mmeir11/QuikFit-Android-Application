@@ -152,48 +152,8 @@
 
 
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:text="Change Password"
-                        android:textStyle="bold" />
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="@color/colorPrimary">
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/password"
-                            android:id="@+id/password_ET"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPassword"
-                            android:textColorHint="@color/colorPrimary" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColorHint="@color/colorPrimary">
-                        <EditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/repeat_password"
-                            android:id="@+id/re_password_ET"
-                            android:imeOptions="actionNext"
-                            android:inputType="textPassword"
-                            android:textColorHint="@color/colorPrimary" />
-                    </android.support.design.widget.TextInputLayout>
 
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@color/colorTextSecondary" />
 
 
 
